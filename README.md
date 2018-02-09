@@ -1,9 +1,6 @@
 jQuery & AngularJs Test
 =======================
 
-- jQuery
-*  jQuery-ui
-*  SimplrGrid
-- AngularJs
-*  Router
+- jQuery (jQuery-ui, SimplrGrid)
+- AngularJs (Router)
 
