@@ -1,0 +1,103 @@
+<div ng-controller="employeeController">
+	<form>
+		<table>
+			<tr>
+				<td class="caption">IDNo</td>
+				<td colspan="3">
+					<input type="text" name="idno">
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Surname</td>
+				<td><input type="text" name="surname"></td>
+				<td class="caption">Othernames</td>
+				<td><input type="text" name="othernames"></td>
+			</tr>
+			<tr>
+				<td class="caption">Post</td>
+				<td colspan="3">
+					<select></select>
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Address 1</td>
+				<td><textarea rows="5" cols="30" name="address1"></textarea></td>
+				<td class="caption">Address 2</td>
+				<td><textarea rows="5" cols="30" name="address2"></textarea></td>
+			</tr>
+			<tr>
+				<td class="caption">Phone 1</td>
+				<td><input type="text" name="phone1"></td>
+				<td class="caption">Phone 2</td>
+				<td><input type="text" name="phone2"></td>
+			</tr>
+			<tr>
+				<td class="caption">Email 1</td>
+				<td><input type="text" name="email1"></td>
+				<td class="caption">Email 2</td>
+				<td><input type="text" name="email2"></td>
+			</tr>
+			<tr>
+				<td class="caption">NSSF</td>
+				<td><input type="text" name="nssf"></td>
+				<td class="caption">NHIF</td>
+				<td><input type="text" name="nhif"></td>
+			</tr>
+			<tr>
+				<td class="caption">PIN</td>
+				<td colspan="3">
+					<input type="text" name="pin">
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Gender</td>
+				<td colspan="3">
+					<select ng-model="gender" ng-options="gender for gender in genders"></select>
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Country</td>
+				<td><input type="text" name="country"></td>
+				<td class="caption">City</td>
+				<td><input type="text" name="city"></td>
+			</tr>
+			<tr>
+				<td class="caption">DOB</td>
+				<td colspan="3">
+					<input type="date" name="dob">
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Start Date</td>
+				<td><input type="date" name="start_date"></td>
+				<td class="caption">End Date</td>
+				<td><input type="date" name="end_date"></td>
+			</tr>
+			<tr>
+				<td class="caption">Marital Status</td>
+				<td colspan="3">
+					<select ng-model="maritalStatus" ng-options="status for status in maritalStatus"></select>
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Bank Details</td>
+				<td colspan="3">
+					<textarea rows="5" cols="30"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="caption">Active</td>
+				<td colspan="3">
+					<input type="checkbox" name="active">
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<input type="submit" value="Submit" ng-click="submit()">
+					<input type="reset" value="Reset">
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

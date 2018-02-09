@@ -1,0 +1,32 @@
+<div ng-controller="userController">
+	<form name="userForm">
+		<table>
+			<tr>
+				<td class="caption">Username</td>
+				<td><input type="text" name="username" ng-model="username"></td>
+			</tr>
+			<tr>
+				<td class="caption">Password</td>
+				<td><input type="password" name="password" ng-model="password"></td>
+			</tr>
+			<tr>
+				<td class="caption">Confirm Password</td>
+				<td><input type="password" name="cpassword" ng-model="cpassword"></td>
+			</tr>
+			<tr>
+				<td class="caption">Roles</td>
+				<td>
+					<select name="role" id="role" ng-model="role" ng-options="role for role in roles">
+				    </select>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="submit" value="Submit" ng-click="submit()">
+					<input type="reset" value="Reset">
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

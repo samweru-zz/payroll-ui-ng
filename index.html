@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/simplrGrid.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/style.css">
+	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
+	<link type="text/css" rel="stylesheet" href="css/simplrGrid.css">
+	<script type="text/ng-template" charset="utf-8" id="login.html">
+      	<div ng-controller="loginController">
+			<table>
+				<tr>
+					<td class="caption">Username</td>
+					<td>
+						<input type="text" name="username" ng-model="username">
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Password</td>
+					<td>
+						<input type="password" name="password" ng-model="password">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<button id="login">Submit</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+    </script> 
+</head>
+<body ng-app="myApp">
+	<div class="tree">
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#!/employees">Employees</a></li>
+			<li><span>+</span>
+				<a href="">Administration</a>
+				<ul>
+					<li><a href="#">Role</a></li>
+					<li><a href="#!/user">User</a></li>
+					<li><a href="#">Period</a></li>
+				</ul>
+			</li>
+			<li><span>+</span>
+				<a href="">Registry</a>
+				<ul>
+					<li><a href="#">Department</a></li>
+					<li><a href="#">Post</a></li>
+					<li><span>+</span>
+						<a href="">Rates</a>
+						<ul>
+							<li><a href="#">NHIF</a></li>
+							<li><a href="#">PAYE</a></li>
+							<li><a href="#">Tax Relief</a></li>
+						</ul>
+					</li>
+					<li><a href="#">Benefits</a></li>
+				</ul>
+			</li>
+			<li><a href="#">Reports</a></li>
+			<li><a href="/">Logout</a></li>
+		</ul>
+	</div>
+	<div class="body" ng-view></div>
+</body>
+<script src="js/main.js"></script>
+<script>
+	(function(){
+
+		$(".tree")
+			.find("ul:has(li) span")
+				.next()
+					.click(function(){
+
+						var ul = $(this).next();
+						
+						if($(this).prev().html() == "+"){
+
+							$(this).prev().html("-")
+							ul.hide();
+						}
+						else{
+
+							$(this).prev().html("+")
+							ul.show();
+						}
+					})
+					.click();
+	})();
+</script>
+</html>
