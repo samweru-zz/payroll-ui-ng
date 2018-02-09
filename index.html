@@ -2,11 +2,11 @@
 <html>
 <head>
 	<title></title>
-	<script src="js/angular.min.js"></script>
-	<script src="js/angular-route.min.js"></script>
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/simplrGrid.min.js"></script>
+	<script src="js/core/angular.min.js"></script>
+	<script src="js/core/jquery-3.3.1.min.js"></script>
+	<script src="js/lib/angular-route.min.js"></script>
+	<script src="js/lib/jquery-ui.min.js"></script>
+	<script src="js/lib/simplrGrid.min.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/simplrGrid.css">
@@ -80,7 +80,7 @@
 					.click(function(){
 
 						var ul = $(this).next();
-						
+
 						if($(this).prev().html() == "+"){
 
 							$(this).prev().html("-")
