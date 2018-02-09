@@ -21,7 +21,7 @@ app.config(function($routeProvider){
 	    })
 	    .when("/", {
 
-	    	template:"<b></b>",
+	    	templateUrl:"tpl/login.html",
 	    	controller: "loginController"
 	    })
 	    .otherwise({
