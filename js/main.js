@@ -16,7 +16,7 @@ app.config(function($routeProvider){
 	    .when("/employees", {
 
 	        // templateUrl : "tpl/employees.html",
-	        template:"",
+	        template:"<div id='employee'></div>",
 	        controller: "employeesController"
 	    })
 	    .when("/", {
@@ -62,7 +62,7 @@ app.controller("employeesController", ['$scope', '$http', function($scope, $http
 
 		$(document.createElement("TABLE"))
 		.attr("id", "employees-tbl")
-		.appendTo("BODY")
+		.appendTo("#employee")
 		.simplrGrid({
 
 			// url:"/server/fetch.all.php",
@@ -72,9 +72,6 @@ app.controller("employeesController", ['$scope', '$http', function($scope, $http
 			// data:{},
 			data:response.data, 
 			// singleSelect:true,
-			freezeHeader:false,
-			freezeLeftColumn:false,
-			resizeColumns:false,
 			columnHide:[
 
 				"id"
