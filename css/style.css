@@ -29,7 +29,7 @@ div.body{
   /*display: block;*/
 }
 
-table tr td.caption{
+table:not(.simplr-grid) tr td.caption{
 
 	vertical-align: top;
 	text-align: right;
@@ -63,7 +63,7 @@ table th {
   text-transform: uppercase;
 }*/
 @media screen and (max-width: 600px) {
-  table {
+  table:not(.simplr-grid) {
     border: 0;
   }
 /*  table caption {
@@ -79,18 +79,18 @@ table th {
     position: absolute;
     width: 1px;
   }*/
-  table tr {
+  table:not(.simplr-grid) tr {
     /*border-bottom: 3px solid #ddd;*/
     display: block;
     margin-bottom: .625em;
   }
-  table td {
+  table:not(.simplr-grid) td {
     /*border-bottom: 1px solid #ddd;*/
     display: block;
     /*font-size: .8em;*/
     text-align: right;
   }
-  table td:before {
+  table:not(.simplr-grid) td:before {
     /*
     * aria-label has no advantage, it won't be read inside a table
     content: attr(aria-label);
@@ -100,7 +100,7 @@ table th {
     font-weight: bold;
     text-transform: uppercase;
   }
-  table td:last-child {
+  table:not(.simplr-grid) td:last-child {
     border-bottom: 0;
   }
 }

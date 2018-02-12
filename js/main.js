@@ -1,50 +1,73 @@
-var app = angular.module("myApp", ["ngRoute"]);
+var app = angular.module("myApp", ["ngRoute", "ngMockE2E"]);
 
-app.config(function($routeProvider){
+app.config(function($routeProvider){	
 
     $routeProvider
 	    .when("/user", {
 
-	        templateUrl : "tpl/user.html",
+	        templateUrl : "user.html",	
 	        controller: "userController"
 	    })
-	    .when("/employee", {
+	    .when("/employee/:id", {
 
-	        templateUrl : "tpl/employee.html",
+	        templateUrl : "employee.html",
 	        controller: "employeeController"
 	    })
 	    .when("/employees", {
 
-	        // templateUrl : "tpl/employees.html",
 	        template:"<div id='employee'></div>",
 	        controller: "employeesController"
 	    })
 	    .when("/", {
 
-	    	templateUrl:"tpl/login.html",
+	    	template: "",
 	    	controller: "loginController"
 	    })
 	    .otherwise({
 
 	    	redirectTo:"/"
 	    })
-});
+})
+.run(['$httpBackend', function ($httpBackend){
 
-app.controller("userController", ['$scope','$http', function($scope, $http){
+     	$httpBackend.whenGET(/(\.html|employee.json)$/).passThrough();  
+    }
+]);
 
-	var url = "data/roles.json";
+app.controller("userController", ['$scope','$http','$httpBackend','$templateCache', function($scope, $http, $httpBackend, $templateCache){
 
-	$http.get(url).then( function(response){
+	$httpBackend.whenPOST('/data/roles.json').respond(function(method, url, data, headers){
 
-	 	$scope.roles = response.data;
+	    console.log('Received these data:', method, url, data, headers);
+
+	    var _roles = roles().get()
+
+	    for(idx in _roles){
+
+			delete _roles[idx].___id;
+			delete _roles[idx].___s;
+		}
+
+		return [200, _roles, {}];
+	});
+
+	// $scope.username = "sa";
+
+	$http.post("/data/roles.json").then( function(response){
+
+		var _roles = response.data;
+
+		var roles_data = {};
+		for(idx in _roles)
+			roles_data[_roles[idx]["id"]] = _roles[idx]["name"];
+
+	 	$scope.roles = roles_data;
 	});	
 }]);
 
 app.controller("employeeController", ['$scope','$http', function($scope, $http){
 
-	var url = "data/employee.json";
-
-	$http.get(url).then( function(response){
+	$http.get("data/employee.json").then( function(response){
 
 		var employee = response.data;
 
@@ -53,24 +76,52 @@ app.controller("employeeController", ['$scope','$http', function($scope, $http){
 	});	
 }]);
 
-app.controller("employeesController", ['$scope', '$http', function($scope, $http){
+app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$location", function($scope, $http, $httpBackend, $location){
 
-	$http.get("/data/employees.json").then(function(response){
+	$httpBackend.whenPOST('/data/employees.json').respond(function(method, url, data, headers){
 
-		// console.log(response.data);
+	    console.log('Received these data:', method, url, data, headers);
 
+	    var pager = JSON.parse(data);
 
-		$(document.createElement("TABLE"))
+	    var start_from = (pager.page - 1) * pager.rows;
+
+	    var _employees = employees().start(start_from).limit(pager.rows).get()
+
+	    for(idx in _employees){
+
+			delete _employees[idx].___id;
+			delete _employees[idx].___s;
+		}
+
+		return [200, _employees, {}];
+	});
+
+	$(document.createElement("TABLE"))
 		.attr("id", "employees-tbl")
 		.appendTo("#employee")
 		.simplrGrid({
 
-			// url:"/server/fetch.all.php",
-			// method:"POST",
+			url:"/data/employees.json",
+			method:"POST",
 			title:"Sample Grid",
-			// usePager:true,
+			usePager:true,
+			ajaxSetup:{
+
+				exec:function(url, method, data, done, fail){
+
+					$http.post(url, data).then(done);
+				},
+				responder:function(response){
+
+					return {
+
+						rows:response.data,
+						count:employees().count()
+					};
+				}
+			},
 			// data:{},
-			data:response.data, 
 			// singleSelect:true,
 			columnHide:[
 
@@ -85,42 +136,34 @@ app.controller("employeesController", ['$scope', '$http', function($scope, $http
 				// width:500,
 				height:500
 			},
-			// pager:{
+			pager:{
 
-			// 	page:1,
-			// 	rows:10//,
-			// 	// list:[10,20]
-			// },
+				page:1,
+				rows:10//,
+				// list:[10,20]
+			},
 			onDblClick:function(row){
 
-				console.log(row);
+				$location.path("/employee/".concat(row.id));
 			}
 		})
 		.fixLeftColumn()
 		.fixHeader()
 		.resizeColumns();
-	});
 }]);
 
-// app.controller("vm", function($scope, $element) {
+app.controller("loginController", ['$scope','$http', '$httpBackend', '$templateCache', function($scope, $http, $httpBackend, $templateCache){
 
-//   vm = $scope;
-  
-//   //APPEND for DEMO purposes
-//   vm.html = '<script>alert("Hello John!");</script><p>Loaded</p>';
-//   $element.append(vm.html);
-  
-//   //FIND script and eval 
-//   var js = $element.find("script")[0].innerHTML;
-//   eval(js);
-  
-// });
+	$httpBackend.whenPOST('data/login.json').respond(function(method, url, data, headers){
 
-app.controller("loginController", ['$scope','$http', function($scope, $http){
+	    console.log('Received these data:', method, url, data, headers);
+
+		return [200, {"username":"sa", "password":"p@55w0rd"}, {}];
+	});
 
 	$("div.tree").css({display:"none"});
 
-	var login = $($("script[id='login.html']").html());
+	var login = $($templateCache.get("login.html"));
 
 	login.dialog({
 
@@ -148,15 +191,12 @@ app.controller("loginController", ['$scope','$http', function($scope, $http){
 		}
 		else{
 
-			var url = "data/login.json";
+			$http.post("data/login.json").then(function(response){
 
-			$http.post(url).then(function(response){
+				console.log(response);
 
 			 	if(txtUsername.val() != response.data.username || 
 			 		txtPassword.val() != response.data.password){
-
-			 		// console.log(txtUsername.val() + " " + response.username + "---" + 
-			 					// txtPassword.val() + " " + response.password);
 
 			 		alert("Username and/or Password is wrong!");
 				}
