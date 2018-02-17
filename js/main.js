@@ -15,7 +15,7 @@ app.config(function($routeProvider){
 	    })
 	    .when("/employees", {
 
-	        template:"<div id='employee'></div>",
+	        template:"<table id='employee-tbl'></table>",
 	        controller: "employeesController"
 	    })
 	    .when("/", {
@@ -30,28 +30,52 @@ app.config(function($routeProvider){
 })
 .run(['$httpBackend', function ($httpBackend){
 
-     	$httpBackend.whenGET(/(\.html|employee.json)$/).passThrough();  
+     	$httpBackend.whenGET(/(\.html)$/).passThrough();  
+
+     	$httpBackend.whenPOST('/data/login.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+			return [200, {"username":"sa", "password":"p@55w0rd"}, {}];
+		});
+
+		$httpBackend.whenPOST('/data/roles.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _roles = roles().get()
+
+		    for(idx in _roles){
+
+				delete _roles[idx].___id;
+				delete _roles[idx].___s;
+			}
+
+			return [200, _roles, {}];
+		});
+
+		$httpBackend.whenPOST('/data/employees.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _employees = employees().start(start_from).limit(pager.rows).get()
+
+		    for(idx in _employees){
+
+				delete _employees[idx].___id;
+				delete _employees[idx].___s;
+			}
+
+			return [200, {rows:_employees, count:employees().count()}, {}];
+		});
     }
 ]);
 
-app.controller("userController", ['$scope','$http','$httpBackend','$templateCache', function($scope, $http, $httpBackend, $templateCache){
-
-	$httpBackend.whenPOST('/data/roles.json').respond(function(method, url, data, headers){
-
-	    console.log('Received these data:', method, url, data, headers);
-
-	    var _roles = roles().get()
-
-	    for(idx in _roles){
-
-			delete _roles[idx].___id;
-			delete _roles[idx].___s;
-		}
-
-		return [200, _roles, {}];
-	});
-
-	// $scope.username = "sa";
+app.controller("userController", ['$scope','$http','$httpBackend', function($scope, $http, $httpBackend){
 
 	$http.post("/data/roles.json").then( function(response){
 
@@ -67,99 +91,90 @@ app.controller("userController", ['$scope','$http','$httpBackend','$templateCach
 
 app.controller("employeeController", ['$scope','$http', function($scope, $http){
 
-	$http.get("data/employee.json").then( function(response){
+	// $http.get("data/employee.json").then( function(response){
 
-		var employee = response.data;
+	// 	var employee = response.data;
 
-	 	$scope.genders = employee.genders;
-	 	$scope.maritalStatus = employee.maritalStatus;
-	});	
+	//  	$scope.genders = employee.genders;
+	//  	$scope.maritalStatus = employee.maritalStatus;
+	// });	
 }]);
 
 app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$location", function($scope, $http, $httpBackend, $location){
 
-	$httpBackend.whenPOST('/data/employees.json').respond(function(method, url, data, headers){
+	// var btnEdit = $(document.createElement("BUTTON")).html("Edit")
+	// btnEdit.click(function(){
 
-	    console.log('Received these data:', method, url, data, headers);
+	// 	var row = $("#employee-tbl").getSelectedRow();
 
-	    var pager = JSON.parse(data);
+	// 	if(Object.keys(row).length > 1)
+	// 		$scope.$apply(function() {
+	// 		  $location.path("/employee/".concat(row.id));
+	// 		});
+			
+	// })
 
-	    var start_from = (pager.page - 1) * pager.rows;
-
-	    var _employees = employees().start(start_from).limit(pager.rows).get()
-
-	    for(idx in _employees){
-
-			delete _employees[idx].___id;
-			delete _employees[idx].___s;
-		}
-
-		return [200, _employees, {}];
-	});
-
-	$(document.createElement("TABLE"))
-		.attr("id", "employees-tbl")
-		.appendTo("#employee")
+	$("#employee-tbl")
 		.simplrGrid({
 
-			url:"/data/employees.json",
+			url:"data/employees.json",
 			method:"POST",
-			title:"Sample Grid",
+			title:"Employees",
 			usePager:true,
-			ajaxSetup:{
-
-				exec:function(url, method, data, done, fail){
-
-					$http.post(url, data).then(done);
-				},
-				responder:function(response){
-
-					return {
-
-						rows:response.data,
-						count:employees().count()
-					};
-				}
-			},
-			// data:{},
-			// singleSelect:true,
+			singleSelect:true,
+			fixLeftColumn:true,
+			fixHeader:true,
+			resizeColumns:true,
 			columnHide:[
 
 				"id"
 			],
-			// toolbars:[
+			toolbars:[
 
-				// [btnAdd, btnSel]	
-			// ],
+				// [btnEdit]	
+			],
 			css:{
 
-				// width:500,
-				height:500
+				capsuleWidth:"100%",
+				gridHeight:"400px",
+				gridWidth:"90%"
 			},
 			pager:{
 
 				page:1,
-				rows:10//,
-				// list:[10,20]
+				rows:10,
+				list:[10,20]
 			},
-			onDblClick:function(row){
+			dblClick:function(){
 
-				$location.path("/employee/".concat(row.id));
+				var row = $(this).getRow();
+
+				$scope.$apply(function(){
+
+					$location.path("/employee/".concat(row.id));
+				});
+			},
+			customLoader:function(table, options, builder){
+
+				$http.post("/data/employees.json", {
+
+				    page:options.pager.page,
+				    rows:options.pager.rows
+				})
+				.then( function(response){
+
+					//total-number-of-rows/rows-per-page
+					options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
+
+					// console.log(response);
+
+					builder(table, response.data, options);
+				});	
 			}
 		})
-		.fixLeftColumn()
-		.fixHeader()
-		.resizeColumns();
 }]);
 
 app.controller("loginController", ['$scope','$http', '$httpBackend', '$templateCache', function($scope, $http, $httpBackend, $templateCache){
-
-	$httpBackend.whenPOST('data/login.json').respond(function(method, url, data, headers){
-
-	    console.log('Received these data:', method, url, data, headers);
-
-		return [200, {"username":"sa", "password":"p@55w0rd"}, {}];
-	});
 
 	$("div.tree").css({display:"none"});
 
@@ -168,7 +183,7 @@ app.controller("loginController", ['$scope','$http', '$httpBackend', '$templateC
 	login.dialog({
 
 		draggable:false,
-	    resizable: false,
+		resizable: false,
 	    height: "auto",
 	    modal: true,
 	    open: function(event, ui) {
@@ -191,7 +206,7 @@ app.controller("loginController", ['$scope','$http', '$httpBackend', '$templateC
 		}
 		else{
 
-			$http.post("data/login.json").then(function(response){
+			$http.post("/data/login.json").then(function(response){
 
 				console.log(response);
 
