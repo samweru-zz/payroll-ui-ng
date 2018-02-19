@@ -1,34 +1,41 @@
-var app = angular.module("myApp", ["ngRoute", "ngMockE2E"]);
+var app = angular.module("myApp", ["ui.router", "ngMockE2E"]);
 
-app.config(function($routeProvider){	
+app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
-    $routeProvider
-	    .when("/user", {
+    $stateProvider
+        .state('user', {
 
-	        templateUrl : "user.html",	
+            url:'/user',
+            templateUrl : "user.html",	
 	        controller: "userController"
-	    })
-	    .when("/employee/:id", {
+        })
+        .state('employee.edit', {
 
-	        templateUrl : "employee.html",
+            url: '/employee/:id',
+            templateUrl : "employee.html",
 	        controller: "employeeController"
-	    })
-	    .when("/employee/add", {
+        })
+        .state('employee.add', {
 
-	        templateUrl : "employee.html",
+            url: '/employee/add',
+            templateUrl : "employee.html",
 	        controller: "employeeController"
-	    })
-	    .when("/employees", {
+        })
+        .state('employees', {
 
-	        templateUrl:"employees.html",
+            url: '/employees',
+            templateUrl:"employees.html",
 	        controller: "employeesController"
-	    })
-	    .when("/", {
+        })
+        .state('login', {
 
-	    	templateUrl: "login.html",
+            url: '/',
+            templateUrl: "login.html",
 	    	controller: "loginController"
-	    })
-})
+        })
+
+        $urlRouterProvider.otherwise('/');
+}])
 .run(['$httpBackend', function ($httpBackend){
 
      	$httpBackend.whenGET(/(\.html)$/).passThrough();  
