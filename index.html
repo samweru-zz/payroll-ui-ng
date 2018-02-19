@@ -11,6 +11,10 @@
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
 	<script src="js/db/employees.js"></script>
 	<script src="js/db/roles.js"></script>
+	<script src="js/app/main.js"></script>
+	<script src="js/app/directives/dialog.js"></script>
+	<script src="js/app/directives/simplr-grid.js"></script>
+	<script src="js/app/controllers/controller.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link type="text/css" rel="stylesheet" href="css/simplr-grid.css">
@@ -121,29 +125,62 @@
 			</form>
 		</div>
 	</script>
+	<script type="text/ng-template" charset="utf-8" id="employees.html">
+		<table jq-simplr-grid 
+				id='employees-tbl'
+				url="data/employees.json"
+				method="POST"
+				title="Employees"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
 	<script type="text/ng-template" charset="utf-8" id="login.html">
-      	<div ng-controller="loginController">
-			<table>
-				<tr>
-					<td class="caption">Username</td>
-					<td>
-						<input type="text" name="username" ng-model="username">
-					</td>
-				</tr>
-				<tr>
-					<td class="caption">Password</td>
-					<td>
-						<input type="password" name="password" ng-model="password">
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<button id="login">Submit</button>
-					</td>
-				</tr>
-			</table>
-		</div>
+		<div ng-controller="loginController" style="display:none;">
+			<div jq-dialog
+				id="login-dlg"
+				title="Login"
+				auto-open="true"
+				modal=true
+				open={{dialogLoginOpen}}>
+				<table>
+					<tr>
+						<td class="caption">Username</td>
+						<td>
+							<input type="text" name="username" ng-model="username"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="caption">Password</td>
+						<td>
+							<input type="password" name="password" ng-model="password"/>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<button ng-click="submit()">Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div jq-dialog 
+					id="auth-msg-dlg"
+					title="Authentication"
+					modal="true"
+					open={{dialogMsgOpen}}
+					ok-button="Ok"
+					ok-callback="okHandle"
+					width="300">{{message}}</div>
+	    </div>
     </script>
     <script  type="text/ng-template" charset="utf-8" id="user.html">
     	<div ng-controller="userController">
@@ -181,7 +218,7 @@
     </script>
 	<div class="tree">
 		<ul>
-			<li><span>+</span>
+			<li><span>-</span>
 				<a href="">Administration</a>
 				<ul>
 					<li><a href="#!/role">Role</a></li>
@@ -189,7 +226,7 @@
 					<li><a href="#!/period">Period</a></li>
 				</ul>
 			</li>
-			<li><span>+</span>
+			<li><span>-</span>
 				<a href="">Human Resource</a>
 				<ul>
 					<li><a href="#!/employees">Employees</a></li>
@@ -197,10 +234,10 @@
 					<li><a href="#!/post">Post</a></li>
 				</ul>
 			</li>
-			<li><span>+</span>
+			<li><span>-</span>
 				<a href="">Payroll</a>
 				<ul>
-					<li><span>+</span>
+					<li><span>-</span>
 						<a href="">Rates</a>
 						<ul>
 							<li><a href="#!/nhif">NHIF</a></li>
@@ -217,7 +254,6 @@
 	</div>
 	<div class="body" ng-view></div>
 </body>
-<script src="js/main.js"></script>
 <script>
 	(function(){
 
@@ -231,12 +267,12 @@
 						if($(this).prev().html() == "+"){
 
 							$(this).prev().html("-")
-							ul.hide();
+							ul.show();
 						}
 						else{
 
 							$(this).prev().html("+")
-							ul.show();
+							ul.hide();
 						}
 					})
 					.click();
