@@ -9,8 +9,7 @@
 	<script src="js/lib/angular-ui-router.min.js"></script>
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
-	<script src="js/db/employees.js"></script>
-	<script src="js/db/roles.js"></script>
+	<script src="js/db/payroll.js"></script>
 	<script src="js/app/main.js"></script>
 	<script src="js/app/directives/dialog.js"></script>
 	<script src="js/app/directives/simplr-grid.js"></script>
@@ -125,6 +124,212 @@
 			</form>
 		</div>
 	</script>
+	<script type="text/ng-template" charset="utf-8" id="benefit.html">
+		<form id="benefits-form">
+			<table>
+				<tbody>
+					<tr>
+						<td valign="top" align="left">
+							<input id="name" name="name" type="text"></td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<input id="amt" name="amt" type="text">
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<textarea id="descr" name="descr" rows="5" cols="60"></textarea>
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<span><input type="checkbox" id="perc" name="perc" value="1">
+								<b>&nbsp;Percentage?</b>
+							</span>
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<span><input type="checkbox" id="deduct" name="deduct" value="1">
+								<b>&nbsp;Deduction?</b>
+							</span>
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<span><input type="checkbox" id="taxable" name="taxable" value="1">
+								<b>&nbsp;Taxable?</b>
+							</span>
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="left">
+							<span><input type="checkbox" id="active" name="active" value="1">
+								<b>&nbsp;Active?</b>
+							</span>
+						</td>
+						<td valign="top"></td>
+					</tr>
+					<tr></tr>
+					<tr>
+						<td valign="top" align="left">
+							<span id="buttons-benefits-form">
+								<input type="button" value="Submit">
+							</span>
+						</td>
+						<td valign="top"></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="posts.html">
+		<table jq-simplr-grid 
+				id='posts-tbl'
+				url="data/posts.json"
+				method="POST"
+				title="Posts"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="post.html">
+		<form id="post-form">
+			<table>
+				<tbody>
+					<tr>
+						<td valign="top" align="right">Post</td>
+						<td valign="top"><input id="name" name="name" type="text"></td>
+					</tr>
+					<tr>
+						<td valign="top" align="right">Description</td>
+						<td valign="top">
+							<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" align="right">Dept.</td>
+						<td valign="top">
+							<select id="dept" name="dept"></select>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" align="right"></td>
+						<td valign="top">
+							<input type="button" value="Submit">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="depts.html">
+		<table jq-simplr-grid 
+				id='depts-tbl'
+				url="data/depts.json"
+				method="POST"
+				title="Departments"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'50%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="dept.html">
+		<div ng-controller="deptController">
+			<form id="dept-form">
+				<table>
+					<tbody>
+						<tr>
+							<td valign="top" align="right">Dept.</td>
+							<td valign="top">
+								<input id="name" name="name" type="text">
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="right">Description</td>
+							<td valign="top">
+								<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="right"></td>
+							<td valign="top">
+								<input type="button" value="Submit">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="roles.html">
+		<table jq-simplr-grid 
+				id='roles-tbl'
+				url="data/roles.json"
+				method="POST"
+				title="Roles"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="role.html">
+		<div ng-controller="roleController">
+			<form id="role-form">
+				<table>
+					<tbody>
+						<tr>
+							<td valign="top" align="right">Role</td>
+							<td valign="top">
+								<input id="name" name="name" type="text">
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="right">Description</td>
+							<td valign="top">
+								<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="right"></td>
+							<td valign="top">
+								<input type="button" value="Submit">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</script>
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 
 				id='employees-tbl'
@@ -221,7 +426,7 @@
 			<li><span>-</span>
 				<a href="">Administration</a>
 				<ul>
-					<li><a href="#!/role">Role</a></li>
+					<li><a href="#!/roles">Role</a></li>
 					<li><a href="#!/user">User</a></li>
 					<li><a href="#!/period">Period</a></li>
 				</ul>
@@ -230,8 +435,8 @@
 				<a href="">Human Resource</a>
 				<ul>
 					<li><a href="#!/employees">Employees</a></li>
-					<li><a href="#!/dept">Department</a></li>
-					<li><a href="#!/post">Post</a></li>
+					<li><a href="#!/depts">Department</a></li>
+					<li><a href="#!/posts">Post</a></li>
 				</ul>
 			</li>
 			<li><span>-</span>
@@ -245,7 +450,7 @@
 							<li><a href="#!/tax">Tax Relief</a></li>
 						</ul>
 					</li>
-					<li><a href="#!/benefits">Benefits</a></li>
+					<li><a href="#!/benefit">Benefits</a></li>
 					<li><a href="#!/rpt">Reports</a></li>
 				</ul>
 			</li>

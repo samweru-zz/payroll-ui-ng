@@ -1,4 +1,59 @@
+roles = TAFFY([
+	
+	{
+		id:1,
+		name:'Administrator',
+		descr:'Super Administrator/Root User'
+	},
+	{
+		id:2,
+		name:'Payroll Administrator',
+		descr:'Payroll Administrator/Payroll Manager'
+	},
+	{
+		id:4,
+		name:'Payroll User',
+		descr:'Normal User/Payroll User'
+	}
+]);
+
+depts = TAFFY([
+
+	{
+		id:1,
+		alias:'HR',
+		descr:'Human Resource Department'
+	},
+	{
+		id:3,
+		alias:'FIN',
+		descr:'Finance Department'
+	},
+	{
+		id:4,
+		alias:'IT',
+		descr:'Information Technology and Support'
+	}
+])
+
+posts = TAFFY([
+
+	{
+		id:1,
+		dept:1,
+		name:'HR Manager',
+		descr:'Human Resource Managers'
+	},
+	{
+		id:3,
+		dept:3,
+		name:'Finance Manager',
+		descr:'Finance Head'
+	}
+]);
+
 employees = TAFFY([
+
 	{
 		"id": 1, 
 		"email": "dena.delzell@hotmail.com",
