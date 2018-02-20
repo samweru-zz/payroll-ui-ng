@@ -13,6 +13,7 @@
 	<script src="js/app/main.js"></script>
 	<script src="js/app/directives/dialog.js"></script>
 	<script src="js/app/directives/simplr-grid.js"></script>
+	<script src="js/app/directives/tree-menu.js"></script>
 	<script src="js/app/controllers/controller.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
@@ -421,7 +422,7 @@
 			</form>
 		</div>
     </script>
-	<div class="tree">
+	<div jq-tree-menu class="tree">
 		<ul>
 			<li><span>-</span>
 				<a href="">Administration</a>
@@ -459,28 +460,4 @@
 	</div>
 	<div class="body" ui-view></div>
 </body>
-<script>
-	(function(){
-
-		$(".tree")
-			.find("ul:has(li) span")
-				.next()
-					.click(function(){
-
-						var ul = $(this).next();
-
-						if($(this).prev().html() == "+"){
-
-							$(this).prev().html("-")
-							ul.show();
-						}
-						else{
-
-							$(this).prev().html("+")
-							ul.hide();
-						}
-					})
-					.click();
-	})();
-</script>
 </html>
