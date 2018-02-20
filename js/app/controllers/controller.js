@@ -1,4 +1,6 @@
-app.controller("userController", ['$scope','$http','$httpBackend', function($scope, $http, $httpBackend){
+app.controller("userController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+
+	console.log("User")
 
 	// $http.post("/data/roles.json").then( function(response){
 
@@ -10,10 +12,9 @@ app.controller("userController", ['$scope','$http','$httpBackend', function($sco
 
 	//  	$scope.roles = roles_data;
 	// });	
-	console.log("User")
 }]);
 
-app.controller("employeeController", ['$scope','$http', function($scope, $http){
+app.controller("employeeController", ['$scope','$http', "$state", function($scope, $http, $state){
 
 	console.log("Employee")
 
@@ -26,19 +27,14 @@ app.controller("employeeController", ['$scope','$http', function($scope, $http){
 	// });	
 }]);
 
-app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$location", function($scope, $http, $httpBackend, $location){
-
-	console.log("EmployeeS")
+app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
 
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			$scope.$apply(function(){
-
-				$location.path("/employee/add");
-			});				
+			$state.go("employee-add")				
 		})
 
 		return [
@@ -51,10 +47,7 @@ app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$loca
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
-
-			$location.path("/employee/".concat(row.id));
-		});
+		$state.go("employee-edit", {id:row.id})
 	}
 
 	$scope.customLoader = function(table, options, builder){

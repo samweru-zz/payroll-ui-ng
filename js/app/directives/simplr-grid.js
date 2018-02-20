@@ -23,7 +23,7 @@ app.directive('jqSimplrGrid', function ($timeout){
 	    replace:false,
 	    link: function (scope, element, attrs) {
 
-	    	console.log(attrs)
+	    	// console.log(attrs)
 
             var gridOptions = {
 

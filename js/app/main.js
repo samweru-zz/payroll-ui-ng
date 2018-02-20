@@ -9,13 +9,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl : "user.html",	
 	        controller: "userController"
         })
-        .state('employee.edit', {
+        .state('employee-edit', {
 
             url: '/employee/:id',
             templateUrl : "employee.html",
 	        controller: "employeeController"
         })
-        .state('employee.add', {
+        .state('employee-add', {
 
             url: '/employee/add',
             templateUrl : "employee.html",
@@ -36,7 +36,10 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
         $urlRouterProvider.otherwise('/');
 }])
-.run(['$httpBackend', function ($httpBackend){
+.run(['$httpBackend', "$rootScope", "$state", "$location", function ($httpBackend, $rootScope, $state, $location){
+
+		$rootScope.$state = $state;
+  		$rootScope.$location = $location;
 
      	$httpBackend.whenGET(/(\.html)$/).passThrough();  
 
