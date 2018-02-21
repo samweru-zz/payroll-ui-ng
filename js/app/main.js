@@ -3,11 +3,11 @@ var app = angular.module("myApp", ["ui.router", "ngMockE2E"]);
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
     $stateProvider
-    	.state('benefit', {
+        .state('benefits', {
 
-            url:'/benefit',
-            templateUrl : "benefit.html",	
-	        controller: "benefitController"
+            url:'/benefits',
+            templateUrl : "benefits.html",	
+	        controller: "benefitsController"
         })
     	.state('post-edit', {
 
@@ -33,35 +33,11 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl : "post.html",	
 	        controller: "postController"
         })
-        .state('role-add', {
-
-            url:'/role',
-            templateUrl : "role.html",	
-	        controller: "roleController"
-        })
-        .state('role-edit', {
-
-            url:'/role',
-            templateUrl : "role.html",	
-	        controller: "roleController"
-        })
     	.state('roles', {
 
             url:'/roles',
             templateUrl : "roles.html",	
 	        controller: "rolesController"
-        })
-        .state('dept-edit', {
-
-            url:'/dept/:id',
-            templateUrl : "dept.html",	
-	        controller: "deptController"
-        })
-        .state('dept-add', {
-
-            url:'/dept',
-            templateUrl : "dept.html",	
-	        controller: "deptController"
         })
         .state('depts', {
 
@@ -123,7 +99,10 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 				delete _roles[idx].___id;
 				delete _roles[idx].___s;
+				// delete _roles[idx].descr;
 			}
+
+			console.log(_roles)
 
 			return [200, _roles, {}];
 		});
@@ -185,6 +164,21 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_depts, count:depts().count()}, {}];
 		});
 
+		$httpBackend.whenPOST('/data/post-list.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _posts = posts().get()
+
+		    for(idx in _posts){
+
+				delete _posts[idx].___id;
+				delete _posts[idx].___s;
+			}
+
+			return [200, _posts, {}];
+		});
+
 		$httpBackend.whenPOST('/data/posts.json').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
@@ -195,17 +189,47 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 		    var _posts = posts().start(start_from).limit(pager.rows).get()
 
+		    var __posts = [];
+
 		    for(idx in _posts){
 
-				delete _posts[idx].___id;
-				delete _posts[idx].___s;
+		    	var dept = depts({id:_posts[idx].id}).first();
 
-				_posts[idx].dept = depts({id:_posts[idx].id}).get()[0].descr
+				__posts.push({
+
+					dept_name: dept.descr,
+					dept_id: dept.id,
+					name: _posts[idx].name,
+					descr: _posts[idx].descr
+				})
 			}
 
-			// console.log(_posts)
+			return [200, {rows:__posts, count:posts().count()}, {}];
+		});
 
-			return [200, {rows:_posts, count:posts().count()}, {}];
+		$httpBackend.whenPOST('/data/benefits.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _benefits = benefits().start(start_from).limit(pager.rows).get()
+
+		    for(idx in _benefits){
+
+				delete _benefits[idx].___id;
+				delete _benefits[idx].___s;
+
+				// _benefits[idx].
+
+				// _benefits[idx].dept = depts({id:_benefits[idx].id}).get()[0].descr
+			}
+
+			// console.log(_benefits)
+
+			return [200, {rows:_benefits, count:benefits().count()}, {}];
 		});
     }
 ]);

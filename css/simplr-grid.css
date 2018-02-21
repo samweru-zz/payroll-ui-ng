@@ -59,6 +59,7 @@
 .simplr-grid thead th:first-child{
 
 	border-left:none;
+	width: 10px;
 }
 
 .simplr-grid thead th span{

@@ -39,7 +39,7 @@
 					<tr>
 						<td class="caption">Post</td>
 						<td colspan="3">
-							<select></select>
+							<select ng-model="post" ng-options="post.id as post.descr for post in posts"></select>
 						</td>
 					</tr>
 					<tr>
@@ -75,7 +75,7 @@
 					<tr>
 						<td class="caption">Gender</td>
 						<td colspan="3">
-							<select ng-model="gender" ng-options="gender for gender in genders"></select>
+							<select ng-model="gender" ng-options="key as value for (key, value) in genders"></select>
 						</td>
 					</tr>
 					<tr>
@@ -99,7 +99,7 @@
 					<tr>
 						<td class="caption">Marital Status</td>
 						<td colspan="3">
-							<select ng-model="maritalStatus" ng-options="status for status in maritalStatus"></select>
+							<select ng-model="maritalStatus" ng-options="key as value for (key, value) in maritalStatus"></select>
 						</td>
 					</tr>
 					<tr>
@@ -125,30 +125,33 @@
 			</form>
 		</div>
 	</script>
-	<script type="text/ng-template" charset="utf-8" id="benefit.html">
-		<form id="benefits-form">
+	<script type="text/ng-template" charset="utf-8" id="benefits.html">
+		<form id="benefit-form">
 			<table>
 				<tbody>
 					<tr>
 						<td valign="top" align="left">
-							<input id="name" name="name" type="text"></td>
+							<input id="name" name="name" type="text" ng-model="name"></td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<input id="amt" name="amt" type="text">
+							<input id="amt" name="amt" type="text" ng-model="amt">
 						</td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<textarea id="descr" name="descr" rows="5" cols="60"></textarea>
+							<textarea id="descr" name="descr" rows="5" cols="60" ng-model="descr"></textarea>
 						</td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="perc" name="perc" value="1">
+							<span><input type="checkbox" id="perc" name="perc" 
+										ng-model="perc"
+										ng-true-value="'True'" 
+										ng-false-value="'False'">
 								<b>&nbsp;Percentage?</b>
 							</span>
 						</td>
@@ -156,7 +159,10 @@
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="deduct" name="deduct" value="1">
+							<span><input type="checkbox" id="deduct" name="deduct" 
+										ng-model="deduct"
+										ng-true-value="'True'" 
+										ng-false-value="'False'">
 								<b>&nbsp;Deduction?</b>
 							</span>
 						</td>
@@ -164,7 +170,10 @@
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="taxable" name="taxable" value="1">
+							<span><input type="checkbox" id="taxable" name="taxable" 
+										ng-model="taxable"
+										ng-true-value="'True'" 
+										ng-false-value="'False'">
 								<b>&nbsp;Taxable?</b>
 							</span>
 						</td>
@@ -172,7 +181,10 @@
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="active" name="active" value="1">
+							<span><input type="checkbox" id="active" name="active" 
+											ng-model="active"
+											ng-true-value="'True'" 
+											ng-false-value="'False'">
 								<b>&nbsp;Active?</b>
 							</span>
 						</td>
@@ -189,148 +201,207 @@
 					</tr>
 				</tbody>
 			</table>
+			<table jq-simplr-grid 
+				id='benefits-tbl'
+				url="data/benefits.json"
+				method="POST"
+				title="Benfits & Deductions"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
 		</form>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="posts.html">
-		<table jq-simplr-grid 
-				id='posts-tbl'
-				url="data/posts.json"
-				method="POST"
-				title="Posts"
-				use-pager="true"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				column-hide="['id']"
-				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
+		<div ng-controller="postsController">
+			<table jq-simplr-grid 
+					id='posts-tbl'
+					url="data/posts.json"
+					method="POST"
+					title="Posts"
+					use-pager="true"
+					single-select="true"
+					fix-left-column="true"
+					fix-header="true"
+					resize-columns="true"
+					column-hide='["id", "dept_id"]'
+					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+			<div jq-dialog
+					id="post-dlg"
+					title="Post"
+					modal="true"
+					open={{dialogPostOpen}}
+					cancel-callback="cancelHandle"
+					hide-close-button="false">
+				<form id="post-form">
+					<table>
+						<tbody>
+							<tr>
+								<td valign="top" align="right">Post</td>
+								<td valign="top"><input id="name" name="name" type="text"></td>
+							</tr>
+							<tr>
+								<td valign="top" align="right">Description</td>
+								<td valign="top">
+									<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right">Dept.</td>
+								<td valign="top">
+									<select id="dept" name="dept"></select>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right"></td>
+								<td valign="top">
+									<input type="button" value="Submit">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
 	</script>
-	<script type="text/ng-template" charset="utf-8" id="post.html">
-		<form id="post-form">
-			<table>
-				<tbody>
-					<tr>
-						<td valign="top" align="right">Post</td>
-						<td valign="top"><input id="name" name="name" type="text"></td>
-					</tr>
-					<tr>
-						<td valign="top" align="right">Description</td>
-						<td valign="top">
-							<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="right">Dept.</td>
-						<td valign="top">
-							<select id="dept" name="dept"></select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="right"></td>
-						<td valign="top">
-							<input type="button" value="Submit">
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</script>
+	<!-- <script type="text/ng-template" charset="utf-8" id="post.html">
+		
+	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="depts.html">
-		<table jq-simplr-grid 
-				id='depts-tbl'
-				url="data/depts.json"
-				method="POST"
-				title="Departments"
-				use-pager="true"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				column-hide="['id']"
-				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'50%'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
+		<div ng-controller="deptsController">
+			<table jq-simplr-grid 
+					id='depts-tbl'
+					url="data/depts.json"
+					method="POST"
+					title="Departments"
+					use-pager="true"
+					single-select="true"
+					fix-left-column="true"
+					fix-header="true"
+					resize-columns="true"
+					column-hide="['id']"
+					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'50%'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+			<div jq-dialog
+					id="dept-dlg"
+					title="Post"
+					modal="true"
+					open={{dialogDeptOpen}}
+					cancel-callback="cancelHandle"
+					hide-close-button="false">
+				<form id="dept-form">
+					<table>
+						<tbody>
+							<tr>
+								<td valign="top" align="right">Dept.</td>
+								<td valign="top">
+									<input id="alias" 
+											alias="alias" type="text" 
+											ng-model="alias">
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right">Description</td>
+								<td valign="top">
+									<textarea id="descr" 
+												name="descr" rows="5" cols="30" 
+												ng-model="descr"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right"></td>
+								<td valign="top">
+									<input type="button" value="Submit">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
 	</script>
-	<script type="text/ng-template" charset="utf-8" id="dept.html">
+	<!-- <script type="text/ng-template" charset="utf-8" id="dept.html">
 		<div ng-controller="deptController">
-			<form id="dept-form">
-				<table>
-					<tbody>
-						<tr>
-							<td valign="top" align="right">Dept.</td>
-							<td valign="top">
-								<input id="name" name="name" type="text">
-							</td>
-						</tr>
-						<tr>
-							<td valign="top" align="right">Description</td>
-							<td valign="top">
-								<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td valign="top" align="right"></td>
-							<td valign="top">
-								<input type="button" value="Submit">
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
+			
 		</div>
-	</script>
+	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="roles.html">
-		<table jq-simplr-grid 
-				id='roles-tbl'
-				url="data/roles.json"
-				method="POST"
-				title="Roles"
-				use-pager="true"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				column-hide="['id']"
-				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
-	</script>
-	<script type="text/ng-template" charset="utf-8" id="role.html">
-		<div ng-controller="roleController">
-			<form id="role-form">
-				<table>
-					<tbody>
-						<tr>
-							<td valign="top" align="right">Role</td>
-							<td valign="top">
-								<input id="name" name="name" type="text">
-							</td>
-						</tr>
-						<tr>
-							<td valign="top" align="right">Description</td>
-							<td valign="top">
-								<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td valign="top" align="right"></td>
-							<td valign="top">
-								<input type="button" value="Submit">
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
+		<div ng-controller="rolesController">
+			<table jq-simplr-grid 
+					id='roles-tbl'
+					url="/data/roles.json"
+					method="POST"
+					title="Roles"
+					use-pager="true"
+					single-select="true"
+					fix-left-column="true"
+					fix-header="true"
+					resize-columns="true"
+					column-hide="['id']"
+					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+			<div jq-dialog
+					id="role-dlg"
+					title="Role"
+					modal="true"
+					open={{dialogRoleOpen}}
+					cancel-callback="cancelHandle"
+					hide-close-button="false">
+				<form id="role-form">
+					<table>
+						<tbody>
+							<tr>
+								<td valign="top" align="right">Role</td>
+								<td valign="top">
+									<input id="name" 
+											name="name" 
+											type="text" 
+											ng-model="name">
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right">Description</td>
+								<td valign="top">
+									<textarea id="descr" 
+												name="descr" 
+												rows="5" cols="30" 
+												ng-model="descr"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right"></td>
+								<td valign="top">
+									<input type="button" value="Submit">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
 		</div>
 	</script>
+	<!-- <script type="text/ng-template" charset="utf-8" id="role.html">
+		<div ng-controller="roleController">
+			
+		</div>
+	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 
 				id='employees-tbl'
@@ -407,7 +478,10 @@
 					<tr>
 						<td class="caption">Roles</td>
 						<td>
-							<select name="role" id="role" ng-model="role" ng-options="role for role in roles">
+							<select name="role" 
+										id="role" 
+										ng-model="role" 
+										ng-options="role.id as role.name for role in roles">
 						    </select>
 						</td>
 					</tr>
@@ -451,7 +525,7 @@
 							<li><a href="#!/tax">Tax Relief</a></li>
 						</ul>
 					</li>
-					<li><a href="#!/benefit">Benefits</a></li>
+					<li><a href="#!/benefits">Benefits</a></li>
 					<li><a href="#!/rpt">Reports</a></li>
 				</ul>
 			</li>

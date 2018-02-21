@@ -6,7 +6,7 @@ app.directive('jqDialog', function ($timeout){
             okButton: '@',
             okCallback: '=',
             // cancelButton: '@',
-            // cancelCallback: '=',
+            cancelCallback: '=',
             open: '@',
             title: '@',
             width: '@',
@@ -43,16 +43,30 @@ app.directive('jqDialog', function ($timeout){
                 draggable: attrs.draggable || true,
                 resizable: attrs.resizable,
                 closeOnEscape: attrs.closeOnEscape || false,
-                
+                beforeClose:function(event, ui){
+
+                    // console.log(event)
+
+                    // $(this).dialog('close')
+
+                    // console.
+
+                    // return false;
+                },
                 close: function() {
 
+                    // $(this).preventDefault()
                     // console.log('closing...');
                     //console.log(scope);
-                    /*
-                    $timeout(function() {
-                       scope.$apply(scope.cancelCallback());
-                    },0);    
-                    */
+                    if(scope.cancelCallback)
+                        $timeout(function() {
+                           scope.$apply(scope.cancelCallback());
+                        },0);    
+                    
+
+                    // $(this).dialog('close')//.destroy()
+
+                    // return false;
                 },
                 open: function(event, ui) { 
 

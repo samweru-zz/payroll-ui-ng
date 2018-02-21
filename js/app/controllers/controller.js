@@ -1,16 +1,55 @@
-app.controller("benefitController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
 
-	console.log("Benefit")
+	// $scope.perc = 'False'
+
+	$scope.dblClick = function(){
+
+		var row = $(this).getRow();
+
+		$scope.$apply(function(){
+
+			$scope.name = row.name
+			$scope.amt = row.amount
+			$scope.descr = row.descr
+			$scope.perc = row.percentage
+			$scope.deduct = row.deduct
+			$scope.taxable = row.taxable
+			$scope.active = row.active
+	
+		})
+	}
+
+	$scope.customLoader = function(table, options, builder){
+
+		$http.post("/data/benefits.json", {
+
+		    page:options.pager.page,
+		    rows:options.pager.rows
+		})
+		.then(function(response){
+
+			//total-number-of-rows/rows-per-page
+			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
+
+			// console.log(response);
+			builder(table, response.data, options);
+		});	
+	}	
 }]);
 
 app.controller("postsController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+
+	$scope.cancelHandle = function(){
+
+		$scope.dialogPostOpen = false;
+	}
 
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			$state.go("post-add")				
+			$scope.dialogPostOpen = true;				
 		})
 
 		return [
@@ -23,7 +62,12 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 
 		var row = $(this).getRow();
 
-		$state.go("post-edit", {id:row.id})
+		$scope.$apply(function(){
+
+			$scope.dialogPostOpen = true;
+			// $scope.alias = row.alias
+			// $scope.descr = row.descr
+		})
 	}
 
 	$scope.customLoader = function(table, options, builder){
@@ -33,7 +77,7 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 		    page:options.pager.page,
 		    rows:options.pager.rows
 		})
-		.then( function(response){
+		.then(function(response){
 
 			//total-number-of-rows/rows-per-page
 			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
@@ -56,12 +100,20 @@ app.controller("deptController", ['$scope','$http','$httpBackend','$state', func
 
 app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
 
+	$scope.cancelHandle = function(){
+
+		$scope.dialogDeptOpen = false;
+	}
+
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			$state.go("dept-add")				
+			$scope.$apply(function(){
+
+				$scope.dialogDeptOpen = true;
+			})				
 		})
 
 		return [
@@ -74,7 +126,12 @@ app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", 
 
 		var row = $(this).getRow();
 
-		$state.go("dept-edit", {id:row.id})
+		$scope.$apply(function(){
+
+			$scope.dialogDeptOpen = true;
+			$scope.alias = row.alias
+			$scope.descr = row.descr
+		})
 	}
 
 	$scope.customLoader = function(table, options, builder){
@@ -85,6 +142,8 @@ app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", 
 		    rows:options.pager.rows
 		})
 		.then( function(response){
+
+			console.log(response.data)
 
 			//total-number-of-rows/rows-per-page
 			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
@@ -97,12 +156,20 @@ app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", 
 
 app.controller("rolesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
 
+	$scope.cancelHandle = function(){
+
+		$scope.dialogRoleOpen = false;
+	}
+
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			$state.go("role-add")				
+			$scope.$apply(function(){
+
+				$scope.dialogRoleOpen = true;
+			})		
 		})
 
 		return [
@@ -115,7 +182,12 @@ app.controller("rolesController", ['$scope', '$http', '$httpBackend', "$state", 
 
 		var row = $(this).getRow();
 
-		$state.go("role-edit", {id:row.id})
+		$scope.$apply(function(){
+
+			$scope.dialogRoleOpen = true;
+			$scope.name = row.name
+			$scope.descr = row.descr
+		})
 	}
 
 	$scope.customLoader = function(table, options, builder){
@@ -136,22 +208,16 @@ app.controller("rolesController", ['$scope', '$http', '$httpBackend', "$state", 
 	}
 }]);
 
-app.controller("roleController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+// app.controller("roleController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
 
-	console.log("Role")
-}]);
+// 	console.log("Role")
+// }]);
 
 app.controller("userController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
 
 	$http.post("/data/role-list.json").then( function(response){
 
-		var _roles = response.data;
-
-		var roles_data = {};
-		for(idx in _roles)
-			roles_data[_roles[idx]["id"]] = _roles[idx]["name"];
-
-	 	$scope.roles = roles_data;
+	 	$scope.roles = response.data;
 	});
 }]);
 
@@ -159,13 +225,24 @@ app.controller("employeeController", ['$scope','$http', "$state", function($scop
 
 	console.log("Employee")
 
-	// $http.get("data/employee.json").then( function(response){
+	$http.post("/data/post-list.json").then( function(response){
 
-	// 	var employee = response.data;
+		$scope.posts = response.data;
 
-	//  	$scope.genders = employee.genders;
-	//  	$scope.maritalStatus = employee.maritalStatus;
-	// });	
+	 	$scope.genders = {
+
+	 		"male":"Male",
+	 		"female":"Female",
+	 		"other":"Other"
+	 	}
+
+	 	$scope.maritalStatus = {
+
+	 		"separated": "Separated",
+	 		"married":"Married",
+	 		"divorced":"Divorced"
+	 	}
+	});	
 }]);
 
 app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
