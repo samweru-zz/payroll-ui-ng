@@ -42,13 +42,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
         .state('employee-edit', {
 
             url: '/employee/:id',
-            templateUrl : "employee.html",
+            templateUrl : "employee-edit.html",
 	        controller: "employeeController"
         })
         .state('employee-add', {
 
             url: '/employee/add',
-            templateUrl : "employee.html",
+            templateUrl : "employee-add.html",
 	        controller: "employeeController"
         })
         .state('employees', {
@@ -194,13 +194,22 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 		    var _employees = employees().start(start_from).limit(pager.rows).get()
 
+		    var __employees = [];
+
 		    for(idx in _employees){
 
-				delete _employees[idx].___id;
-				delete _employees[idx].___s;
+				__employees.push({
+
+					"id":_employees[idx].id,
+					"idno":_employees[idx].idno,
+					"firstname":_employees[idx].firstname,
+					"lastname":_employees[idx].lastname,
+					"email":_employees[idx].email,
+					"county":_employees[idx].county,
+				})
 			}
 
-			return [200, {rows:_employees, count:employees().count()}, {}];
+			return [200, {rows:__employees, count:employees().count()}, {}];
 		});
 
 		$httpBackend.whenPOST('/data/depts.json').respond(function(method, url, data, headers){

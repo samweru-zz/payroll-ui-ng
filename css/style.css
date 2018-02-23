@@ -110,3 +110,9 @@ table th {
     border-bottom: 0;
   }
 }
+
+.tab-head{
+
+  cursor: pointer;
+  text-decoration: underline;
+}

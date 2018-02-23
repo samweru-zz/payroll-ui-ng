@@ -1,3 +1,43 @@
+app.controller("employeeController", ['$scope','$http', "$state", function($scope, $http, $state){
+
+	$scope.genders = [
+
+		{
+			id:"male",
+			name: "Male"
+		},
+		{
+			id:"female",
+			name:"Female"
+		},
+		{
+			id:"other",
+			name:"Other"
+		}
+	];
+
+	$scope.maritalStatus = [
+
+		{
+			id:"married",
+			name: "Married"
+		},
+		{
+			id:"divorced",
+			name:"Divorced"
+		},
+		{
+			id:"separated",
+			name:"Separated"
+		}
+	];
+
+	$http.post("/data/post-list.json").then(function(response){
+
+		$scope.posts = response.data
+	})
+}]);
+
 app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
 
 	$scope.toolbars = function(){

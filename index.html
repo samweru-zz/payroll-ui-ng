@@ -32,23 +32,35 @@
 			<table>
 				<tr>
 					<td>
-						<input type="text" name="start_date" ng-model="start_date">
+						<input type="date" name="start_date" 
+								ng-model="start_date"
+								placeholder="Start Date">
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<input type="text" name="end_date" ng-model="end_date">
+						<input type="date" name="end_date" 
+								ng-model="end_date"
+								placeholder="End Date">
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<select name="status" ng-model="status"></select>
+						<select name="status" 
+								ng-model="period_status" 
+								ng-options="state.id as state.name for state in status track by state.id"
+								placeholder="Select Status">
+								<option disabled value="">Select Status</option>
+						</select>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label for="active">
-							<input type="checkbox" id="active" name="active" ng-model="active">
+							<input type="checkbox" id="active" name="active" 
+									ng-model="active"
+									ng-true-value="'Yes'" 
+									ng-false-value="'No'">
 							Active?
 						</label>
 					</td>
@@ -78,109 +90,153 @@
 		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee.html">
-		<div ng-controller="employeeController">
-			<form>
-				<table>
-					<tr>
-						<td class="caption">IDNo</td>
-						<td colspan="3">
-							<input type="text" name="idno">
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Surname</td>
-						<td><input type="text" name="surname"></td>
-						<td class="caption">Othernames</td>
-						<td><input type="text" name="othernames"></td>
-					</tr>
-					<tr>
-						<td class="caption">Post</td>
-						<td colspan="3">
-							<select ng-model="post" ng-options="post.id as post.descr for post in posts"></select>
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Address 1</td>
-						<td><textarea rows="5" cols="30" name="address1"></textarea></td>
-						<td class="caption">Address 2</td>
-						<td><textarea rows="5" cols="30" name="address2"></textarea></td>
-					</tr>
-					<tr>
-						<td class="caption">Phone 1</td>
-						<td><input type="text" name="phone1"></td>
-						<td class="caption">Phone 2</td>
-						<td><input type="text" name="phone2"></td>
-					</tr>
-					<tr>
-						<td class="caption">Email 1</td>
-						<td><input type="text" name="email1"></td>
-						<td class="caption">Email 2</td>
-						<td><input type="text" name="email2"></td>
-					</tr>
-					<tr>
-						<td class="caption">NSSF</td>
-						<td><input type="text" name="nssf"></td>
-						<td class="caption">NHIF</td>
-						<td><input type="text" name="nhif"></td>
-					</tr>
-					<tr>
-						<td class="caption">PIN</td>
-						<td colspan="3">
-							<input type="text" name="pin">
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Gender</td>
-						<td colspan="3">
-							<select ng-model="gender" ng-options="key as value for (key, value) in genders"></select>
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Country</td>
-						<td><input type="text" name="country"></td>
-						<td class="caption">City</td>
-						<td><input type="text" name="city"></td>
-					</tr>
-					<tr>
-						<td class="caption">DOB</td>
-						<td colspan="3">
-							<input type="date" name="dob">
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Start Date</td>
-						<td><input type="date" name="start_date"></td>
-						<td class="caption">End Date</td>
-						<td><input type="date" name="end_date"></td>
-					</tr>
-					<tr>
-						<td class="caption">Marital Status</td>
-						<td colspan="3">
-							<select ng-model="maritalStatus" ng-options="key as value for (key, value) in maritalStatus"></select>
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Bank Details</td>
-						<td colspan="3">
-							<textarea rows="5" cols="30"></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td class="caption">Active</td>
-						<td colspan="3">
-							<input type="checkbox" name="active">
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td colspan="3">
-							<input type="submit" value="Submit" ng-click="submit()">
-							<input type="reset" value="Reset">
-						</td>
-					</tr>
-				</table>
-			</form>
+		<form>
+			<table>
+				<tr>
+					<td class="caption">IDNo</td>
+					<td colspan="3">
+						<input type="text" name="idno" ng-model="idno">
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Surname</td>
+					<td><input type="text" name="surname"
+											ng-model="surname"></td>
+					<td class="caption">Othernames</td>
+					<td><input type="text" name="othernames" 
+											ng-model="othernames"></td>
+				</tr>
+				<tr>
+					<td class="caption">Post</td>
+					<td colspan="3">
+						<select ng-model="post"
+								ng-options="post.id as post.name for post in posts"></select>
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Address 1</td>
+					<td><textarea rows="5" cols="30" 
+									name="address1" 
+									ng-model="address1"></textarea></td>
+					<td class="caption">Address 2</td>
+					<td><textarea rows="5" cols="30" 
+									name="address2" 
+									ng-model="address2"></textarea></td>
+				</tr>
+				<tr>
+					<td class="caption">Phone 1</td>
+					<td><input type="text" name="phone1" ng-model="phone1"></td>
+					<td class="caption">Phone 2</td>
+					<td><input type="text" name="phone2" ng-model="phone2"></td>
+				</tr>
+				<tr>
+					<td class="caption">Email 1</td>
+					<td><input type="text" name="email1" ng-model="email1"></td>
+					<td class="caption">Email 2</td>
+					<td><input type="text" name="email2" ng-model="email2"></td>
+				</tr>
+				<tr>
+					<td class="caption">NSSF</td>
+					<td><input type="text" name="nssf" ng-model="nssf"></td>
+					<td class="caption">NHIF</td>
+					<td><input type="text" name="nhif" ng-model="nhif"></td>
+				</tr>
+				<tr>
+					<td class="caption">PIN</td>
+					<td colspan="3">
+						<input type="text" name="pin" ng-model="pin">
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Gender</td>
+					<td colspan="3">
+						<select ng-model="gender" 
+								ng-options="gender.id as gender.name for gender in genders"></select>
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Country</td>
+					<td><input type="text" name="country" ng-model="country"></td>
+					<td class="caption">City</td>
+					<td><input type="text" name="city" ng-model="city"></td>
+				</tr>
+				<tr>
+					<td class="caption">DOB</td>
+					<td colspan="3">
+						<input type="date" name="dob" ng-model="dob">
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Start Date</td>
+					<td><input type="date" name="start_date" ng-model="start_date"></td>
+					<td class="caption">End Date</td>
+					<td><input type="date" name="end_date" ng-model="end_date"></td>
+				</tr>
+				<tr>
+					<td class="caption">Marital Status</td>
+					<td colspan="3">
+						<select ng-model="mStatus"
+								ng-options="status.id as status.name for status in maritalStatus"></select>
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Bank Details</td>
+					<td colspan="3">
+						<textarea rows="5" cols="30" ng-model="bank_details"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Active</td>
+					<td colspan="3">
+						<input type="checkbox" name="active" ng-model="active">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td colspan="3">
+						<input type="submit" value="Submit" ng-click="submit()">
+						<input type="reset" value="Reset">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="employee-add.html">
+		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="employee-edit.html">
+		<div ng-init="empTab='emp-det'">
+			<a ng-click="empTab='emp-det'" class="tab-head">Employee Details</a>
+			<span>&nbsp;|&nbsp;</span>
+			<a ng-click="empTab='pay-det'" class="tab-head">Payroll Details</a>
+			<br><span>&nbsp;</span>
+			<div ng-switch="empTab">
+				<div ng-switch-when="pay-det">
+					<table></table>
+				</div>
+				<div ng-switch-when="emp-det">
+					<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
+				</div>
+			</div>
 		</div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="employees.html">
+		<table jq-simplr-grid 
+				id='employees-tbl'
+				url="data/employees.json"
+				method="POST"
+				title="Employees"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="benefits.html">
 		<form id="benefit-form">
@@ -205,45 +261,44 @@
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="perc" name="perc" 
+							<label><input type="checkbox" id="perc" name="perc" 
 										ng-model="perc"
 										ng-true-value="'True'" 
 										ng-false-value="'False'">
-								<b>&nbsp;Percentage?</b>
-							</span>
+							Percentage?</label>
 						</td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="deduct" name="deduct" 
+							<label><input type="checkbox" id="deduct" name="deduct" 
 										ng-model="deduct"
 										ng-true-value="'True'" 
 										ng-false-value="'False'">
-								<b>&nbsp;Deduction?</b>
-							</span>
+							Deduction?</label>
 						</td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="taxable" name="taxable" 
+							<label for="taxable">
+								<input type="checkbox" id="taxable" name="taxable" 
 										ng-model="taxable"
 										ng-true-value="'True'" 
 										ng-false-value="'False'">
-								<b>&nbsp;Taxable?</b>
+							Taxable?</label>
 							</span>
 						</td>
 						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
-							<span><input type="checkbox" id="active" name="active" 
+							<label for="active">
+								<input type="checkbox" id="active" name="active" 
 											ng-model="active"
 											ng-true-value="'True'" 
 											ng-false-value="'False'">
-								<b>&nbsp;Active?</b>
-							</span>
+							Active?</label>
 						</td>
 						<td valign="top"></td>
 					</tr>
@@ -452,24 +507,6 @@
 				</form>
 			</div>
 		</div>
-	</script>
-	<script type="text/ng-template" charset="utf-8" id="employees.html">
-		<table jq-simplr-grid 
-				id='employees-tbl'
-				url="data/employees.json"
-				method="POST"
-				title="Employees"
-				use-pager="true"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				column-hide="['id']"
-				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="login.html">
 		<div ng-controller="loginController" style="display:none;">
