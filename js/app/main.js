@@ -9,29 +9,11 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl : "benefits.html",	
 	        controller: "benefitsController"
         })
-    	.state('post-edit', {
-
-            url:'/post',
-            templateUrl : "post.html",	
-	        controller: "postController"
-        })
-        .state('post-add', {
-
-            url:'/post',
-            templateUrl : "post.html",	
-	        controller: "postController"
-        })
         .state('posts', {
 
             url:'/posts',
             templateUrl : "posts.html",	
 	        controller: "postsController"
-        })
-        .state('post', {
-
-            url:'/post',
-            templateUrl : "post.html",	
-	        controller: "postController"
         })
     	.state('roles', {
 
@@ -45,11 +27,17 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl : "depts.html",	
 	        controller: "deptsController"
         })
-        .state('user', {
+        .state('users', {
 
-            url:'/user',
-            templateUrl : "user.html",	
-	        controller: "userController"
+            url:'/users',
+            templateUrl : "users.html",	
+	        controller: "usersController"
+        })
+        .state('period', {
+
+            url:'/period',
+            templateUrl : "period.html",	
+	        controller: "periodController"
         })
         .state('employee-edit', {
 
@@ -80,13 +68,83 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 }])
 .run(['$httpBackend', "$state", "$location", function ($httpBackend, $state, $location){
 
-     	$httpBackend.whenGET(/(\.html)$/).passThrough();  
+     	$httpBackend.whenGET(/(\.html)$/).passThrough();
+
+     	$httpBackend.whenPOST('data/period.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _periods = period().get()
+
+		    var __periods = [];
+
+		    for(idx in _periods){
+
+		    	__periods.push({
+
+		    		"start":_periods[idx].start,
+		    		"end":_periods[idx].end,
+		    		"status":_periods[idx].status,
+		    		"active":_periods[idx].active?"Yes":"No"
+		    	})
+		    }
+
+		    console.log(__periods);
+
+			return [200, {rows:__periods, count:period().count()}, {}];
+		}); 
+
+     	$httpBackend.whenPOST('/data/users.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _users = users().get()
+
+		    var __users = [];
+
+		    for(idx in _users){
+
+		    	var role = roles({id:_users[idx].role}).first()
+
+		    	__users.push({
+
+		    		username: _users[idx].username,
+		    		role_id:  role.id,
+		    		role_name: role.name
+		    	})
+		    }
+
+			return [200, {rows:__users, count:users().count()}, {}];
+		});  
 
      	$httpBackend.whenPOST('/data/login.json').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
-			return [200, {"username":"sa", "password":"p@55w0rd"}, {}];
+		    data = JSON.parse(data)
+
+		    // console.log(data)
+
+		    var _user = {}
+		    if(!$.isEmptyObject(data))
+		    	_user = users(data).first();
+
+		    var response = {
+
+		    	isLoggedIn:false
+		    };
+
+		    // console.log(_user)
+
+		    if(!$.isEmptyObject(_user)){
+
+		    	response = {
+
+		    		isLoggedIn:true
+		    	}
+		    }
+
+			return [200, response, {}];
 		});
 
 		$httpBackend.whenPOST('/data/role-list.json').respond(function(method, url, data, headers){
@@ -102,7 +160,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 				// delete _roles[idx].descr;
 			}
 
-			console.log(_roles)
+			// console.log(_roles)
 
 			return [200, _roles, {}];
 		});
@@ -162,6 +220,21 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			}
 
 			return [200, {rows:_depts, count:depts().count()}, {}];
+		});
+
+		$httpBackend.whenPOST('/data/dept-list.json').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _depts = depts().get()
+
+		    for(idx in _depts){
+
+				delete _depts[idx].___id;
+				delete _depts[idx].___s;
+			}
+
+			return [200, _depts, {}];
 		});
 
 		$httpBackend.whenPOST('/data/post-list.json').respond(function(method, url, data, headers){

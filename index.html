@@ -14,12 +14,69 @@
 	<script src="js/app/directives/dialog.js"></script>
 	<script src="js/app/directives/simplr-grid.js"></script>
 	<script src="js/app/directives/tree-menu.js"></script>
-	<script src="js/app/controllers/controller.js"></script>
+	<script src="js/app/controllers/benefits.js"></script>
+	<script src="js/app/controllers/dept.js"></script>
+	<script src="js/app/controllers/employee.js"></script>
+	<script src="js/app/controllers/login.js"></script>
+	<script src="js/app/controllers/period.js"></script>
+	<script src="js/app/controllers/post.js"></script>
+	<script src="js/app/controllers/role.js"></script>
+	<script src="js/app/controllers/user.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link type="text/css" rel="stylesheet" href="css/simplr-grid.css">
 </head>
 <body>
+	<script type="text/ng-template" charset="utf-8" id="period.html">
+		<div ng-controller="periodController">
+			<table>
+				<tr>
+					<td>
+						<input type="text" name="start_date" ng-model="start_date">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" name="end_date" ng-model="end_date">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<select name="status" ng-model="status"></select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="active">
+							<input type="checkbox" id="active" name="active" ng-model="active">
+							Active?
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="submit" value="Submit">
+					</td>
+				</tr>
+			</table>
+			<table jq-simplr-grid 
+				id='period-tbl'
+				url="data/period.json"
+				method="POST"
+				title="Period"
+				use-pager="true"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id']"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+		</div>
+	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee.html">
 		<div ng-controller="employeeController">
 			<form>
@@ -203,7 +260,7 @@
 			</table>
 			<table jq-simplr-grid 
 				id='benefits-tbl'
-				url="data/benefits.json"
+				url="/data/benefits.json"
 				method="POST"
 				title="Benfits & Deductions"
 				use-pager="true"
@@ -249,18 +306,25 @@
 						<tbody>
 							<tr>
 								<td valign="top" align="right">Post</td>
-								<td valign="top"><input id="name" name="name" type="text"></td>
+								<td valign="top"><input id="name" 
+														name="name" type="text"
+														ng-model="name"></td>
 							</tr>
 							<tr>
 								<td valign="top" align="right">Description</td>
 								<td valign="top">
-									<textarea id="descr" name="descr" rows="5" cols="30"></textarea>
+									<textarea id="descr" 
+												name="descr" rows="5" cols="30"
+												ng-model="descr"></textarea>
 								</td>
 							</tr>
 							<tr>
 								<td valign="top" align="right">Dept.</td>
 								<td valign="top">
-									<select id="dept" name="dept"></select>
+									<select id="dept" 
+											name="dept"
+											ng-model="dept"
+											ng-options="dept.id as dept.descr for dept in depts track by dept.id"></select>
 								</td>
 							</tr>
 							<tr>
@@ -275,9 +339,6 @@
 			</div>
 		</div>
 	</script>
-	<!-- <script type="text/ng-template" charset="utf-8" id="post.html">
-		
-	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="depts.html">
 		<div ng-controller="deptsController">
 			<table jq-simplr-grid 
@@ -334,11 +395,6 @@
 			</div>
 		</div>
 	</script>
-	<!-- <script type="text/ng-template" charset="utf-8" id="dept.html">
-		<div ng-controller="deptController">
-			
-		</div>
-	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="roles.html">
 		<div ng-controller="rolesController">
 			<table jq-simplr-grid 
@@ -397,11 +453,6 @@
 			</div>
 		</div>
 	</script>
-	<!-- <script type="text/ng-template" charset="utf-8" id="role.html">
-		<div ng-controller="roleController">
-			
-		</div>
-	</script> -->
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 
 				id='employees-tbl'
@@ -459,41 +510,84 @@
 					width="300">{{message}}</div>
 	    </div>
     </script>
-    <script  type="text/ng-template" charset="utf-8" id="user.html">
-    	<div ng-controller="userController">
-			<form name="userForm">
-				<table>
-					<tr>
-						<td class="caption">Username</td>
-						<td><input type="text" name="username" ng-model="username"></td>
-					</tr>
-					<tr>
-						<td class="caption">Password</td>
-						<td><input type="password" name="password" ng-model="password"></td>
-					</tr>
-					<tr>
-						<td class="caption">Confirm Password</td>
-						<td><input type="password" name="cpassword" ng-model="cpassword"></td>
-					</tr>
-					<tr>
-						<td class="caption">Roles</td>
-						<td>
-							<select name="role" 
-										id="role" 
-										ng-model="role" 
-										ng-options="role.id as role.name for role in roles">
-						    </select>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<input type="submit" value="Submit" ng-click="submit()">
-							<input type="reset" value="Reset">
-						</td>
-					</tr>
-				</table>
-			</form>
+    <script  type="text/ng-template" charset="utf-8" id="users.html">
+    	<div ng-controller="usersController">
+    		<table jq-simplr-grid 
+				id='user-tbl'
+				url="/data/users.json"
+				method="POST"
+				title="Users"
+				use-pager="false"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				column-hide="['id', 'role_id']"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+			<div jq-dialog
+					id="reset-pw-dlg"
+					title="Reset Password"
+					modal=true
+					open={{dialogResetPassOpen}}
+					ok-button="Yes"
+					ok-callback="okHandle"
+					cancel-button="No"
+					cancel-callback="cancelResetPassHandle">
+					{{message}}
+			</div>
+			<div jq-dialog
+					id="msg-dlg"
+					title="Info"
+					modal=true
+					open={{dialogMsgOpen}}
+					cancel-callback="cancelMsgHandle"
+					hide-close-button="false">
+					{{infomessage}}
+			</div>
+			<div jq-dialog
+					id="user-dlg"
+					title="User"
+					modal=true
+					open={{dialogUserOpen}}
+					cancel-callback="cancelUserHandle"
+					hide-close-button="false">
+				<form name="user-form">
+					<table>
+						<tr>
+							<td class="caption">Username</td>
+							<td><input type="text" name="username" ng-model="username"></td>
+						</tr>
+						<tr>
+							<td class="caption">Password</td>
+							<td><input type="password" name="password" ng-model="password"></td>
+						</tr>
+						<tr>
+							<td class="caption">Confirm Password</td>
+							<td><input type="password" name="cpassword" ng-model="cpassword"></td>
+						</tr>
+						<tr>
+							<td class="caption">Roles</td>
+							<td>
+								<select name="role" 
+											id="role" 
+											ng-model="role" 
+											ng-options="role.id as role.name for role in roles track by role.id">
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<input type="submit" value="Submit" ng-click="submit()">
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
 		</div>
     </script>
 	<div jq-tree-menu class="tree">
@@ -502,8 +596,7 @@
 				<a href="">Administration</a>
 				<ul>
 					<li><a href="#!/roles">Role</a></li>
-					<li><a href="#!/user">User</a></li>
-					<li><a href="#!/period">Period</a></li>
+					<li><a href="#!/users">User</a></li>
 				</ul>
 			</li>
 			<li><span>-</span>
@@ -526,6 +619,7 @@
 						</ul>
 					</li>
 					<li><a href="#!/benefits">Benefits</a></li>
+					<li><a href="#!/period">Period</a></li>
 					<li><a href="#!/rpt">Reports</a></li>
 				</ul>
 			</li>

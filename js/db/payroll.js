@@ -1,3 +1,37 @@
+function newDate(date){
+
+	var d = new Date(date);
+
+	return d.toDateString();
+}
+
+users = TAFFY([
+
+	{
+		username:"sa", 
+		password:"p@55w0rd",
+		role:1
+	}
+])
+
+period = TAFFY([
+
+	{
+		id:1,
+		start: newDate("01/01/2018"),
+		end: newDate("01/31/2018"),
+		status: "Closed",
+		active: false
+	},
+	{
+		id:2,
+		start: newDate("02/01/2018"),
+		end: newDate("02/28/2018"),
+		status: "Open",
+		active: true
+	}
+])
+
 roles = TAFFY([
 	
 	{

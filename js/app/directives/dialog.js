@@ -5,7 +5,7 @@ app.directive('jqDialog', function ($timeout){
         scope: { 
             okButton: '@',
             okCallback: '=',
-            // cancelButton: '@',
+            cancelButton: '@',
             cancelCallback: '=',
             open: '@',
             title: '@',
@@ -110,19 +110,19 @@ app.directive('jqDialog', function ($timeout){
                dialogOptions['buttons'].push(btnOptions);    
             }
            
-            // if(attrs.cancelButton) {
+            if(attrs.cancelButton) {
 
-            //    var btnOptions = {
+               var btnOptions = {
 
-            //       text: attrs.cancelButton, 
-            //       click: function(){ 
+                  text: attrs.cancelButton, 
+                  click: function(){ 
 
-            //         scope.$apply(scope.cancelCallback()); 
-            //       }
-            //    };
+                    scope.$apply(scope.cancelCallback()); 
+                  }
+               };
 
-            //    dialogOptions['buttons'].push(btnOptions);    
-            // }
+               dialogOptions['buttons'].push(btnOptions);    
+            }
            
             // Initialize the element as a dialog
             // For some reason this timeout is required, otherwise it doesn't work
