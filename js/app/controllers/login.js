@@ -7,7 +7,7 @@ app.controller("loginController", ['$scope','$http', '$httpBackend', function($s
 
 	$scope.submit = function(){
 
-		$http.post("/data/login.json",{
+		$http.post("/data/login",{
 
 			username:$scope.username,
 			password:$scope.password

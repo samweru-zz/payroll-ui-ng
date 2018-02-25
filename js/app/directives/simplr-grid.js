@@ -12,7 +12,7 @@ app.directive('jqSimplrGrid', function ($timeout){
 			fixLeftColumn:"@",
 			fixHeader:"@",
 			resizeColumns:"@",
-			columnHide:"@",
+			columns:"@",
 			toolbars:"=",
 			css:"@",
 			pager:"@",
@@ -23,22 +23,24 @@ app.directive('jqSimplrGrid', function ($timeout){
 	    replace:false,
 	    link: function (scope, element, attrs) {
 
-	    	// console.log(attrs)
+	    	
 
             var gridOptions = {
 
             	title: attrs.title,
             	method: attrs.method,
             	url: attrs.url,
-            	usePager:attrs.usePager || true,
-            	singleSelect:attrs.singleSelect || false,
-            	fixLeftColumn: attrs.fixLeftColumn || false,
-            	fixHeader: attrs.fixHeader || false,
-            	resizeColumns: attrs.resizeColumns || false,
-            	columnHide: eval("("+attrs.columnHide+")") || null,
+            	usePager:attrs.usePager == "true",
+            	singleSelect:attrs.singleSelect == "true",
+            	fixLeftColumn: attrs.fixLeftColumn == "true",
+            	fixHeader: attrs.fixHeader == "true",
+            	resizeColumns: attrs.resizeColumns == "true",
+            	columns: eval("("+attrs.columns+")") || null,
             	pager: eval("("+attrs.pager+")") || null,
             	css: eval("("+attrs.css+")") || null,
     		}
+
+    		console.log(gridOptions)
 
     		if(scope.getToolbars)
     			gridOptions["toolbars"] = scope.getToolbars();

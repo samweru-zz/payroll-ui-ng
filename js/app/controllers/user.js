@@ -2,7 +2,7 @@ app.controller("usersController", ['$scope','$http','$httpBackend','$state', fun
 
 	function populateRolesSelectBox(scope, row){
 
-		$http.post("/data/role-list.json").then(function(response){
+		$http.post("/data/role-list").then(function(response){
 
 			// console.log(row);
 
@@ -96,7 +96,7 @@ app.controller("usersController", ['$scope','$http','$httpBackend','$state', fun
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/users.json", {
+		$http.post("/data/users", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows

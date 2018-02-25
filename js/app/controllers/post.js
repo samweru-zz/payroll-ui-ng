@@ -2,7 +2,7 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 
 	function populateDeptSelectBox(scope, row){
 
-		$http.post("/data/dept-list.json").then(function(response){
+		$http.post("/data/dept-list").then(function(response){
 
 			// console.log(response.data);
 
@@ -67,7 +67,7 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/posts.json", {
+		$http.post("/data/posts", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows

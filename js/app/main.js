@@ -3,6 +3,12 @@ var app = angular.module("myApp", ["ui.router", "ngMockE2E"]);
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
     $stateProvider
+    	// .state('nhif', {
+
+     //        url:'/nhif',
+     //        templateUrl : "nhif.html",	
+	    //     controller: "nhifController"
+     //    })
         .state('benefits', {
 
             url:'/benefits',
@@ -63,14 +69,60 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl: "login.html",
 	    	controller: "loginController"
         })
+        .state('rates', {
+
+            url: '/rates',
+            templateUrl: "rates.html"//,
+	    	// controller: "loginController"
+        })
+      //   .state('paye', {
+
+      //       url: '/paye',
+      //       templateUrl: "paye.html",
+	    	// controller: "payeController"
+      //   })
 
         $urlRouterProvider.otherwise('/');
 }])
 .run(['$httpBackend', "$state", "$location", function ($httpBackend, $state, $location){
 
+		$httpBackend.whenPOST('/data/nhif').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _nhif = nhif().get()
+
+		    for(idx in _nhif){
+
+				delete _nhif[idx].___id;
+				delete _nhif[idx].___s;
+			}
+
+			return [200, {rows:_nhif, count:nhif().count()}, {}];
+		});
+
+		$httpBackend.whenPOST('/data/paye').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _paye = paye().start(start_from).limit(pager.rows).get()
+
+		    for(idx in _paye){
+
+				delete _paye[idx].___id;
+				delete _paye[idx].___s;
+			}
+
+			return [200, {rows:_paye, count:paye().count()}, {}];
+		});
+
      	$httpBackend.whenGET(/(\.html)$/).passThrough();
 
-     	$httpBackend.whenPOST('data/period.json').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/data/period').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -94,7 +146,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:__periods, count:period().count()}, {}];
 		}); 
 
-     	$httpBackend.whenPOST('/data/users.json').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/data/users').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -117,7 +169,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:__users, count:users().count()}, {}];
 		});  
 
-     	$httpBackend.whenPOST('/data/login.json').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/data/login').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -147,7 +199,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, response, {}];
 		});
 
-		$httpBackend.whenPOST('/data/role-list.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/role-list').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -165,7 +217,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, _roles, {}];
 		});
 
-		$httpBackend.whenPOST('/data/roles.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/roles').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -184,7 +236,36 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_roles, count:roles().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/employees.json').respond(function(method, url, data, headers){
+		///\/contacts\/(\d+)/,
+		$httpBackend.whenPOST(/data\/employee\/(\d+)/, {}, {}, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('Received these data:', method, url, data, headers, params);
+
+		    // var re = /.*\/friends\/(\w+)/;
+      		// var friendId = parseInt(url.replace(re, '$1'), 10);
+
+
+
+		 //    for(idx in _employees){
+
+			// 	__employees.push({
+
+			// 		"id":_employees[idx].id,
+			// 		"idno":_employees[idx].idno,
+			// 		"firstname":_employees[idx].firstname,
+			// 		"lastname":_employees[idx].lastname,
+			// 		"email":_employees[idx].email,
+			// 		"county":_employees[idx].county,
+			// 	})
+			// }
+
+			// return [200, {rows:__employees, count:employees().count()}, {}];
+
+			return [200, {}, {}]
+		});
+
+
+		$httpBackend.whenPOST('/data/employees').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -212,7 +293,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:__employees, count:employees().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/depts.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/depts').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -231,7 +312,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_depts, count:depts().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/dept-list.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/dept-list').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -246,7 +327,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, _depts, {}];
 		});
 
-		$httpBackend.whenPOST('/data/post-list.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/post-list').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -261,7 +342,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, _posts, {}];
 		});
 
-		$httpBackend.whenPOST('/data/posts.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/posts').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -289,7 +370,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:__posts, count:posts().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/benefits.json').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/benefits').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 

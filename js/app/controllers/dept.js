@@ -36,7 +36,7 @@ app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", 
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/depts.json", {
+		$http.post("/data/depts", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows

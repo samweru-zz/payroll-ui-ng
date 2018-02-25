@@ -1,4 +1,4 @@
-app.controller("employeeController", ['$scope','$http', "$state", function($scope, $http, $state){
+app.controller("employeeController", ['$scope','$http', "$state", "$stateParams", function($scope, $http, $state, $stateParams){
 
 	$scope.genders = [
 
@@ -32,10 +32,17 @@ app.controller("employeeController", ['$scope','$http', "$state", function($scop
 		}
 	];
 
-	$http.post("/data/post-list.json").then(function(response){
+	// console.log($stateParams)
 
-		$scope.posts = response.data
+	$http.post("data/employee/1").then(function(response){
+
+
 	})
+
+	// $http.post("/data/post-list").then(function(response){
+
+	// 	$scope.posts = response.data
+	// })
 }]);
 
 app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
@@ -63,7 +70,7 @@ app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$stat
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/employees.json", {
+		$http.post("/data/employees", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows

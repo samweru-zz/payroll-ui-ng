@@ -2,11 +2,13 @@
 <html ng-app="myApp">
 <head>
 	<title></title>
-	<script src="js/core/angular.min.js"></script>
+	<!-- <script src="js/core/angular.min.js"></script> -->
+	<script src="js/core/angular.js"></script>
 	<script src="js/core/jquery-3.3.1.min.js"></script>
 	<script src="js/core/taffy-min.js"></script>
 	<script src="js/core/faker.min.js"></script>
-	<script src="js/lib/angular-mocks.min.js"></script>
+	<!-- <script src="js/lib/angular-mocks.min.js"></script> -->
+	<script src="js/lib/angular-mocks.js"></script>
 	<script src="js/lib/angular-ui-router.min.js"></script>
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
@@ -15,6 +17,7 @@
 	<script src="js/app/directives/dialog.js"></script>
 	<script src="js/app/directives/simplr-grid.js"></script>
 	<script src="js/app/directives/tree-menu.js"></script>
+	<script src="js/app/directives/currency.js"></script>
 	<script src="js/app/controllers/benefits.js"></script>
 	<script src="js/app/controllers/dept.js"></script>
 	<script src="js/app/controllers/employee.js"></script>
@@ -23,11 +26,165 @@
 	<script src="js/app/controllers/post.js"></script>
 	<script src="js/app/controllers/role.js"></script>
 	<script src="js/app/controllers/user.js"></script>
+	<script src="js/app/controllers/paye.js"></script>
+	<script src="js/app/controllers/nhif.js"></script>
+	<script src="js/app/controllers/taxrelief.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link type="text/css" rel="stylesheet" href="css/simplr-grid.css">
 </head>
 <body>
+	<script type="text/ng-template" charset="utf-8" id="rates.html">
+		<div ng-init="rateTab='nhif';active=1">
+			<a ng-click="active=1;rateTab='nhif'" 
+				ng-class="{'active': active===1}" class="tab-head">NHIF</a>
+			<span>&nbsp;|&nbsp;</span>
+			<a ng-click="active=2;rateTab='paye'" 
+				ng-class="{'active': active===2}" class="tab-head">PAYE</a>
+			<span>&nbsp;|&nbsp;</span>
+			<a ng-click="active=3;rateTab='tax-relief'" 
+				ng-class="{'active': active===3}" class="tab-head">Tax Relief</a>
+			<br><span>&nbsp;</span>
+			<div ng-switch="rateTab">
+				<div ng-switch-when="nhif">
+					<div ng-controller="nhifController" ng-include src="'nhif.html'"></div>
+				</div>
+				<div ng-switch-when="paye">
+					<div ng-controller="payeController" ng-include src="'paye.html'"></div>
+				</div>
+				<div ng-switch-when="tax-relief">
+					<div ng-controller="taxReliefController" ng-include src="'relief.html'"></div>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="relief.html">
+		<div>Not Yet!</div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="nhif.html">
+		<form>
+			<table>
+				<tr><td>Kshs.
+					<input currency type="text" 
+								name="ubound" 
+								ng-model="ubound"
+								placeholder="Upper Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td>Kshs.
+					<input currency type="text" 
+								name="lbound" 
+								ng-model="lbound"
+								placeholder="Lower Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td>Kshs.
+					<input type="text" 
+								name="amount" 
+								ng-model="amount"
+								placeholder="Amount"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td><input type="submit" text="Submit">
+					</td>
+				</tr>
+			</table>
+		</form>
+		<table jq-simplr-grid 
+				id='nhif-tbl'
+				url="/data/nhif"
+				method="POST"
+				title="NHIF"
+				use-pager="false"
+				single-select="true"
+				fix-left-column="true"
+				columns="{
+
+					lbound:{name:'Lower Bound', css:{textAlign:'right'}},
+					ubound:{name:'Upper Bound', css:{textAlign:'right'}},
+					amt:{name:'Amount', css:{textAlign:'right'}},
+				}"
+				fix-header="true"
+				resize-columns="true"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="paye.html">
+		<form>
+			<table>
+				<tr><td>Kshs.
+					<input currency type="text" 
+								name="annual_ubound" 
+								ng-model="annual_ubound"
+								placeholder="Annual Upper Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td>Kshs.
+					<input currency type="text" 
+								name="annual_lbound" 
+								ng-model="annual_lbound"
+								placeholder="Annual Lower Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td>Kshs.
+					<input type="text" 
+								name="monthly_ubound" 
+								ng-model="monthly_ubound"
+								placeholder="Monthly Upper Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td>Kshs.
+					<input type="text" 
+								name="monthly_lbound" 
+								ng-model="monthly_lbound"
+								placeholder="Monthly Upper Bound"
+								style="text-align:right">
+					</td>
+				</tr>
+				<tr><td><input type="text" 
+								name="tax_rate" 
+								ng-model="tax_rate"
+								placeholder="Tax Rate"
+								style="text-align:right"> %
+					</td>
+				</tr>
+				<tr><td><input type="submit" text="Submit">
+					</td>
+				</tr>
+			</table>
+		</form>
+		<table jq-simplr-grid 
+				id='paye-tbl'
+				url="/data/paye"
+				method="POST"
+				title="Paye"
+				use-pager="false"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				columns = "{
+
+					annual_lbound:{name:'Annual Lower Bound', css:{textAlign:'right'}},
+					annual_ubound:{name:'Annual Upper Bound', css:{textAlign:'right'}},
+					monthly_lbound:{name:'Monthly Lower Bound', css:{textAlign:'right'}},
+					monthly_ubound:{name:'Monthly Upper Bound', css:{textAlign:'right'}},
+				}"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
+	</script>
 	<script type="text/ng-template" charset="utf-8" id="period.html">
 		<div ng-controller="periodController">
 			<table>
@@ -74,7 +231,7 @@
 			</table>
 			<table jq-simplr-grid 
 				id='period-tbl'
-				url="data/period.json"
+				url="/data/period"
 				method="POST"
 				title="Period"
 				use-pager="true"
@@ -82,7 +239,7 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				column-hide="['id']"
+				columns="{'id':{name:'#', css:{display:'none'}}}"
 				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
@@ -206,10 +363,12 @@
 		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-edit.html">
-		<div ng-init="empTab='emp-det'">
-			<a ng-click="empTab='emp-det'" class="tab-head">Employee Details</a>
+		<div ng-init="empTab='emp-det';active=1">
+			<a ng-click="empTab='emp-det';active=1" 
+				ng-class="{'active':active===1}" class="tab-head">Employee Details</a>
 			<span>&nbsp;|&nbsp;</span>
-			<a ng-click="empTab='pay-det'" class="tab-head">Payroll Details</a>
+			<a ng-click="empTab='pay-det';active=2" 
+				ng-class="{'active':active===2}" class="tab-head">Payroll Details</a>
 			<br><span>&nbsp;</span>
 			<div ng-switch="empTab">
 				<div ng-switch-when="pay-det">
@@ -224,7 +383,7 @@
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 
 				id='employees-tbl'
-				url="data/employees.json"
+				url="/data/employees"
 				method="POST"
 				title="Employees"
 				use-pager="true"
@@ -232,7 +391,7 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				column-hide="['id']"
+				columns="{'id':{name:'#', css:{display:'none'}}}"
 				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
@@ -316,7 +475,7 @@
 			</table>
 			<table jq-simplr-grid 
 				id='benefits-tbl'
-				url="/data/benefits.json"
+				url="/data/benefits"
 				method="POST"
 				title="Benfits & Deductions"
 				use-pager="true"
@@ -324,7 +483,7 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				column-hide="['id']"
+				columns="{'id':{name:'#', css:{display:'none'}}}"
 				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
@@ -336,7 +495,7 @@
 		<div ng-controller="postsController">
 			<table jq-simplr-grid 
 					id='posts-tbl'
-					url="data/posts.json"
+					url="/data/posts"
 					method="POST"
 					title="Posts"
 					use-pager="true"
@@ -344,7 +503,11 @@
 					fix-left-column="true"
 					fix-header="true"
 					resize-columns="true"
-					column-hide='["id", "dept_id"]'
+					columns="{
+
+						'id':{name:'#', css:{display:'none'}},
+						'dept_id':{name:'Dept Id', css:{display:'none'}}
+					}"
 					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
@@ -399,7 +562,7 @@
 		<div ng-controller="deptsController">
 			<table jq-simplr-grid 
 					id='depts-tbl'
-					url="data/depts.json"
+					url="/data/depts"
 					method="POST"
 					title="Departments"
 					use-pager="true"
@@ -407,7 +570,7 @@
 					fix-left-column="true"
 					fix-header="true"
 					resize-columns="true"
-					column-hide="['id']"
+					columns="{'id':{name:'#', css:{display:'none'}}}"
 					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'50%'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
@@ -455,7 +618,7 @@
 		<div ng-controller="rolesController">
 			<table jq-simplr-grid 
 					id='roles-tbl'
-					url="/data/roles.json"
+					url="/data/roles"
 					method="POST"
 					title="Roles"
 					use-pager="true"
@@ -463,7 +626,7 @@
 					fix-left-column="true"
 					fix-header="true"
 					resize-columns="true"
-					column-hide="['id']"
+					columns="{'id':{name:'#', css:{display:'none'}}}"
 					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
@@ -552,7 +715,7 @@
     	<div ng-controller="usersController">
     		<table jq-simplr-grid 
 				id='user-tbl'
-				url="/data/users.json"
+				url="/data/users"
 				method="POST"
 				title="Users"
 				use-pager="false"
@@ -560,7 +723,10 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				column-hide="['id', 'role_id']"
+				columns="{
+					'id':{name:'#', css:{display:'none'}},
+					'role_id':{name:'Role Id', css:{display:'none'}}
+				}"
 				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
@@ -648,13 +814,14 @@
 			<li><span>-</span>
 				<a href="">Payroll</a>
 				<ul>
-					<li><span>-</span>
+					<li><a href="#!/rates">Rates</a>
+					<!-- <span>-</span>
 						<a href="">Rates</a>
 						<ul>
 							<li><a href="#!/nhif">NHIF</a></li>
 							<li><a href="#!/paye">PAYE</a></li>
 							<li><a href="#!/tax">Tax Relief</a></li>
-						</ul>
+						</ul> -->
 					</li>
 					<li><a href="#!/benefits">Benefits</a></li>
 					<li><a href="#!/period">Period</a></li>

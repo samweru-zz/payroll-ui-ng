@@ -116,3 +116,8 @@ table th {
   cursor: pointer;
   text-decoration: underline;
 }
+
+a.tab-head.active{
+
+  font-weight: bold;
+}

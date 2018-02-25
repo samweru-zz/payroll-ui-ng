@@ -36,7 +36,7 @@ app.controller("rolesController", ['$scope', '$http', '$httpBackend', "$state", 
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/roles.json", {
+		$http.post("/data/roles", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows

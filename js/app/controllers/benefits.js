@@ -21,7 +21,7 @@ app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', 
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/benefits.json", {
+		$http.post("/data/benefits", {
 
 		    page:options.pager.page,
 		    rows:options.pager.rows
