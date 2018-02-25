@@ -59,7 +59,21 @@
 		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="relief.html">
-		<div>Not Yet!</div>
+		<table jq-simplr-grid 
+				id='relief-tbl'
+				url="/data/relief"
+				method="POST"
+				title="Tax Relief"
+				use-pager="false"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"
+				get-toolbars="toolbars"></table>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="nhif.html">
 		<form>
@@ -403,73 +417,65 @@
 			<table>
 				<tbody>
 					<tr>
-						<td valign="top" align="left">
-							<input id="name" name="name" type="text" ng-model="name"></td>
-						<td valign="top"></td>
+						<td valign="top" align="left" colspan="2">
+							<input id="name" name="name" type="text" ng-model="name">
+						</td>
 					</tr>
 					<tr>
-						<td valign="top" align="left">
+						<td valign="top" align="left" colspan="2">
 							<input id="amt" name="amt" type="text" ng-model="amt">
 						</td>
-						<td valign="top"></td>
 					</tr>
 					<tr>
-						<td valign="top" align="left">
+						<td valign="top" align="left" colspan="2">
 							<textarea id="descr" name="descr" rows="5" cols="60" ng-model="descr"></textarea>
 						</td>
-						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
 							<label><input type="checkbox" id="perc" name="perc" 
 										ng-model="perc"
-										ng-true-value="'True'" 
-										ng-false-value="'False'">
+										ng-true-value="'Yes'" 
+										ng-false-value="'No'">
 							Percentage?</label>
 						</td>
-						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
 							<label><input type="checkbox" id="deduct" name="deduct" 
 										ng-model="deduct"
-										ng-true-value="'True'" 
-										ng-false-value="'False'">
+										ng-true-value="'Yes'" 
+										ng-false-value="'No'">
 							Deduction?</label>
 						</td>
-						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
 							<label for="taxable">
 								<input type="checkbox" id="taxable" name="taxable" 
 										ng-model="taxable"
-										ng-true-value="'True'" 
-										ng-false-value="'False'">
+										ng-true-value="'Yes'" 
+										ng-false-value="'No'">
 							Taxable?</label>
 							</span>
 						</td>
-						<td valign="top"></td>
 					</tr>
 					<tr>
 						<td valign="top" align="left">
 							<label for="active">
 								<input type="checkbox" id="active" name="active" 
 											ng-model="active"
-											ng-true-value="'True'" 
-											ng-false-value="'False'">
+											ng-true-value="'Yes'" 
+											ng-false-value="'No'">
 							Active?</label>
 						</td>
-						<td valign="top"></td>
 					</tr>
-					<tr></tr>
 					<tr>
-						<td valign="top" align="left">
+						<td valign="top" align="left" colspan="2">
 							<span id="buttons-benefits-form">
 								<input type="button" value="Submit">
 							</span>
 						</td>
-						<td valign="top"></td>
 					</tr>
 				</tbody>
 			</table>

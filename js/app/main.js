@@ -3,12 +3,6 @@ var app = angular.module("myApp", ["ui.router", "ngMockE2E"]);
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
     $stateProvider
-    	// .state('nhif', {
-
-     //        url:'/nhif',
-     //        templateUrl : "nhif.html",	
-	    //     controller: "nhifController"
-     //    })
         .state('benefits', {
 
             url:'/benefits',
@@ -72,19 +66,27 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
         .state('rates', {
 
             url: '/rates',
-            templateUrl: "rates.html"//,
-	    	// controller: "loginController"
+            templateUrl: "rates.html"
         })
-      //   .state('paye', {
-
-      //       url: '/paye',
-      //       templateUrl: "paye.html",
-	    	// controller: "payeController"
-      //   })
 
         $urlRouterProvider.otherwise('/');
 }])
 .run(['$httpBackend', "$state", "$location", function ($httpBackend, $state, $location){
+
+		$httpBackend.whenPOST('/data/relief').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _relief = relief().get()
+
+		    for(idx in _relief){
+
+				delete _relief[idx].___id;
+				delete _relief[idx].___s;
+			}
+
+			return [200, {rows:_relief, count:relief().count()}, {}];
+		});
 
 		$httpBackend.whenPOST('/data/nhif').respond(function(method, url, data, headers){
 

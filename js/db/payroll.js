@@ -272,40 +272,40 @@ benefits = TAFFY([
 		name:'Travel Expenses',
 		amount:"10000.00",
 		descr:'N/A',
-		percentage:"False",
-		deduct:"False",
-		taxable:"False",
-		active:"True"
+		percentage:false,
+		deduct:false,
+		taxable:false,
+		active:true
 	},
 	{
 		id:6,
 		name:'Child Allowance',
 		amount:"10",
 		descr:'N/A',
-		percentage:"True",
-		deduct:"False",
-		taxable:"False",
-		active:"False"
+		percentage:true,
+		deduct:false,
+		taxable:false,
+		active:false
 	},
 	{
 		id:9,
 		name:'Housing Allowance',
 		amount:"10000.00",
 		descr:'N/A',
-		percentage:"False",
-		deduct:"False",
-		taxable:"True",
-		active:"True"
+		percentage:false,
+		deduct:false,
+		taxable:true,
+		active:true
 	},
 	{
 		id:12,
 		name:"NSSF",
 		amount:"320.00",
 		descr:"National Social Security Fund",
-		percentage:"False",
-		deduct:"True",
-		taxable:"False",
-		active:"True"
+		percentage:false,
+		deduct:true,
+		taxable:false,
+		active:true
 	}
 ])
 
