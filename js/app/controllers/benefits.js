@@ -1,12 +1,42 @@
 app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
 
-	// $scope.perc = 'False'
+	$scope.cancelHandle = function(){
+
+		$scope.dialogBenefitsOpen = false;
+	}
+
+	$scope.toolbars = function(){
+
+		var btnAdd = $(document.createElement("BUTTON")).html("Add")
+		btnAdd.click(function(){
+			
+			$scope.$apply(function(){
+
+				$scope.dialogBenefitsOpen = true;
+
+				$scope.name = ""
+				$scope.amt = ""
+				$scope.descr = ""
+				$scope.perc = ""
+				$scope.deduct = ""
+				$scope.taxable = ""
+				$scope.active = ""
+			})				
+		})
+
+		return [
+
+			[btnAdd]
+		]
+	}
 
 	$scope.dblClick = function(){
 
 		var row = $(this).getRow();
 
 		$scope.$apply(function(){
+
+			$scope.dialogBenefitsOpen = true;
 
 			$scope.name = row.name
 			$scope.amt = row.amount
@@ -33,8 +63,6 @@ app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', 
 
 			var _benefits = response.data.rows;
 
-			// console.log(_benefits)
-
 			for(idx in _benefits){
 
 				_benefits[idx].percentage = _benefits[idx].percentage?"Yes":"No"
@@ -45,7 +73,6 @@ app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', 
 
 			response.data.rows = _benefits
 
-			// console.log(response);
 			builder(table, response.data, options);
 		});	
 	}	

@@ -59,6 +59,36 @@
 		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="relief.html">
+		<table>
+			<tr>
+				<td>
+					<input type="text" name="name" 
+							ng-model="name"
+							placeholder="Name">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Kshs.<input currency type="text" name="monthly" 
+							ng-model="monthly"
+							placeholder="Monthly Amount"
+							style="text-align: right">
+				</td>
+			</tr>
+			<tr>
+				<td><label for="active">
+					<input type="checkbox" name="active" 
+							ng-model="active"
+							ng-true-value="'Yes'" 
+							ng-false-value="'No'">
+				Active?</label></td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" value="Submit">
+				</td>
+			</tr>
+		</table>
 		<table jq-simplr-grid 
 				id='relief-tbl'
 				url="/data/relief"
@@ -69,7 +99,13 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				columns="{
+
+					id:{name:'#', css:{display:'none'}},
+					name:{name:'Name', css:{width:'200px'}},
+					monthly:{name:'Monthly', css:{textAlign:'right', width:'100px'}}
+				}"
+				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
@@ -117,13 +153,13 @@
 				fix-left-column="true"
 				columns="{
 
-					lbound:{name:'Lower Bound', css:{textAlign:'right'}},
-					ubound:{name:'Upper Bound', css:{textAlign:'right'}},
-					amt:{name:'Amount', css:{textAlign:'right'}},
+					lbound:{name:'Lower Bound', css:{textAlign:'right', width:'100px'}},
+					ubound:{name:'Upper Bound', css:{textAlign:'right', width:'100px'}},
+					amt:{name:'Amount', css:{textAlign:'right', width:'100px'}},
 				}"
 				fix-header="true"
 				resize-columns="true"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
@@ -188,12 +224,12 @@
 				resize-columns="true"
 				columns = "{
 
-					annual_lbound:{name:'Annual Lower Bound', css:{textAlign:'right'}},
-					annual_ubound:{name:'Annual Upper Bound', css:{textAlign:'right'}},
-					monthly_lbound:{name:'Monthly Lower Bound', css:{textAlign:'right'}},
-					monthly_ubound:{name:'Monthly Upper Bound', css:{textAlign:'right'}},
+					annual_lbound:{name:'Annual Lower Bound', css:{textAlign:'right', width:'150px'}},
+					annual_ubound:{name:'Annual Upper Bound', css:{textAlign:'right', width:'150px'}},
+					monthly_lbound:{name:'Monthly Lower Bound', css:{textAlign:'right', width:'150px'}},
+					monthly_ubound:{name:'Monthly Upper Bound', css:{textAlign:'right', width:'150px'}},
 				}"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
@@ -201,48 +237,62 @@
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="period.html">
 		<div ng-controller="periodController">
-			<table>
-				<tr>
-					<td>
-						<input type="date" name="start_date" 
-								ng-model="start_date"
-								placeholder="Start Date">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="date" name="end_date" 
-								ng-model="end_date"
-								placeholder="End Date">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<select name="status" 
-								ng-model="period_status" 
-								ng-options="state.id as state.name for state in status track by state.id"
-								placeholder="Select Status">
-								<option disabled value="">Select Status</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label for="active">
-							<input type="checkbox" id="active" name="active" 
-									ng-model="active"
-									ng-true-value="'Yes'" 
-									ng-false-value="'No'">
-							Active?
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="submit" value="Submit">
-					</td>
-				</tr>
-			</table>
+			<div jq-dialog
+					id="period-dlg"
+					title="Period"
+					modal="true"
+					open={{dialogPeriodOpen}}
+					cancel-callback="cancelHandle"
+					hide-close-button="false"
+					get-toolbars="toolbars">
+				<table>
+					<tr>
+						<td>Start Date</td>
+						<td>
+							<input type="date" name="start_date" 
+									ng-model="start_date"
+									placeholder="Start Date">
+						</td>
+					</tr>
+					<tr>
+						<td>End Date</td>
+						<td>
+							<input type="date" name="end_date" 
+									ng-model="end_date"
+									placeholder="End Date">
+						</td>
+					</tr>
+					<tr>
+						<td>Status</td>
+						<td>
+							<select name="status" 
+									ng-model="period_status" 
+									ng-options="state.id as state.name for state in status track by state.id"
+									placeholder="Select Status">
+									<option disabled value="">Select Status</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<label for="active">
+								<input type="checkbox" id="active" name="active" 
+										ng-model="active"
+										ng-true-value="'Yes'" 
+										ng-false-value="'No'">
+								Active?
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" value="Submit">
+						</td>
+					</tr>
+				</table>
+			</div>
 			<table jq-simplr-grid 
 				id='period-tbl'
 				url="/data/period"
@@ -405,7 +455,13 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				columns="{'id':{name:'#', css:{display:'none'}}}"
+				columns="{
+
+					'id':{name:'#', css:{display:'none'}},
+					'idno':{name:'IdNo', css:{width:'10%'}},
+					'firstname':{name:'First Name', css:{width:'15%'}},
+					'lastname':{name:'Last Name', css:{width:'15%'}}
+				}"
 				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
@@ -413,72 +469,91 @@
 				get-toolbars="toolbars"></table>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="benefits.html">
-		<form id="benefit-form">
-			<table>
-				<tbody>
-					<tr>
-						<td valign="top" align="left" colspan="2">
-							<input id="name" name="name" type="text" ng-model="name">
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left" colspan="2">
-							<input id="amt" name="amt" type="text" ng-model="amt">
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left" colspan="2">
-							<textarea id="descr" name="descr" rows="5" cols="60" ng-model="descr"></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left">
-							<label><input type="checkbox" id="perc" name="perc" 
-										ng-model="perc"
-										ng-true-value="'Yes'" 
-										ng-false-value="'No'">
-							Percentage?</label>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left">
-							<label><input type="checkbox" id="deduct" name="deduct" 
-										ng-model="deduct"
-										ng-true-value="'Yes'" 
-										ng-false-value="'No'">
-							Deduction?</label>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left">
-							<label for="taxable">
-								<input type="checkbox" id="taxable" name="taxable" 
-										ng-model="taxable"
-										ng-true-value="'Yes'" 
-										ng-false-value="'No'">
-							Taxable?</label>
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left">
-							<label for="active">
-								<input type="checkbox" id="active" name="active" 
-											ng-model="active"
-											ng-true-value="'Yes'" 
-											ng-false-value="'No'">
-							Active?</label>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" align="left" colspan="2">
-							<span id="buttons-benefits-form">
-								<input type="button" value="Submit">
-							</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+		<div ng-controller="benefitsController">
+			<div jq-dialog
+					id="benefits-dlg"
+					title="Post"
+					modal="true"
+					open={{dialogBenefitsOpen}}
+					cancel-callback="cancelHandle"
+					hide-close-button="false"
+					get-toolbars="toolbars">
+				<form id="benefit-form">
+					<table>
+						<tbody>
+							<tr>
+								<td valign="top">Name</td>
+								<td valign="top" align="left" colspan="2">
+									<input id="name" name="name" type="text" ng-model="name">
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">Amount</td>
+								<td valign="top" align="left" colspan="2">
+									<input id="amt" name="amt" type="text" ng-model="amt">
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">Descr</td>
+								<td valign="top" align="left" colspan="2">
+									<textarea id="descr" name="descr" rows="5" cols="40" ng-model="descr"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td valign="top" align="left">
+									<label><input type="checkbox" id="perc" name="perc" 
+												ng-model="perc"
+												ng-true-value="'Yes'" 
+												ng-false-value="'No'">
+									Percentage?</label>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td valign="top" align="left">
+									<label><input type="checkbox" id="deduct" name="deduct" 
+												ng-model="deduct"
+												ng-true-value="'Yes'" 
+												ng-false-value="'No'">
+									Deduction?</label>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td valign="top" align="left">
+									<label for="taxable">
+										<input type="checkbox" id="taxable" name="taxable" 
+												ng-model="taxable"
+												ng-true-value="'Yes'" 
+												ng-false-value="'No'">
+									Taxable?</label>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td valign="top" align="left">
+									<label for="active">
+										<input type="checkbox" id="active" name="active" 
+													ng-model="active"
+													ng-true-value="'Yes'" 
+													ng-false-value="'No'">
+									Active?</label>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td valign="top" align="left" colspan="2">
+									<span id="buttons-benefits-form">
+										<input type="button" value="Submit">
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
 			<table jq-simplr-grid 
 				id='benefits-tbl'
 				url="/data/benefits"
@@ -489,13 +564,20 @@
 				fix-left-column="true"
 				fix-header="true"
 				resize-columns="true"
-				columns="{'id':{name:'#', css:{display:'none'}}}"
+				columns="{
+
+					'id':{name:'#', css:{display:'none'}},
+					'percentage':{name:'Percentage', css:{width:'100px'}},
+					'deduct':{name:'Deduction', css:{width:'100px'}},
+					'taxable':{name:'Taxable', css:{width:'100px'}},
+					'active':{name:'Active', css:{width:'100px'}}
+				}"
 				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
 				get-toolbars="toolbars"></table>
-		</form>
+		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="posts.html">
 		<div ng-controller="postsController">
@@ -512,7 +594,9 @@
 					columns="{
 
 						'id':{name:'#', css:{display:'none'}},
-						'dept_id':{name:'Dept Id', css:{display:'none'}}
+						'dept_id':{name:'Dept Id', css:{display:'none'}},
+						'dept_name':{name:'Dept. Name', css:{width:'200px'}},
+						'name':{name:'Post Name', css:{width:'200px'}},
 					}"
 					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
 					pager="{page:1,rows:10,list:[10,20]}"
@@ -632,8 +716,13 @@
 					fix-left-column="true"
 					fix-header="true"
 					resize-columns="true"
-					columns="{'id':{name:'#', css:{display:'none'}}}"
-					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+					columns="{
+
+						'id':{name:'#', css:{display:'none'}},
+						'name':{name:'Name', css:{width:'200px'}},
+						'descr':{name:'Description', css:{width:'200px'}}
+					}"
+					css="{capsuleWidth:'100%',gridHeight:'400px'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
 					custom-ajax-loader="customLoader"
@@ -731,9 +820,11 @@
 				resize-columns="true"
 				columns="{
 					'id':{name:'#', css:{display:'none'}},
-					'role_id':{name:'Role Id', css:{display:'none'}}
+					'role_id':{name:'Role Id', css:{display:'none'}},
+					'role_name':{name:'Role Name', css:{width:'200px'}},
+					'username':{name:'Username', css:{width:'100px'}},
 				}"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"

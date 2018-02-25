@@ -239,7 +239,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 		});
 
 		///\/contacts\/(\d+)/,
-		$httpBackend.whenPOST(/data\/employee\/(\d+)/, {}, {}, ['id']).respond(function(method, url, data, headers, params){
+		$httpBackend.when("POST", /data\/employee\/(\d+)/, {}, {}, ['id']).respond(function(method, url, data, headers, params){
 
 		    console.log('Received these data:', method, url, data, headers, params);
 

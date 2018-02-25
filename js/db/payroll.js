@@ -173,7 +173,7 @@ relief = TAFFY([
 	{
 		id:4,
 		name:"Allowable HOSP Contribution",
-		monthy:4000,
+		monthly:4000,
 		active:false
 	},
 	{
