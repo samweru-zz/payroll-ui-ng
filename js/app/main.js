@@ -73,6 +73,47 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 }])
 .run(['$httpBackend', "$state", "$location", function ($httpBackend, $state, $location){
 
+		$httpBackend.whenGET(/(\.html)$/).passThrough();
+
+		// $httpBackend.when("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+		// $httpBackend.whenPOST(/\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+		$httpBackend.expect("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('Received these data:', method, url, data, headers, params);
+
+      		var _employee = employees({id:parseInt(params.id)}).first()
+
+			return [200, _employee, {}];
+		});
+
+		$httpBackend.whenPOST('/data/employees').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _employees = employees().start(start_from).limit(pager.rows).get()
+
+		    var __employees = [];
+
+		    for(idx in _employees){
+
+				__employees.push({
+
+					"id":_employees[idx].id,
+					"idno":_employees[idx].idno,
+					"firstname":_employees[idx].firstname,
+					"lastname":_employees[idx].lastname,
+					"email":_employees[idx].email,
+					"county":_employees[idx].county,
+				})
+			}
+
+			return [200, {rows:__employees, count:employees().count()}, {}];
+		});
+
 		$httpBackend.whenPOST('/data/relief').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
@@ -121,8 +162,6 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 			return [200, {rows:_paye, count:paye().count()}, {}];
 		});
-
-     	$httpBackend.whenGET(/(\.html)$/).passThrough();
 
      	$httpBackend.whenPOST('/data/period').respond(function(method, url, data, headers){
 
@@ -177,8 +216,6 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 		    data = JSON.parse(data)
 
-		    // console.log(data)
-
 		    var _user = {}
 		    if(!$.isEmptyObject(data))
 		    	_user = users(data).first();
@@ -187,8 +224,6 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 		    	isLoggedIn:false
 		    };
-
-		    // console.log(_user)
 
 		    if(!$.isEmptyObject(_user)){
 
@@ -211,10 +246,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 				delete _roles[idx].___id;
 				delete _roles[idx].___s;
-				// delete _roles[idx].descr;
 			}
-
-			// console.log(_roles)
 
 			return [200, _roles, {}];
 		});
@@ -236,63 +268,6 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			}
 
 			return [200, {rows:_roles, count:roles().count()}, {}];
-		});
-
-		///\/contacts\/(\d+)/,
-		$httpBackend.when("POST", /data\/employee\/(\d+)/, {}, {}, ['id']).respond(function(method, url, data, headers, params){
-
-		    console.log('Received these data:', method, url, data, headers, params);
-
-		    // var re = /.*\/friends\/(\w+)/;
-      		// var friendId = parseInt(url.replace(re, '$1'), 10);
-
-
-
-		 //    for(idx in _employees){
-
-			// 	__employees.push({
-
-			// 		"id":_employees[idx].id,
-			// 		"idno":_employees[idx].idno,
-			// 		"firstname":_employees[idx].firstname,
-			// 		"lastname":_employees[idx].lastname,
-			// 		"email":_employees[idx].email,
-			// 		"county":_employees[idx].county,
-			// 	})
-			// }
-
-			// return [200, {rows:__employees, count:employees().count()}, {}];
-
-			return [200, {}, {}]
-		});
-
-
-		$httpBackend.whenPOST('/data/employees').respond(function(method, url, data, headers){
-
-		    console.log('Received these data:', method, url, data, headers);
-
-		    var pager = JSON.parse(data);
-
-		    var start_from = (pager.page - 1) * pager.rows;
-
-		    var _employees = employees().start(start_from).limit(pager.rows).get()
-
-		    var __employees = [];
-
-		    for(idx in _employees){
-
-				__employees.push({
-
-					"id":_employees[idx].id,
-					"idno":_employees[idx].idno,
-					"firstname":_employees[idx].firstname,
-					"lastname":_employees[idx].lastname,
-					"email":_employees[idx].email,
-					"county":_employees[idx].county,
-				})
-			}
-
-			return [200, {rows:__employees, count:employees().count()}, {}];
 		});
 
 		$httpBackend.whenPOST('/data/depts').respond(function(method, url, data, headers){
@@ -386,13 +361,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 				delete _benefits[idx].___id;
 				delete _benefits[idx].___s;
-
-				// _benefits[idx].
-
-				// _benefits[idx].dept = depts({id:_benefits[idx].id}).get()[0].descr
 			}
-
-			// console.log(_benefits)
 
 			return [200, {rows:_benefits, count:benefits().count()}, {}];
 		});

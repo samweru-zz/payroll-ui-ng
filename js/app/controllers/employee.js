@@ -34,9 +34,9 @@ app.controller("employeeController", ['$scope','$http', "$state", "$stateParams"
 
 	// console.log($stateParams)
 
-	$http.post("data/employee/1").then(function(response){
+	$http.post("/data/employee/1").then(function(response){
 
-
+		console.log(response.data)
 	})
 
 	// $http.post("/data/post-list").then(function(response){

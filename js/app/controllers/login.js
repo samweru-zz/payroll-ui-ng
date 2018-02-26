@@ -1,5 +1,8 @@
 app.controller("loginController", ['$scope','$http', '$httpBackend', function($scope, $http, $httpBackend){
 
+	$scope.username = "sa"
+	$scope.password = "p@55w0rd"
+
 	$scope.okHandle = function(){
 
 		$scope.dialogMsgOpen = false;
