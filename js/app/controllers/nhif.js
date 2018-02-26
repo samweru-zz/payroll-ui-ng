@@ -1,11 +1,16 @@
-app.controller("nhifController", ['$scope','$http', "$state", "$stateParams", "$filter", function($scope, $http, $state, $stateParams, $filter){
+app.controller("nhifController", ['$scope',
+									'$http', 
+									"$stateParams", 
+									"$filter",
+									"nhifService",
+									function($scope, $http, $stateParams, $filter, nhifService){
 
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			// $state.go("employee-add")				
+			//				
 		})
 
 		return [
@@ -18,8 +23,6 @@ app.controller("nhifController", ['$scope','$http', "$state", "$stateParams", "$
 
 		var row = $(this).getRow();
 
-		console.log(row);
-
 		$scope.$apply(function(){
 
 			$scope.lbound = row.lbound
@@ -31,34 +34,23 @@ app.controller("nhifController", ['$scope','$http', "$state", "$stateParams", "$
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post(options.url, {
+		nhifService.getRates(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
-		})
-		.then(function(response){
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
+			var _nhif = data.rows;
 
-			var nhif_rows = response.data.rows;
+			for(idx in _nhif){
 
-			var nhif_list = []
-
-			for(idx in nhif_rows){
-
-				nhif_list.push({
-
-					lbound:$filter("currency")(nhif_rows[idx].lbound, ""),
-					ubound:$filter("currency")(nhif_rows[idx].ubound, ""),
-					amt:$filter("currency")(nhif_rows[idx].amt, ""),
-					descr:nhif_rows[idx].descr
-				})
+				_nhif[idx].lbound = $filter("currency")(_nhif[idx].lbound, ""),
+				_nhif[idx].ubound = $filter("currency")(_nhif[idx].ubound, ""),
+				_nhif[idx].amt = $filter("currency")(_nhif[idx].amt, ""),
+				_nhif[idx].descr = _nhif[idx].descr
 			}
 
-			response.data.rows = nhif_list
+			data.rows = _nhif
 
-			builder(table, response.data, options);
-		});	
+			builder(table, data, options);
+		})	
 	}
 }]);

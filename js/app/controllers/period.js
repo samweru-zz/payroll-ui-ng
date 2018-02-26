@@ -1,16 +1,9 @@
-app.controller("periodController", ["$scope", "$http", "$httpBackend", "$state", function($scope, $http, $httpBackend, $state){
+app.controller("periodController", ["$scope", 
+									"$http", 
+									"periodService", 
+									function($scope, $http, periodService){
 
-	$scope.status = [
-
-		{
-			"id":"new",
-			"name":"New"
-		},
-		{
-			"id":"closed",
-			"name":"Closed"
-		}
-	]
+	$scope.status = periodService.getStatus()
 
 	$scope.cancelHandle = function(){
 
@@ -64,18 +57,16 @@ app.controller("periodController", ["$scope", "$http", "$httpBackend", "$state",
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post(options.url, {
+		periodService.getAll(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
+
+			var _periods = data.rows
+
+			for(idx in _periods)
+    			_periods[idx].active = _periods[idx].active?"Yes":"No"
+
+			builder(table, data, options);
 		})
-		.then(function(response){
-
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			// console.log(response);
-			builder(table, response.data, options);
-		});	
 	}
 }])

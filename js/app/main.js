@@ -114,7 +114,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:__employees, count:employees().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/relief').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/taxrelief').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -129,7 +129,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_relief, count:relief().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/nhif').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/nhif/rates').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -144,7 +144,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_nhif, count:nhif().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/paye').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/data/paye/rates').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
@@ -163,28 +163,19 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 			return [200, {rows:_paye, count:paye().count()}, {}];
 		});
 
-     	$httpBackend.whenPOST('/data/period').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/data/periods').respond(function(method, url, data, headers){
 
 		    console.log('Received these data:', method, url, data, headers);
 
 		    var _periods = period().get()
 
-		    var __periods = [];
-
 		    for(idx in _periods){
 
-		    	__periods.push({
-
-		    		"start":_periods[idx].start,
-		    		"end":_periods[idx].end,
-		    		"status":_periods[idx].status,
-		    		"active":_periods[idx].active?"Yes":"No"
-		    	})
+		    	delete _periods[idx].___id;
+				delete _periods[idx].___s;
 		    }
 
-		    console.log(__periods);
-
-			return [200, {rows:__periods, count:period().count()}, {}];
+			return [200, {rows:_periods, count:period().count()}, {}];
 		}); 
 
      	$httpBackend.whenPOST('/data/users').respond(function(method, url, data, headers){
@@ -225,13 +216,8 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 		    	isLoggedIn:false
 		    };
 
-		    if(!$.isEmptyObject(_user)){
-
-		    	response = {
-
-		    		isLoggedIn:true
-		    	}
-		    }
+		    if(!$.isEmptyObject(_user))
+		    	response.isLoggedIn = true
 
 			return [200, response, {}];
 		});

@@ -1,4 +1,7 @@
-app.controller("loginController", ['$scope','$http', '$httpBackend', function($scope, $http, $httpBackend){
+app.controller("loginController", ['$scope',
+									'$http', 
+									'userService',
+									function($scope, $http, userService){
 
 	$scope.username = "sa"
 	$scope.password = "p@55w0rd"
@@ -10,16 +13,9 @@ app.controller("loginController", ['$scope','$http', '$httpBackend', function($s
 
 	$scope.submit = function(){
 
-		$http.post("/data/login",{
+		userService.doAuth($scope.username, $scope.password).then(function(data){
 
-			username:$scope.username,
-			password:$scope.password
-		})
-		.then(function(response){
-
-			// console.log(response);
-
-			if(response.data.isLoggedIn){
+			if(data.isLoggedIn){
 
 			 	$scope.dialogLoginOpen = false;
 			}
@@ -28,6 +24,6 @@ app.controller("loginController", ['$scope','$http', '$httpBackend', function($s
 			 	$scope.message = "Invalid Credentials!";
 			 	$scope.dialogMsgOpen = true;
 			}
-		});
+		})
 	}	
 }]);

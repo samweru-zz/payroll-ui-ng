@@ -1,12 +1,15 @@
-app.controller("usersController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+app.controller("usersController", ['$scope',
+									'$http',
+									'userService',
+									'roleService', 
+									function($scope, $http, userService, roleService){
 
 	function populateRolesSelectBox(scope, row){
 
-		$http.post("/data/role-list").then(function(response){
+		roleService.getList().then(function(data){
 
-			// console.log(row);
-
-			$scope.roles = response.data
+			$scope.roles = data
+			$scope.role = {}
 
 			if(!$.isEmptyObject(row)){
 
@@ -15,10 +18,6 @@ app.controller("usersController", ['$scope','$http','$httpBackend','$state', fun
 					"id": row.role_id,
 					"name":row.role_name
 				}
-			}
-			else{
-
-				$scope.role = {}
 			}
 		})
 	}
@@ -96,20 +95,11 @@ app.controller("usersController", ['$scope','$http','$httpBackend','$state', fun
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/users", {
+		userService.getAll(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
+
+			builder(table, data, options);
 		})
-		.then(function(response){
-
-			// console.log(response.data)
-
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			// console.log(response);
-			builder(table, response.data, options);
-		});	
 	}
 }]);

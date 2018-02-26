@@ -1,11 +1,15 @@
-app.controller("taxReliefController", ['$scope','$http', "$state", "$stateParams", "$filter", function($scope, $http, $state, $stateParams, $filter){
+app.controller("taxReliefController", ['$scope',
+										'$http',
+										"$filter", 
+										"taxReliefService",
+										function($scope, $http, $filter, taxReliefService){
 
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			// $state.go("employee-add")				
+			//			
 		})
 
 		return [
@@ -18,8 +22,6 @@ app.controller("taxReliefController", ['$scope','$http', "$state", "$stateParams
 
 		var row = $(this).getRow();
 
-		console.log(row);
-
 		$scope.$apply(function(){
 
 			// $scope.id = row.id
@@ -31,27 +33,21 @@ app.controller("taxReliefController", ['$scope','$http', "$state", "$stateParams
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post(options.url, {
+		taxReliefService.getAll(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
-		})
-		.then(function(response){
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
+			var _relief = data.rows;
 
-			var relief_rows = response.data.rows;
+			for(idx in _relief){
 
-			for(idx in relief_rows){
-
-				relief_rows[idx].monthly = $filter("currency")(relief_rows[idx].monthly, "")
-				relief_rows[idx].active = relief_rows[idx].active?"Yes":"No"
+				_relief[idx].monthly = $filter("currency")(_relief[idx].monthly, "")
+				_relief[idx].active = _relief[idx].active?"Yes":"No"
 			}
 
-			response.data.rows = relief_rows
+			data.rows = _relief
 
-			builder(table, response.data, options);
-		});	
+			builder(table, data, options);
+		})
 	}
 }])

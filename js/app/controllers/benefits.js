@@ -1,4 +1,8 @@
-app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+app.controller("benefitsController", ['$scope',
+										'$http',
+										'$state', 
+										'benefitsService',
+										function($scope, $http, $state, benefitsService){
 
 	$scope.cancelHandle = function(){
 
@@ -51,17 +55,11 @@ app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', 
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/benefits", {
+		benefitsService.getBenefits(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
-		})
-		.then(function(response){
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			var _benefits = response.data.rows;
+			var _benefits = data.rows;
 
 			for(idx in _benefits){
 
@@ -71,9 +69,9 @@ app.controller("benefitsController", ['$scope','$http','$httpBackend','$state', 
 				_benefits[idx].active = _benefits[idx].active?"Yes":"No"
 			}
 
-			response.data.rows = _benefits
+			data.rows = _benefits
 
-			builder(table, response.data, options);
-		});	
+			builder(table, data, options);
+		})
 	}	
 }]);

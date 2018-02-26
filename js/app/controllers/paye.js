@@ -1,11 +1,15 @@
-app.controller("payeController", ['$scope','$http', "$state", "$stateParams", "$filter", function($scope, $http, $state, $stateParams, $filter){
+app.controller("payeController", ['$scope',
+									'$http', 
+									"$filter", 
+									"payeService",
+									function($scope, $http, $filter, payeService){
 
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
 		btnAdd.click(function(){
 			
-			// $state.go("employee-add")				
+			//				
 		})
 
 		return [
@@ -17,8 +21,6 @@ app.controller("payeController", ['$scope','$http', "$state", "$stateParams", "$
 	$scope.dblClick = function(){
 
 		var row = $(this).getRow();
-
-		console.log(row);
 
 		$scope.$apply(function(){
 
@@ -32,35 +34,24 @@ app.controller("payeController", ['$scope','$http', "$state", "$stateParams", "$
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post(options.url, {
+		payeService.getRates(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
-		})
-		.then(function(response){
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
+			var _paye = data.rows;
 
-			var paye_list = []
+			for(idx in _paye){
 
-			var paye_rows = response.data.rows;
-
-			for(idx in paye_rows){
-
-				paye_list.push({
-
-					annual_lbound:$filter("currency")(paye_rows[idx].annual_lbound, ""),
-					annual_ubound:$filter("currency")(paye_rows[idx].annual_ubound, ""),
-					monthly_lbound:$filter("currency")(paye_rows[idx].monthly_lbound, ""),
-					monthly_ubound:$filter("currency")(paye_rows[idx].monthly_ubound, ""),
-					tax_rate:paye_rows[idx].rate_perc + "%"
-				})
+				_paye[idx].annual_lbound = $filter("currency")(_paye[idx].annual_lbound, "")
+				_paye[idx].annual_ubound = $filter("currency")(_paye[idx].annual_ubound, "")
+				_paye[idx].monthly_lbound = $filter("currency")(_paye[idx].monthly_lbound, "")
+				_paye[idx].monthly_ubound = $filter("currency")(_paye[idx].monthly_ubound, "")
+				_paye[idx].tax_rate = _paye[idx].rate_perc + "%"
 			}
 
-			response.data.rows = paye_list
+			data.rows = _paye
 
-			builder(table, response.data, options);
-		});	
+			builder(table, data, options);
+		})
 	}
 }]);
