@@ -1,4 +1,8 @@
-app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
+app.controller("deptsController", ['$scope', 
+									'$http', 
+									"$state", 
+									"deptService",
+									function($scope, $http, $state, deptService){
 
 	$scope.cancelHandle = function(){
 
@@ -36,20 +40,11 @@ app.controller("deptsController", ['$scope', '$http', '$httpBackend', "$state", 
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/depts", {
+		deptService.getDepts(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
+
+			builder(table, data, options);
 		})
-		.then(function(response){
-
-			console.log(response.data)
-
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			// console.log(response);
-			builder(table, response.data, options);
-		});	
 	}
 }]);

@@ -1,12 +1,16 @@
-app.controller("postsController", ['$scope','$http','$httpBackend','$state', function($scope, $http, $httpBackend, $state){
+app.controller("postsController", ['$scope',
+									'$http',
+									'$state',
+									'postService', 
+									'deptService',
+									function($scope, $http, $state, postService, deptService){
 
 	function populateDeptSelectBox(scope, row){
 
-		$http.post("/data/dept-list").then(function(response){
+		deptService.getList().then(function(data){
 
-			// console.log(response.data);
-
-			$scope.depts = response.data
+			$scope.depts = data
+			$scope.dept = {}
 
 			if(!$.isEmptyObject(row)){
 
@@ -15,10 +19,6 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 					"id": row.dept_id,
 					"descr":row.dept_name
 				}
-			}
-			else{
-
-				$scope.dept = {}
 			}
 		})
 	}
@@ -53,8 +53,6 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 
 		var row = $(this).getRow();
 
-		// console.log(row)
-
 		$scope.$apply(function(){
 
 			$scope.dialogPostOpen = true;
@@ -67,18 +65,11 @@ app.controller("postsController", ['$scope','$http','$httpBackend','$state', fun
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/posts", {
+		postService.getPosts(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
+
+			builder(table, data, options);
 		})
-		.then(function(response){
-
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			// console.log(response);
-			builder(table, response.data, options);
-		});	
 	}	
 }]);

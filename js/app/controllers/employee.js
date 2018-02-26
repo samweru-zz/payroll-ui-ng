@@ -1,51 +1,27 @@
-app.controller("employeeController", ['$scope','$http', "$state", "$stateParams", function($scope, $http, $state, $stateParams){
+app.controller("employeeController", [
+					'$scope',
+					"$stateParams", 
+					"employeeService",
+					"postService", 
+					function($scope, $stateParams, employeeService, postService){
 
-	$scope.genders = [
+	$scope.genders = employeeService.getGenders();
 
-		{
-			id:"male",
-			name: "Male"
-		},
-		{
-			id:"female",
-			name:"Female"
-		},
-		{
-			id:"other",
-			name:"Other"
-		}
-	];
+	$scope.maritalStatus = employeeService.getMaritalStatus();
 
-	$scope.maritalStatus = [
+	if(Object.keys($stateParams).includes("id"))
+		employeeService.get($stateParams["id"]).then(function(data){
 
-		{
-			id:"married",
-			name: "Married"
-		},
-		{
-			id:"divorced",
-			name:"Divorced"
-		},
-		{
-			id:"separated",
-			name:"Separated"
-		}
-	];
+			console.log(data)
+		})
 
-	// console.log($stateParams)
+	postService.getList().then(function(data){
 
-	$http.post("/data/employee/1").then(function(response){
-
-		console.log(response.data)
+		$scope.posts = data
 	})
-
-	// $http.post("/data/post-list").then(function(response){
-
-	// 	$scope.posts = response.data
-	// })
 }]);
 
-app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", function($scope, $http, $httpBackend, $state){
+app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$state", "employeeService", function($scope, $http, $httpBackend, $state, employeeService){
 
 	$scope.toolbars = function(){
 
@@ -70,18 +46,11 @@ app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$stat
 
 	$scope.customLoader = function(table, options, builder){
 
-		$http.post("/data/employees", {
+		employeeService.getEmployees(options.pager).then(function(data){
 
-		    page:options.pager.page,
-		    rows:options.pager.rows
-		})
-		.then( function(response){
+			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			//total-number-of-rows/rows-per-page
-			options.pager.pages = Math.ceil(response.data.count/options.pager.rows);
-
-			// console.log(response);
-			builder(table, response.data, options);
+			builder(table, data, options);
 		});	
 	}
 }]);
