@@ -327,100 +327,102 @@
 				<tr>
 					<td class="caption">IDNo</td>
 					<td colspan="3">
-						<input type="text" name="idno" ng-model="idno">
+						<input type="text" name="idno" ng-model="employee.idno">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Surname</td>
 					<td><input type="text" name="surname"
-											ng-model="surname"></td>
+											ng-model="employee.surname"></td>
 					<td class="caption">Othernames</td>
 					<td><input type="text" name="othernames" 
-											ng-model="othernames"></td>
+											ng-model="employee.othernames"></td>
 				</tr>
 				<tr>
 					<td class="caption">Post</td>
 					<td colspan="3">
-						<select ng-model="post"
-								ng-options="post.id as post.name for post in posts"></select>
+						<select ng-model="employee.post"
+								ng-options="post.id as post.name for post in posts track by post.id"></select>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Address 1</td>
 					<td><textarea rows="5" cols="30" 
 									name="address1" 
-									ng-model="address1"></textarea></td>
+									ng-model="employee.address1"></textarea></td>
 					<td class="caption">Address 2</td>
 					<td><textarea rows="5" cols="30" 
 									name="address2" 
-									ng-model="address2"></textarea></td>
+									ng-model="employee.address2"></textarea></td>
 				</tr>
 				<tr>
 					<td class="caption">Phone 1</td>
-					<td><input type="text" name="phone1" ng-model="phone1"></td>
+					<td><input type="text" name="phone1" ng-model="employee.phone1"></td>
 					<td class="caption">Phone 2</td>
-					<td><input type="text" name="phone2" ng-model="phone2"></td>
+					<td><input type="text" name="phone2" ng-model="employee.phone2"></td>
 				</tr>
 				<tr>
 					<td class="caption">Email 1</td>
-					<td><input type="text" name="email1" ng-model="email1"></td>
+					<td><input type="text" name="email1" ng-model="employee.email1"></td>
 					<td class="caption">Email 2</td>
-					<td><input type="text" name="email2" ng-model="email2"></td>
+					<td><input type="text" name="email2" ng-model="employee.email2"></td>
 				</tr>
 				<tr>
 					<td class="caption">NSSF</td>
-					<td><input type="text" name="nssf" ng-model="nssf"></td>
+					<td><input type="text" name="nssf" ng-model="employee.nssf"></td>
 					<td class="caption">NHIF</td>
-					<td><input type="text" name="nhif" ng-model="nhif"></td>
+					<td><input type="text" name="nhif" ng-model="employee.nhif"></td>
 				</tr>
 				<tr>
 					<td class="caption">PIN</td>
 					<td colspan="3">
-						<input type="text" name="pin" ng-model="pin">
+						<input type="text" name="pin" ng-model="employee.pin">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Gender</td>
 					<td colspan="3">
-						<select ng-model="gender" 
-								ng-options="gender.id as gender.name for gender in genders"></select>
+						<select ng-model="employee.gender" 
+								ng-options="gender.id as gender.name for gender in genders track by gender.id"></select>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Country</td>
-					<td><input type="text" name="country" ng-model="country"></td>
+					<td><input type="text" name="country" ng-model="employee.country"></td>
 					<td class="caption">City</td>
-					<td><input type="text" name="city" ng-model="city"></td>
+					<td><input type="text" name="city" ng-model="employee.city"></td>
 				</tr>
 				<tr>
 					<td class="caption">DOB</td>
 					<td colspan="3">
-						<input type="date" name="dob" ng-model="dob">
+						<input type="date" name="dob" ng-model="employee.dob">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Start Date</td>
-					<td><input type="date" name="start_date" ng-model="start_date"></td>
+					<td><input type="date" name="start_date" ng-model="employee.start_date"></td>
 					<td class="caption">End Date</td>
-					<td><input type="date" name="end_date" ng-model="end_date"></td>
+					<td><input type="date" name="end_date" ng-model="employee.end_date"></td>
 				</tr>
 				<tr>
 					<td class="caption">Marital Status</td>
 					<td colspan="3">
-						<select ng-model="mStatus"
-								ng-options="status.id as status.name for status in maritalStatus"></select>
+						<select ng-model="employee.mStatus"
+								ng-options="status.id as status.name for status in maritalStatus track by status.id"></select>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Bank Details</td>
 					<td colspan="3">
-						<textarea rows="5" cols="30" ng-model="bank_details"></textarea>
+						<textarea rows="5" cols="30" ng-model="employee.bank_details"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Active</td>
 					<td colspan="3">
-						<input type="checkbox" name="active" ng-model="active">
+						<input type="checkbox" name="active" ng-model="employee.active"
+								ng-true-value="'Active'"
+								nt-false-value="'Inactive'">
 					</td>
 				</tr>
 				<tr>
@@ -789,13 +791,13 @@
 					<tr>
 						<td class="caption">Username</td>
 						<td>
-							<input type="text" name="username" ng-model="username"/>
+							<input type="text" name="username" ng-model="login.username"/>
 						</td>
 					</tr>
 					<tr>
 						<td class="caption">Password</td>
 						<td>
-							<input type="password" name="password" ng-model="password"/>
+							<input type="password" name="password" ng-model="login.password"/>
 						</td>
 					</tr>
 					<tr>

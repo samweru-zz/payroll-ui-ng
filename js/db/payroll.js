@@ -310,9 +310,9 @@ benefits = TAFFY([
 ])
 
 
-function randomNumber(times){
-
-	return Math.floor(Math.random() * parseInt("9"+Array(times).join(9)))
+var randomFixedInteger = function (length) {
+	
+    return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
 }
 
 var i = 1;
@@ -329,15 +329,16 @@ while(i<=20){
 	employees__.push({
 
 		id: i++, 
-		idno: randomNumber(7),
-		nssf_no:randomNumber(9),
-		nhif_no:randomNumber(7),
+		idno: randomFixedInteger(7),
+		nssf_no:randomFixedInteger(9),
+		nhif_no:randomFixedInteger(7),
 		pin:faker.random.alphaNumeric(12).toUpperCase(),
 		email: emailAddr.toLowerCase(),
 		mobile: faker.phone.phoneNumber(), 
 		status: faker.random.arrayElement(["Active","Inactive"]),
 		address: faker.address.streetName(),
 		marital_status: faker.random.arrayElement(["Single","Married","Separated","Divorced"]),
+		gender: faker.random.arrayElement(["Male","Female","Other"]),
 		lastname: lastName, 
 		firstname: firstName,
 		county: faker.address.county(), 
@@ -350,7 +351,10 @@ while(i<=20){
 		other_address:"",
 		other_email:"",
 		other_mobile:"",
-		post:""
+		post:faker.random.arrayElement(posts().get().map(function(l){
+
+			return l.id
+		}))
 	})
 }
 

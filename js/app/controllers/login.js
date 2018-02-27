@@ -3,8 +3,11 @@ app.controller("loginController", ['$scope',
 									'userService',
 									function($scope, $http, userService){
 
-	$scope.username = "sa"
-	$scope.password = "p@55w0rd"
+	$scope.login = {
+
+		username:"sa",
+		password:"p@55w0rd"
+	}
 
 	$scope.okHandle = function(){
 
@@ -13,7 +16,7 @@ app.controller("loginController", ['$scope',
 
 	$scope.submit = function(){
 
-		userService.doAuth($scope.username, $scope.password).then(function(data){
+		userService.doAuth($scope.login.username, $scope.login.password).then(function(data){
 
 			if(data.isLoggedIn){
 

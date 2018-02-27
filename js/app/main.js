@@ -75,9 +75,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 		$httpBackend.whenGET(/(\.html)$/).passThrough();
 
-		// $httpBackend.when("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 		$httpBackend.whenPOST(/\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
-		// $httpBackend.expect("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
 		    console.log('Received these data:', method, url, data, headers, params);
 

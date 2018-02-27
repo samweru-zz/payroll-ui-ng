@@ -4,8 +4,7 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/employee/".concat(id))
-		.then(function(response){
+		$http.post("/data/employee/".concat(id)).then(function(response){
 
 			deferred.resolve(response.data)
 		},
@@ -21,8 +20,7 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/employees", pager)
-		.then(function(response){
+		$http.post("/data/employees", pager).then(function(response){
 
 			deferred.resolve(response.data)
 		},
@@ -34,9 +32,9 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 		return deferred.promise;	
 	}
 
-	this.getGenders = function(){
+	this.getGenders = function(id){
 
-		return [
+		var genders = [
 
 			{
 				id:"male",
@@ -51,11 +49,21 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 				name:"Other"
 			}
 		]
+
+		if(!!id){
+
+			id = id.toLowerCase()
+			for(idx in genders)
+				if(genders[idx].id == id)
+					return genders[idx];
+		}
+
+		return genders;
 	}
 
-	this.getMaritalStatus = function(){
+	this.getMaritalStatus = function(id){
 
-		return [
+		var mStatus = [
 
 			{
 				id:"married",
@@ -70,5 +78,15 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 				name:"Separated"
 			}
 		]
-	}
+
+		if(!!id){
+
+			id = id.toLowerCase()
+			for(idx in mStatus)
+				if(mStatus[idx].id == id)
+					return mStatus[idx];
+		}
+
+		return mStatus;
+	}	
 }])
