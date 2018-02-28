@@ -8,8 +8,6 @@ app.run(['$httpBackend', function ($httpBackend){
 
       		var _benefits = []
 
-      		var _idx = 0
-
       		$.each(employee_benefits({employee:parseInt(params.id)}).get(), function(idx, empBen){
 
       			var benefit = benefits({id:empBen.benefit}).first()
