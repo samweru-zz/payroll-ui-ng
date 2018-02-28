@@ -2,6 +2,45 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		$httpBackend.whenGET(/(\.html)$/).passThrough();
 
+		$httpBackend.whenPOST(/\/data\/employee\/(\d+)\/benefits/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('Received these data:', method, url, data, headers, params);
+
+      		var _benefits = []
+
+      		var _idx = 0
+
+      		$.each(employee_benefits({employee:parseInt(params.id)}).get(), function(idx, empBen){
+
+      			var benefit = benefits({id:empBen.benefit}).first()
+      			delete benefit.___id
+				delete benefit.___s
+
+				var amount = benefit.amount;
+				if(benefit.percentage)
+					amount = amount + "%"
+
+				var type = "Benefit"
+				if(benefit.deduct)
+					type = "Deduction"
+
+				var taxable = "No"
+				if(benefit.taxable)
+					taxable = "Yes"
+
+      			_benefits.push({
+
+      				"id":benefit.id,
+      				"name":benefit.name,
+      				"amount":amount,
+      				"type":type,
+      				"taxable":taxable
+      			})
+      		})
+
+			return [200, {rows:_benefits, count:_benefits.length}, {}];
+		});
+
 		$httpBackend.whenPOST(/\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
 		    console.log('Received these data:', method, url, data, headers, params);
@@ -275,6 +314,26 @@ app.run(['$httpBackend', function ($httpBackend){
 			}
 
 			return [200, {rows:_benefits, count:benefits().count()}, {}];
+		});
+
+		$httpBackend.whenPOST('/data/benefits-list').respond(function(method, url, data, headers){
+
+		    console.log('Received these data:', method, url, data, headers);
+
+		    var _benefits = benefits().get()
+
+		    var __benefits = []
+
+		    for(idx in _benefits){
+
+				__benefits.push({
+
+					"id":_benefits[idx].id,
+					"name":_benefits[idx].name
+				})
+			}
+
+			return [200, __benefits, {}];
 		});
     }
 ]);

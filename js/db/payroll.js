@@ -359,3 +359,17 @@ while(i<=20){
 }
 
 employees = TAFFY(employees__)
+
+employee_benefits = TAFFY([
+
+	{
+		id:1,
+		employee:1,
+		benefit:5
+	},
+	{
+		id:2,
+		employee:1,
+		benefit:6
+	},
+])

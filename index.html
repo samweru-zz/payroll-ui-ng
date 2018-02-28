@@ -29,6 +29,8 @@
 	<script src="js/app/services/role.js"></script>
 	<script src="js/app/services/user.js"></script>
 	<script src="js/app/services/period.js"></script>
+	<script src="js/app/services/payroll.js"></script>
+	<script src="js/app/controllers/payroll.js"></script>
 	<script src="js/app/controllers/benefits.js"></script>
 	<script src="js/app/controllers/dept.js"></script>
 	<script src="js/app/controllers/employee.js"></script>
@@ -436,6 +438,69 @@
 			</table>
 		</form>
 	</script>
+	<script type="text/ng-template" charset="utf-8" id="payroll-details.html">
+		<form>
+			<span>
+				Employee:
+				<b>{{employeeName}}</b>
+			</span></br>
+			<span>&nbsp;</span>
+			<table>
+				<tr>
+					<td class="caption">Salary</td>
+					<td>
+						<input type="text" name="salary" ng-model="salary">
+					</td>
+				</tr>
+				<tr>
+					<td class="caption">Insurance Relief</td>
+					<td>
+						<input type="text" name="in_relief" ng-model="in_relief">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type="submit" value="Submit">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span>&nbsp;</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button>Add</button>
+						<select ng-model="benefit" ng-options="benefit.id as benefit.name for benefit in benefits track by benefit.id">
+							<option disabled value="">Benefit/Deduction</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<table jq-simplr-grid 
+				id='benefits-tbl'
+				url="/data/benefits"
+				method="POST"
+				title="Benfits & Deductions"
+				columns="{
+
+					id:{css:{display:'none'}},
+					//name:{name:'Name', css:{width:'50px'}},
+					amount:{name:'Amount', css:{width:'20%'}},
+					type:{name:'Type', css:{width:'20%'}},
+					taxable:{name:'Taxable', css:{width:'20%'}},
+				}"
+				single-select="true"
+				fix-left-column="true"
+				fix-header="true"
+				resize-columns="true"
+				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'60%'}"
+				pager="{page:1,rows:10,list:[10,20]}"
+				dbl-click-row="dblClick"
+				custom-ajax-loader="customLoader"></table>
+		</form>
+	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-add.html">
 		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
 	</script>
@@ -449,7 +514,8 @@
 			<br><span>&nbsp;</span>
 			<div ng-switch="empTab">
 				<div ng-switch-when="pay-det">
-					<table></table>
+					<div ng-controller="payrollController" 
+							ng-include src="'payroll-details.html'"></div>
 				</div>
 				<div ng-switch-when="emp-det">
 					<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
