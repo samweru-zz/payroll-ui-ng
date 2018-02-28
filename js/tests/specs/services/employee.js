@@ -17,17 +17,22 @@ describe("Employee Service:", function(){
     });
 
 
-    it('should return employee record', function(/*done*/){
+    it('should return employee record', function(){
 
-      var employee = employees({id:1}).first()
+      $httpBackend.expect("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+    
+         console.log('Received these data:', method, url, data, headers, params);
+
+         var employee = employees({id:parseInt(params.id)}).first()
+  
+         return [200, employee, {}];
+      });
 
       var employeeId = 1;
-      $httpBackend.expect("POST", /\/data\/empoyee\/(\d+)/).respond(employee);
-      // $httpBackend.expect("POST", "/data/employee/".concat(employeeId)).respond(employee);
 
       employeeService.get(employeeId).then(function(data){
 
-        expect(data).toEqual(employee);
+        expect(data).toEqual(employees({id:employeeId}).first());
       })
 
       $httpBackend.flush()
