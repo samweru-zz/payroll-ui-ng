@@ -1,8 +1,11 @@
-app.controller("benefitsController", ['$scope',
-										'$http',
-										'$state', 
-										'benefitsService',
-										function($scope, $http, $state, benefitsService){
+app.controller("benefitsController", benefitsController)
+
+benefitsController.$inject = ['$scope',
+								'$http',
+								'$state', 
+								'benefitsService'];
+
+function benefitsController($scope, $http, $state, benefitsService){
 
 	$scope.cancelHandle = function(){
 
@@ -74,4 +77,4 @@ app.controller("benefitsController", ['$scope',
 			builder(table, data, options);
 		})
 	}	
-}]);
+};
