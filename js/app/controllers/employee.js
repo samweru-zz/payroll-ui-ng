@@ -1,9 +1,13 @@
 app.controller("employeeController", [
 					"$scope",
+					"$state",
 					"$stateParams", 
 					"employeeService",
-					"postService", 
-					function($scope, $stateParams, employeeService, postService){
+					"postService",
+					"$cookies", 
+					function($scope, $state, $stateParams, employeeService, postService, $cookies){
+
+	$scope.active = $state.current.name;
 
 	$scope.genders = employeeService.getGenders();
 	$scope.maritalStatus = employeeService.getMaritalStatus();
@@ -70,7 +74,7 @@ app.controller("employeesController", ['$scope', '$http', '$httpBackend', "$stat
 
 		var row = $(this).getRow();
 
-		$state.go("employee-edit", {id:row.id})
+		$state.go("employee.details", {id:row.id})
 	}
 
 	$scope.customLoader = function(table, options, builder){

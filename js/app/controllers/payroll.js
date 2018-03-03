@@ -5,6 +5,8 @@ app.controller("payrollController", [
 					"$stateParams",
 					"payrollService", function($scope, $http, $state, $stateParams, payrollService){
 
+	$scope.$parent.active = $state.current.name;
+
 	payrollService.getEmployeeNameById($stateParams.id).then(function(data){
 
 		$scope.employeeName = data.firstname + " " + data.lastname

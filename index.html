@@ -10,6 +10,7 @@
 	<!-- <script src="js/lib/angular-mocks.min.js"></script> -->
 	<script src="js/lib/angular-mocks.js"></script>
 	<script src="js/lib/angular-ui-router.min.js"></script>
+	<script src="js/lib/angular-cookies.min.js"></script>
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
 	<script src="js/db/payroll.js"></script>
@@ -478,50 +479,65 @@
 					</td>
 				</tr>
 			</table>
-			<table jq-simplr-grid 
-				id='benefits-tbl'
-				url="/data/benefits"
-				method="POST"
-				title="Benfits & Deductions"
-				columns="{
+			<div style="display: block;width: 100%">
+				<div style="float: left;width:50%">
+					<table jq-simplr-grid 
+						id='benefits-tbl'
+						url="/data/benefits"
+						method="POST"
+						title="Benfits & Deductions"
+						columns="{
 
-					id:{css:{display:'none'}},
-					//name:{name:'Name', css:{width:'50px'}},
-					amount:{name:'Amount', css:{width:'20%'}},
-					type:{name:'Type', css:{width:'20%'}},
-					taxable:{name:'Taxable', css:{width:'20%'}},
-				}"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'60%'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"></table>
+							id:{css:{display:'none'}},
+							name:{name:'Name', css:{width:'100px'}},
+							amount:{name:'Amount', css:{width:'75px'}},
+							type:{name:'Type', css:{width:'75px'}},
+							taxable:{name:'Taxable', css:{width:'75px'}},
+						}"
+						single-select="true"
+						fix-left-column="true"
+						fix-header="true"
+						resize-columns="true"
+						css="{capsuleWidth:'100%', gridHeight:'300px'}"
+						pager="{page:1,rows:10,list:[10,20]}"
+						dbl-click-row="dblClick"
+						custom-ajax-loader="customLoader"></table>
+				</div>
+			</div>	
 		</form>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-add.html">
 		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-edit.html">
-		<div ng-init="empTab='emp-det';active=1">
-			<a ng-click="empTab='emp-det';active=1" 
-				ng-class="{'active':active===1}" class="tab-head">Employee Details</a>
+		<!-- <div ng-init="active=1"> -->
+			<!-- <a ng-click="active=1" 
+				ng-class="{'active':active===1}" class="tab-head">Employee Details</a> -->
+			<a ui-sref="employee.details"
+				ng-click="active='employee.details'" 
+				ng-class="{'active':active==='employee.details'}"
+				class="tab-head">Employee Details</a>
 			<span>&nbsp;|&nbsp;</span>
-			<a ng-click="empTab='pay-det';active=2" 
-				ng-class="{'active':active===2}" class="tab-head">Payroll Details</a>
+			<!-- <a ng-click="active=2" 
+				 class="tab-head">Payroll Details</a> -->
+			<a ui-sref="employee.details.payroll" 
+				ng-click="active='employee.details.payroll'"
+				ng-class="{'active':active==='employee.details.payroll'}"
+				class="tab-head">Payroll Details</a>
 			<br><span>&nbsp;</span>
-			<div ng-switch="empTab">
-				<div ng-switch-when="pay-det">
+
+			<div ui-view="employee-details"></div>
+			<!-- <div ng-switch="active">
+				<div ng-switch-when="2">
 					<div ng-controller="payrollController" 
 							ng-include src="'payroll-details.html'"></div>
 				</div>
-				<div ng-switch-when="emp-det">
-					<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
+				<div ng-switch-when="1">
+					<div ng-controller="employeeController" 
+							ng-include src="'employee.html'"></div>
 				</div>
-			</div>
-		</div>
+			</div> -->
+		<!-- </div> -->
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 

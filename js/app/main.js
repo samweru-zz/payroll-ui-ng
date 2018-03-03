@@ -1,4 +1,4 @@
-var app = angular.module("myApp", ["ui.router", "ngMockE2E"]);
+var app = angular.module("myApp", ["ui.router", "ngMockE2E", "ngCookies"]);
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
@@ -39,17 +39,47 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
             templateUrl : "period.html",	
 	        controller: "periodController"
         })
-        .state('employee-edit', {
+        .state('employee', {
 
-            url: '/employee/:id',
-            templateUrl : "employee-edit.html",
-	        controller: "employeeController"
+            url: '/employee',
+            views:{
+
+                '':{
+
+                    templateUrl : "employee-edit.html",
+                    controller: "employeeController"
+                }
+            } 
+        })
+        .state('employee.details', {
+
+            url: '/:id',
+            views:{
+
+                "employee-details@employee":{
+
+                    templateUrl : "employee.html",
+                    controller: "employeeController"
+                }
+            } 
+        })
+        .state('employee.details.payroll', {
+
+            url: '/payroll',
+            views:{
+
+                "employee-details@employee":{
+
+                    templateUrl : "payroll-details.html",
+                    controller: "payrollController"
+                }
+            } 
         })
         .state('employee-add', {
 
             url: '/employee/add',
             templateUrl : "employee-add.html",
-	        controller: "employeeController"
+            controller: "employeeController"
         })
         .state('employees', {
 
