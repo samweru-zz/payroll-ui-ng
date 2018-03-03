@@ -49,7 +49,24 @@
 </head>
 <body>
 	<script type="text/ng-template" charset="utf-8" id="rates.html">
-		<div ng-init="rateTab='nhif';active=1">
+		<a ui-sref="rates.nhif" 
+			ng-click="active=1"
+			ng-class="{'active':active===1}"
+			class="tab-head">NHIF</a>
+		<span>&nbsp;|&nbsp;</span>
+		<a ui-sref="rates.paye" 
+			ng-click="active=2"
+			ng-class="{'active':active===2}"
+			class="tab-head">PAYE</a>
+		<span>&nbsp;|&nbsp;</span>
+		<a ui-sref="rates.taxrelief" 
+			ng-click="active=3"
+			ng-class="{'active':active===3}"
+			class="tab-head">Tax Relief</a>
+		<br><span>&nbsp;</span>
+		<div ui-view="rate-details"></div>
+
+		<!-- <div ng-init="rateTab='nhif';active=1">
 			<a ng-click="active=1;rateTab='nhif'" 
 				ng-class="{'active': active===1}" class="tab-head">NHIF</a>
 			<span>&nbsp;|&nbsp;</span>
@@ -70,7 +87,7 @@
 					<div ng-controller="taxReliefController" ng-include src="'relief.html'"></div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="relief.html">
 		<table>
@@ -510,34 +527,17 @@
 		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-edit.html">
-		<!-- <div ng-init="active=1"> -->
-			<!-- <a ng-click="active=1" 
-				ng-class="{'active':active===1}" class="tab-head">Employee Details</a> -->
-			<a ui-sref="employee.details"
-				ng-click="active='employee.details'" 
-				ng-class="{'active':active==='employee.details'}"
-				class="tab-head">Employee Details</a>
-			<span>&nbsp;|&nbsp;</span>
-			<!-- <a ng-click="active=2" 
-				 class="tab-head">Payroll Details</a> -->
-			<a ui-sref="employee.details.payroll" 
-				ng-click="active='employee.details.payroll'"
-				ng-class="{'active':active==='employee.details.payroll'}"
-				class="tab-head">Payroll Details</a>
-			<br><span>&nbsp;</span>
-
-			<div ui-view="employee-details"></div>
-			<!-- <div ng-switch="active">
-				<div ng-switch-when="2">
-					<div ng-controller="payrollController" 
-							ng-include src="'payroll-details.html'"></div>
-				</div>
-				<div ng-switch-when="1">
-					<div ng-controller="employeeController" 
-							ng-include src="'employee.html'"></div>
-				</div>
-			</div> -->
-		<!-- </div> -->
+		<a ui-sref="employee.details"
+			ng-click="active=1" 
+			ng-class="{'active':active===1}"
+			class="tab-head">Employee Details</a>
+		<span>&nbsp;|&nbsp;</span>
+		<a ui-sref="employee.details.payroll" 
+			ng-click="active=2"
+			ng-class="{'active':active===2}"
+			class="tab-head">Payroll Details</a>
+		<br><span>&nbsp;</span>
+		<div ui-view="employee-details"></div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employees.html">
 		<table jq-simplr-grid 
@@ -1006,7 +1006,7 @@
 			<li><span>-</span>
 				<a href="">Payroll</a>
 				<ul>
-					<li><a href="#!/rates">Rates</a>
+					<li><a href="#!/rates/nhif">Rates</a>
 					<!-- <span>-</span>
 						<a href="">Rates</a>
 						<ul>

@@ -1,9 +1,12 @@
 app.controller("nhifController", ['$scope',
 									'$http', 
+									'$state',
 									"$stateParams", 
 									"$filter",
 									"nhifService",
-									function($scope, $http, $stateParams, $filter, nhifService){
+									function($scope, $http, $state, $stateParams, $filter, nhifService){
+
+	$scope.$parent.active = 1
 
 	$scope.toolbars = function(){
 

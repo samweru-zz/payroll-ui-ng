@@ -7,7 +7,7 @@ app.controller("employeeController", [
 					"$cookies", 
 					function($scope, $state, $stateParams, employeeService, postService, $cookies){
 
-	$scope.active = $state.current.name;
+	$scope.$parent.active = 1
 
 	$scope.genders = employeeService.getGenders();
 	$scope.maritalStatus = employeeService.getMaritalStatus();

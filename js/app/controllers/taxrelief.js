@@ -1,8 +1,11 @@
 app.controller("taxReliefController", ['$scope',
 										'$http',
+										'$state',
 										"$filter", 
 										"taxReliefService",
-										function($scope, $http, $filter, taxReliefService){
+										function($scope, $http, $state, $filter, taxReliefService){
+
+	$scope.$parent.active = 3
 
 	$scope.toolbars = function(){
 

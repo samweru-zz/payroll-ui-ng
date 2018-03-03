@@ -1,8 +1,11 @@
 app.controller("payeController", ['$scope',
-									'$http', 
+									'$http',
+									'$state',
 									"$filter", 
 									"payeService",
-									function($scope, $http, $filter, payeService){
+									function($scope, $http, $state, $filter, payeService){
+
+	$scope.$parent.active = 2
 
 	$scope.toolbars = function(){
 

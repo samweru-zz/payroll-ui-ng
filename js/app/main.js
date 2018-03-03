@@ -42,14 +42,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
         .state('employee', {
 
             url: '/employee',
-            views:{
-
-                '':{
-
-                    templateUrl : "employee-edit.html",
-                    controller: "employeeController"
-                }
-            } 
+            templateUrl : "employee-edit.html"
         })
         .state('employee.details', {
 
@@ -97,6 +90,39 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
             url: '/rates',
             templateUrl: "rates.html"
+        })
+        .state('rates.nhif', {
+
+            url: '/nhif',
+            views:{
+                'rate-details@rates':{
+                    
+                    templateUrl: "nhif.html",
+                    controller: "nhifController"
+                }
+            }
+        })
+        .state('rates.paye', {
+
+            url: '/paye',
+            views:{
+                'rate-details@rates':{
+                    
+                    templateUrl: "paye.html",
+                    controller: "payeController"
+                }
+            }
+        })
+        .state('rates.taxrelief', {
+
+            url: '/taxrelief',
+            views:{
+                'rate-details@rates':{
+                    
+                    templateUrl: "relief.html",
+                    controller: "taxReliefController"
+                }
+            }
         })
 
         $urlRouterProvider.otherwise('/');
