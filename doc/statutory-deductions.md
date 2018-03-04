@@ -1,7 +1,7 @@
 Statutory Deductions
 ====================
 
-The information below is copied word for word from [calculator.co.ke](calculator.co.ke) except for the very last statement.
+The information below is copied word for word from [calculator.co.ke](https://calculator.co.ke) except for the very last statement.
 
 ## Tax Relief
 ### What is insurance relief?

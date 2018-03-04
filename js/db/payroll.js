@@ -291,8 +291,28 @@ benefits = TAFFY([
 	},
 	{
 		id:12,
-		name:"NSSF",
-		amount:"320.00",
+		name:"NSSF (Tier I)",
+		amount:360,
+		descr:"National Social Security Fund",
+		percentage:false,
+		deduct:true,
+		taxable:false,
+		active:true
+	},
+	{
+		id:13,
+		name:"NSSF (Tier II)",
+		amount:720,
+		descr:"National Social Security Fund",
+		percentage:false,
+		deduct:true,
+		taxable:false,
+		active:true
+	},
+	{
+		id:14,
+		name:"NSSF (Tier I & II)",
+		amount:1080.00,
 		descr:"National Social Security Fund",
 		percentage:false,
 		deduct:true,
@@ -302,7 +322,7 @@ benefits = TAFFY([
 ])
 
 
-var randomFixedInteger = function (length) {
+var randomFixedLengthInteger = function (length) {
 	
     return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
 }
@@ -321,9 +341,9 @@ while(i<=20){
 	employees__.push({
 
 		id: i++, 
-		idno: randomFixedInteger(7),
-		nssf_no:randomFixedInteger(9),
-		nhif_no:randomFixedInteger(7),
+		idno: randomFixedLengthInteger(7),
+		nssf_no:randomFixedLengthInteger(9),
+		nhif_no:randomFixedLengthInteger(7),
 		pin:faker.random.alphaNumeric(12).toUpperCase(),
 		email: emailAddr.toLowerCase(),
 		mobile: faker.phone.phoneNumber(), 
