@@ -100,7 +100,7 @@
 .simplr-grid tbody tr:hover{
 
 	background-color:#ddd;
-	/*cursor: pointer;*/
+	cursor: pointer;
 	color:#000;
 }
 

@@ -3,9 +3,22 @@ app.controller("benefitsController", benefitsController)
 benefitsController.$inject = ['$scope',
 								'$http',
 								'$state', 
+								"$filter",
 								'benefitsService'];
 
-function benefitsController($scope, $http, $state, benefitsService){
+function benefitsController($scope, $http, $state, $filter, benefitsService){
+
+	$scope.benefit_types = [
+
+		{
+			id:"benefit",
+			name:"Benefit"
+		},
+		{
+			id:"deduction",
+			name:"Deduction"
+		}
+	]
 
 	$scope.cancelHandle = function(){
 
@@ -52,7 +65,6 @@ function benefitsController($scope, $http, $state, benefitsService){
 			$scope.deduct = row.deduct
 			$scope.taxable = row.taxable
 			$scope.active = row.active
-	
 		})
 	}
 
@@ -64,17 +76,50 @@ function benefitsController($scope, $http, $state, benefitsService){
 
 			var _benefits = data.rows;
 
+			var perc, amt;
+
+			var __benefits = [];
+
 			for(idx in _benefits){
 
-				_benefits[idx].percentage = _benefits[idx].percentage?"Yes":"No"
-				_benefits[idx].deduct = _benefits[idx].deduct?"Yes":"No"
-				_benefits[idx].taxable = _benefits[idx].taxable?"Yes":"No"
-				_benefits[idx].active = _benefits[idx].active?"Yes":"No"
+				perc = _benefits[idx].percentage
+
+				if(perc)
+					amt = _benefits[idx].amount.toString().concat("%")
+				else 
+					amt = $filter("currency")(_benefits[idx].amount, "")
+
+				__benefits.push({
+
+					"name":_benefits[idx].name,
+					"amount":amt,
+					"deduct":_benefits[idx].deduct?"Yes":"No",
+					"taxable":_benefits[idx].taxable?"Yes":"No",
+					"active":_benefits[idx].active?"Yes":"No"
+				})
 			}
 
-			data.rows = _benefits
+			data.rows = __benefits
 
 			builder(table, data, options);
+
+			table.find("td[name='amount']").each(function(idx, j){
+
+				var val = $(this).has("div").find("div").html()
+
+				if(val == "")
+					val = $(this).html()
+
+				if(!/\%/.test(val))
+					$(this).children().css({
+
+						textAlign:"right"
+					})
+					.parent().css({
+
+						paddingRight:"10px"
+					})
+			})
 		})
 	}	
 };

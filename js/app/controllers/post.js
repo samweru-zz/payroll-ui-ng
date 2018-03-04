@@ -69,6 +69,23 @@ app.controller("postsController", ['$scope',
 
 			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
+			var _posts = data.rows
+
+			var __posts = []
+
+			for(idx in _posts){
+
+				__posts.push({
+
+					"id":_posts[idx].id,
+					"name":_posts[idx].name,
+					"dept_name": _posts[idx].dept_name,
+					"dept_id": _posts[idx].dept_id
+				})
+			}
+
+			data.rows = __posts
+
 			builder(table, data, options);
 		})
 	}	

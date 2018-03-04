@@ -43,15 +43,19 @@ app.controller("nhifController", ['$scope',
 
 			var _nhif = data.rows;
 
+			var __nhif = []
+
 			for(idx in _nhif){
 
-				_nhif[idx].lbound = $filter("currency")(_nhif[idx].lbound, ""),
-				_nhif[idx].ubound = $filter("currency")(_nhif[idx].ubound, ""),
-				_nhif[idx].amt = $filter("currency")(_nhif[idx].amt, ""),
-				_nhif[idx].descr = _nhif[idx].descr
+				__nhif.push({
+
+					"lbound":$filter("currency")(_nhif[idx].lbound, ""),
+					"ubound":$filter("currency")(_nhif[idx].ubound, ""),
+					"amt":$filter("currency")(_nhif[idx].amt, "")
+				})
 			}
 
-			data.rows = _nhif
+			data.rows = __nhif
 
 			builder(table, data, options);
 		})	

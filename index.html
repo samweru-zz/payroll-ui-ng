@@ -528,7 +528,7 @@
 		<div ng-controller="benefitsController">
 			<div jq-dialog
 					id="benefits-dlg"
-					title="Post"
+					title="Benefits/Deductions"
 					modal="true"
 					open={{dialogBenefitsOpen}}
 					cancel-callback="cancelHandle"
@@ -538,19 +538,28 @@
 					<table>
 						<tbody>
 							<tr>
-								<td valign="top">Name</td>
+								<td class="caption">Name</td>
 								<td valign="top" align="left" colspan="2">
 									<input id="name" name="name" type="text" ng-model="name">
 								</td>
 							</tr>
 							<tr>
-								<td valign="top">Amount</td>
+								<td class="caption">Amount</td>
 								<td valign="top" align="left" colspan="2">
 									<input id="amt" name="amt" type="text" ng-model="amt">
 								</td>
 							</tr>
 							<tr>
-								<td valign="top">Descr</td>
+								<td class="caption">Type</td>
+								<td valign="top" align="left" colspan="2">
+									<select id="benefit_type" 
+										name="benefit_type"
+										ng-model="benefit_type"
+										ng-options="benefit_type.id as benefit_type.name for benefit_type in benefit_types track by benefit_type.id"></select>
+								</td>
+							</tr>
+							<tr>
+								<td class="caption">Description</td>
 								<td valign="top" align="left" colspan="2">
 									<textarea id="descr" name="descr" rows="5" cols="40" ng-model="descr"></textarea>
 								</td>
@@ -565,7 +574,7 @@
 									Percentage?</label>
 								</td>
 							</tr>
-							<tr>
+							<!-- <tr>
 								<td></td>
 								<td valign="top" align="left">
 									<label><input type="checkbox" id="deduct" name="deduct" 
@@ -574,7 +583,7 @@
 												ng-false-value="'No'">
 									Deduction?</label>
 								</td>
-							</tr>
+							</tr> -->
 							<tr>
 								<td></td>
 								<td valign="top" align="left">
@@ -623,12 +632,14 @@
 				columns="{
 
 					'id':{name:'#', css:{display:'none'}},
+					'name':{name:'Name', css:{width:'150px'}},
+					'amount':{name:'Amount', css:{width:'100px'}},
 					'percentage':{name:'Percentage', css:{width:'100px'}},
 					'deduct':{name:'Deduction', css:{width:'100px'}},
 					'taxable':{name:'Taxable', css:{width:'100px'}},
 					'active':{name:'Active', css:{width:'100px'}}
 				}"
-				css="{capsuleWidth:'100%',gridHeight:'300px',gridWidth:'90%'}"
+				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
@@ -651,10 +662,10 @@
 
 						'id':{name:'#', css:{display:'none'}},
 						'dept_id':{name:'Dept Id', css:{display:'none'}},
-						'dept_name':{name:'Dept. Name', css:{width:'200px'}},
-						'name':{name:'Post Name', css:{width:'200px'}},
+						'dept_name':{name:'Dept.', css:{width:'200px'}},
+						'name':{name:'Post', css:{width:'200px'}},
 					}"
-					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+					css="{capsuleWidth:'100%',gridHeight:'400px'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
 					custom-ajax-loader="customLoader"
@@ -716,15 +727,20 @@
 					fix-left-column="true"
 					fix-header="true"
 					resize-columns="true"
-					columns="{'id':{name:'#', css:{display:'none'}}}"
-					css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'50%'}"
+					columns="{
+
+						'id':{name:'#', css:{display:'none'}},
+						'alias':{name:'Alias', css:{width:'50px'}},
+						'descr':{name:'Description', css:{width:'250px'}}
+					}"
+					css="{capsuleWidth:'100%',gridHeight:'400px'}"
 					pager="{page:1,rows:10,list:[10,20]}"
 					dbl-click-row="dblClick"
 					custom-ajax-loader="customLoader"
 					get-toolbars="toolbars"></table>
 			<div jq-dialog
 					id="dept-dlg"
-					title="Post"
+					title="Departments"
 					modal="true"
 					open={{dialogDeptOpen}}
 					cancel-callback="cancelHandle"
@@ -733,7 +749,7 @@
 					<table>
 						<tbody>
 							<tr>
-								<td valign="top" align="right">Dept.</td>
+								<td valign="top" align="right">Alias</td>
 								<td valign="top">
 									<input id="alias" 
 											alias="alias" type="text" 
