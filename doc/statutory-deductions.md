@@ -40,12 +40,12 @@ Any trust or insurance company or other body or person paying pensions.
 For pay-as-you-earn purposes an "employee" is defined as inclusive of any holder of an appointment of office, whether public, private or calling, for which remuneration is payable. It includes an employee who retires on pension and stays in Kenya where pensions received from a registered pension fund exceed Kshs. 15,000 per month.
 
 ### How is PAYE calculated in 2018?
-​|Taxable income			|Tax Rate|
-| --------------------- | ------ |
-|KSh0 - KSh147,580		|	  10%|
-|KSh147,581 - KSh286,623|	  15%|
-|KSh286,624 - KSh425,666|	  20%|
-|KSh425,667 - KSh564,709|	  25%|
-|KSh564,710 and Above	|	  30%|
+​Taxable Income | Tax Rate
+-------------- | --------
+KSh0 - KSh147,580 | 10%
+KSh147,581 - KSh286,623 | 15%
+KSh286,624 - KSh425,666 | 20%
+KSh425,667 - KSh564,709 | 25%
+KSh564,710 and Above | 30%
 
 Minimum Taxable Income: KES 13,486.00 per month
