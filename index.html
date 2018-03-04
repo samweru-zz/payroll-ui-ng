@@ -13,6 +13,7 @@
 	<script src="js/lib/angular-cookies.min.js"></script>
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
+	<script src="js/lib/loadingoverlay.min.js"></script>
 	<script src="js/db/payroll.js"></script>
 	<script src="js/app/main.js"></script>
 	<script src="js/app/runner.js"></script>
@@ -120,58 +121,60 @@
 				get-toolbars="toolbars"></table>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="nhif.html">
-		<form>
-			<table>
-				<tr><td>Kshs.
-					<input currency type="text" 
-								name="ubound" 
-								ng-model="ubound"
-								placeholder="Upper Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td>Kshs.
-					<input currency type="text" 
-								name="lbound" 
-								ng-model="lbound"
-								placeholder="Lower Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td>Kshs.
-					<input type="text" 
-								name="amount" 
-								ng-model="amount"
-								placeholder="Amount"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td><input type="submit" text="Submit">
-					</td>
-				</tr>
-			</table>
-		</form>
-		<table jq-simplr-grid 
-				id='nhif-tbl'
-				url="/data/nhif"
-				method="POST"
-				title="NHIF"
-				use-pager="false"
-				single-select="true"
-				fix-left-column="true"
-				columns="{
+		<div ng-controller="nhifController">
+			<form ng-submit="submit()">
+				<table>
+					<tr><td>Kshs.
+						<input currency type="text" 
+									name="ubound" 
+									ng-model="ubound"
+									placeholder="Upper Bound"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td>Kshs.
+						<input currency type="text" 
+									name="lbound" 
+									ng-model="lbound"
+									placeholder="Lower Bound"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td>Kshs.
+						<input type="text" 
+									name="amount" 
+									ng-model="amount"
+									placeholder="Amount"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td><input type="submit" text="Submit">
+						</td>
+					</tr>
+				</table>
+			</form>
+			<table jq-simplr-grid 
+					id='nhif-tbl'
+					url="/data/nhif"
+					method="POST"
+					title="NHIF"
+					use-pager="false"
+					single-select="true"
+					fix-left-column="true"
+					columns="{
 
-					lbound:{name:'Lower Bound', css:{textAlign:'right', width:'100px'}},
-					ubound:{name:'Upper Bound', css:{textAlign:'right', width:'100px'}},
-					amt:{name:'Amount', css:{textAlign:'right', width:'100px'}},
-				}"
-				fix-header="true"
-				resize-columns="true"
-				css="{capsuleWidth:'100%',gridHeight:'300px'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
+						lbound:{name:'Lower Bound', css:{textAlign:'right', width:'100px'}},
+						ubound:{name:'Upper Bound', css:{textAlign:'right', width:'100px'}},
+						amt:{name:'Amount', css:{textAlign:'right', width:'100px'}},
+					}"
+					fix-header="true"
+					resize-columns="true"
+					css="{capsuleWidth:'100%',gridHeight:'300px'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="paye.html">
 		<form>
@@ -534,7 +537,7 @@
 					cancel-callback="cancelHandle"
 					hide-close-button="false"
 					get-toolbars="toolbars">
-				<form id="benefit-form">
+				<form id="benefit-form" ng-submit="submit()">
 					<table>
 						<tbody>
 							<tr>
@@ -545,17 +548,28 @@
 							</tr>
 							<tr>
 								<td class="caption">Amount</td>
-								<td valign="top" align="left" colspan="2">
-									<input id="amt" name="amt" type="text" ng-model="amt">
+								<td ng-if="perc==='Yes'" valign="top" align="left" colspan="2">
+									<input type="number" 
+											name="amt" 
+											min="1" max="100"
+											ng-model="amt"
+											style="text-align: right">&nbsp;%
+								</td>
+								<td ng-if="perc==='No'" valign="top" align="left" colspan="2">
+									<input currency 
+											name="amt" 
+											type="text" 
+											ng-model="amt"
+											style="text-align: right">
 								</td>
 							</tr>
 							<tr>
 								<td class="caption">Type</td>
 								<td valign="top" align="left" colspan="2">
-									<select id="benefit_type" 
+									<select id="benefit_type"
 										name="benefit_type"
 										ng-model="benefit_type"
-										ng-options="benefit_type.id as benefit_type.name for benefit_type in benefit_types track by benefit_type.id"></select>
+										ng-options="type.id as type.name for type in benefit_types track by type.id"></select>
 								</td>
 							</tr>
 							<tr>
@@ -611,7 +625,7 @@
 								<td></td>
 								<td valign="top" align="left" colspan="2">
 									<span id="buttons-benefits-form">
-										<input type="button" value="Submit">
+										<input type="submit" value="Submit">
 									</span>
 								</td>
 							</tr>

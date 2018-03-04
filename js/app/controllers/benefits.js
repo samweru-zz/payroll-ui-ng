@@ -1,24 +1,17 @@
-app.controller("benefitsController", benefitsController)
-
-benefitsController.$inject = ['$scope',
+app.controller("benefitsController", [
+								'$scope',
 								'$http',
 								'$state', 
 								"$filter",
-								'benefitsService'];
+								'benefitsService', 
+								function($scope, $http, $state, $filter, benefitsService){
 
-function benefitsController($scope, $http, $state, $filter, benefitsService){
+	$scope.submit = function(){
 
-	$scope.benefit_types = [
+		console.log(this);
+	}
 
-		{
-			id:"benefit",
-			name:"Benefit"
-		},
-		{
-			id:"deduction",
-			name:"Deduction"
-		}
-	]
+	$scope.benefit_types = benefitsService.getType()
 
 	$scope.cancelHandle = function(){
 
@@ -54,18 +47,33 @@ function benefitsController($scope, $http, $state, $filter, benefitsService){
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		$scope.dialogBenefitsOpen = true;
 
-			$scope.dialogBenefitsOpen = true;
+		benefitsService.get(row.id).then(function(data){
 
-			$scope.name = row.name
-			$scope.amt = row.amount
-			$scope.descr = row.descr
-			$scope.perc = row.percentage
-			$scope.deduct = row.deduct
-			$scope.taxable = row.taxable
-			$scope.active = row.active
+			// console.log(data)
+
+			$scope.name = data.name
+			$scope.amt = data.amount
+			$scope.descr = data.descr
+			$scope.perc = data.percentage?"Yes":"No"
+			$scope.benefit_type = benefitsService.getType(data.deduct?"deduction":"benefit")
+			$scope.taxable = data.taxable?"Yes":"No"
+			$scope.active = data.active?"Yes":"No"
 		})
+
+		// $scope.$apply(function(){
+
+		// 	$scope.dialogBenefitsOpen = true;
+
+		// 	$scope.name = row.name
+		// 	$scope.amt = row.amount
+		// 	$scope.descr = row.descr
+		// 	$scope.perc = row.percentage
+		// 	$scope.benefit_type = benefitsService.getType(row.deduct == "Yes"?"deduction":"benefit")
+		// 	$scope.taxable = row.taxable
+		// 	$scope.active = row.active
+		// })
 	}
 
 	$scope.customLoader = function(table, options, builder){
@@ -91,6 +99,7 @@ function benefitsController($scope, $http, $state, $filter, benefitsService){
 
 				__benefits.push({
 
+					"id":_benefits[idx].id,
 					"name":_benefits[idx].name,
 					"amount":amt,
 					"deduct":_benefits[idx].deduct?"Yes":"No",
@@ -122,4 +131,4 @@ function benefitsController($scope, $http, $state, $filter, benefitsService){
 			})
 		})
 	}	
-};
+}]);

@@ -16,17 +16,25 @@ app.controller("loginController", ['$scope',
 
 	$scope.submit = function(){
 
-		userService.doAuth($scope.login.username, $scope.login.password).then(function(data){
+		$("body").LoadingOverlay("show")
 
-			if(data.isLoggedIn){
+		setTimeout(function(){
 
-			 	$scope.dialogLoginOpen = false;
-			}
-			else{
+			$("body").LoadingOverlay("hide")
 
-			 	$scope.message = "Invalid Credentials!";
-			 	$scope.dialogMsgOpen = true;
-			}
-		})
+			userService.doAuth($scope.login.username, $scope.login.password).then(function(data){
+
+				if(data.isLoggedIn){
+
+				 	$scope.dialogLoginOpen = false;
+				}
+				else{
+
+				 	$scope.message = "Invalid Credentials!";
+				 	$scope.dialogMsgOpen = true;
+				}
+			})
+
+		}, 1000)
 	}	
 }]);

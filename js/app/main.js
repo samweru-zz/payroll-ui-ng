@@ -127,3 +127,9 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
         $urlRouterProvider.otherwise('/');
 }])
+
+
+$.LoadingOverlaySetup({
+
+    color:"rgba(0, 0, 0, 0.4)",
+});

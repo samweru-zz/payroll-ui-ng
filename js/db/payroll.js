@@ -1,3 +1,48 @@
+
+// https://goo.gl/MP7UMX
+Number.prototype.toMoney = function(){
+
+	return this.toFixed(2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+}
+
+
+// https://goo.gl/d2r24q
+function getMonthFirstDay(date){
+
+	var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+	return firstDay;
+}
+
+// https://goo.gl/d2r24q
+function getMonthLastDay(date){
+
+	var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+	return lastDay;
+}
+
+// https://goo.gl/1SQbwG
+function getShortDate(date){ //dd/mm/yyyy
+
+	var dd = date.getDate();
+	var mm = date.getMonth()+1; //January is 0!
+	var yyyy = date.getFullYear();
+
+	if(dd<10){
+
+	    dd='0'+dd;
+	} 
+	if(mm<10){
+
+	    mm='0'+mm;
+	} 
+
+	var date = dd+'/'+mm+'/'+yyyy;
+
+	return date;
+}
+
 function newDate(date){
 
 	var d = new Date(date);
@@ -29,7 +74,7 @@ paye = TAFFY([
 		rate_perc:25,
 	},
 	{
-		lbound:47060,
+		lbound:47059,
 		ubound:1000000000,
 		rate_perc:30,
 	}
@@ -196,8 +241,8 @@ period = TAFFY([
 	},
 	{
 		id:2,
-		start: newDate("02/01/2018"),
-		end: newDate("02/28/2018"),
+		start: getMonthFirstDay(new Date()).toDateString(),
+		end: getMonthLastDay(new Date()).toDateString(),
 		status: "Open",
 		active: true
 	}
@@ -262,7 +307,7 @@ benefits = TAFFY([
 	{
 		id:5,
 		name:'Travel Expenses',
-		amount:"10000.00",
+		amount:10000,
 		descr:'N/A',
 		percentage:false,
 		deduct:false,
@@ -272,7 +317,7 @@ benefits = TAFFY([
 	{
 		id:6,
 		name:'Child Allowance',
-		amount:"10",
+		amount:10,
 		descr:'N/A',
 		percentage:true,
 		deduct:false,
@@ -282,7 +327,7 @@ benefits = TAFFY([
 	{
 		id:9,
 		name:'Housing Allowance',
-		amount:"10000.00",
+		amount:10000,
 		descr:'N/A',
 		percentage:false,
 		deduct:false,
@@ -312,7 +357,7 @@ benefits = TAFFY([
 	{
 		id:14,
 		name:"NSSF (Tier I & II)",
-		amount:1080.00,
+		amount:1080,
 		descr:"National Social Security Fund",
 		percentage:false,
 		deduct:true,

@@ -16,8 +16,8 @@ describe("Payroll Test:", function(){
       var taxable_pay = gross_salary - nssf_contrib;
       var salary = taxable_pay;
 
-      console.log("NSSF Contribution: " + nssf_contrib)
-      console.log("Salary After NSSF (Taxable Pay): " + taxable_pay)
+      console.log("NSSF Contribution: " + nssf_contrib.toMoney())
+      console.log("Salary After NSSF (Taxable Pay): " + taxable_pay.toMoney())
 
       var paye_amount = []
       $.each(paye().get(), function(idx, rate){
@@ -39,19 +39,19 @@ describe("Payroll Test:", function(){
         return total + num;
       })
 
-      console.log("Tax (Before Relief): " + paye_total)
+      console.log("Tax (Before Relief): " + paye_total.toMoney())
 
       var personal_relief = relief({name:"Personal Relief"}).first()
 
-      console.log("Personal Relief: " + personal_relief.amt)
+      console.log("Personal Relief: " + personal_relief.amt.toMoney())
 
       var tax = paye_total - personal_relief.amt;
 
-      console.log("Tax (After Relief): " + tax)
+      console.log("Tax (After Relief): " + tax.toMoney())
 
       salary = salary - tax
 
-      console.log("Salary After Tax: " + salary)
+      console.log("Salary After Tax: " + salary.toMoney())
 
       var nhif_amount = 0;
       $.each(nhif().get(), function(idx, rate){
@@ -62,12 +62,12 @@ describe("Payroll Test:", function(){
 
       var net_salary = salary - nhif_amount;
 
-      console.log("NHIF Contribution: " + nhif_amount)
-      console.log("Salary After NHIF (Net Salary): " + net_salary)
+      console.log("NHIF Contribution: " + nhif_amount.toMoney())
+      console.log("Salary After NHIF (Net Salary): " + net_salary.toMoney())
 
       var deductions = nssf_contrib + nhif_amount + tax;
 
-      console.log("Total Deductions: "+ deductions)
+      console.log("Total Deductions: "+ deductions.toMoney())
 
       expect(gross_salary).toEqual(net_salary+deductions)
     });

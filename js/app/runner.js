@@ -2,6 +2,18 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		$httpBackend.whenGET(/(\.html)$/).passThrough();
 
+		$httpBackend.whenPOST(/\/data\/benefit\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+			console.log('Received these data:', method, url, data, headers, params);
+
+			var benefit = benefits({id:parseInt(params.id)}).first()
+
+			delete benefit.___s
+			delete benefit.___id
+
+			return [200, benefit, {}];
+		})
+
 		$httpBackend.whenPOST(/\/data\/employee\/(\d+)\/benefits/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
 		    console.log('Received these data:', method, url, data, headers, params);

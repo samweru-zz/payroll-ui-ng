@@ -8,6 +8,11 @@ app.controller("nhifController", ['$scope',
 
 	$scope.$parent.active = 1
 
+	$scope.submit = function(){
+
+		console.log(this)
+	}
+
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
