@@ -1,7 +1,7 @@
 Statutory Deductions
 ====================
 
-The information below is copied word for word from [calculator.co.ke](https://calculator.co.ke) except for the very last statement.
+The information below is copied word for word from [calculator.co.ke](https://calculator.co.ke)
 
 ## Tax Relief
 ### What is insurance relief?
@@ -38,14 +38,3 @@ Any agent, manager or other representative in Kenya of any employer who is outsi
 Any paying officer of Government or other public authority
 Any trust or insurance company or other body or person paying pensions.
 For pay-as-you-earn purposes an "employee" is defined as inclusive of any holder of an appointment of office, whether public, private or calling, for which remuneration is payable. It includes an employee who retires on pension and stays in Kenya where pensions received from a registered pension fund exceed Kshs. 15,000 per month.
-
-### How is PAYE calculated in 2018?
-​Taxable Income | Tax Rate
--------------- | --------
-KSh0 - KSh147,580 | 10%
-KSh147,581 - KSh286,623 | 15%
-KSh286,624 - KSh425,666 | 20%
-KSh425,667 - KSh564,709 | 25%
-KSh564,710 and Above | 30%
-
-The above table's amount is annual income. Minimum Taxable Income: KES 13,486.00 per month
