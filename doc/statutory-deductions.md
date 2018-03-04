@@ -48,4 +48,4 @@ KSh286,624 - KSh425,666 | 20%
 KSh425,667 - KSh564,709 | 25%
 KSh564,710 and Above | 30%
 
-Minimum Taxable Income: KES 13,486.00 per month
+The above table's amount is annual income. Minimum Taxable Income: KES 13,486.00 per month
