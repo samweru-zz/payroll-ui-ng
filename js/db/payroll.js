@@ -5,41 +5,32 @@ function newDate(date){
 	return d.toDateString();
 }
 
+//2018 Rates
 paye = TAFFY([
 
 	{
-		annual_lbound:0,
-		annual_ubound:134164,
-		monthly_lbound:0,
-		monthly_ubound:11180,
+		lbound:0,
+		ubound:12298,
 		rate_perc:10,
 	},
 	{
-		annual_lbound:134164,
-		annual_ubound:260567,
-		monthly_lbound:11180,
-		monthly_ubound:21714,
+		lbound:12299,
+		ubound:23885,
 		rate_perc:15,
 	},
 	{
-		annual_lbound:260567,
-		annual_ubound:386970,
-		monthly_lbound:21714,
-		monthly_ubound:32248,
+		lbound:23886,
+		ubound:35472,
 		rate_perc:20,
 	},
 	{
-		annual_lbound:386970,
-		annual_ubound:513373,
-		monthly_lbound:32248,
-		monthly_ubound:42781,
-		rate_perc:30,
+		lbound:35473,
+		ubound:47059,
+		rate_perc:25,
 	},
 	{
-		annual_lbound:513373,
-		annual_ubound:1000000000,
-		monthly_lbound:42781,
-		monthly_ubound:1000000000,
+		lbound:47060,
+		ubound:1000000000,
 		rate_perc:30,
 	}
 ])
@@ -155,31 +146,32 @@ relief = TAFFY([
 	{
 		id:1,
 		name:"Personal Relief",
-		monthly:1162,
+		// amt:1162,
+		amt:1408, //2018 Rate
 		active:true
 	},
 	{
 		id:2,
 		name:"Insurance Relief",
-		monthly:5000,
+		amt:5000,
 		active:false
 	},
 	{
 		id:3,
 		name:"Allowable Pension Fund Contribution",
-		monthly:20000,
+		amt:20000,
 		active:false
 	},
 	{
 		id:4,
 		name:"Allowable HOSP Contribution",
-		monthly:4000,
+		amt:4000,
 		active:false
 	},
 	{
 		id:5,
 		name:"Owner Occupier Interest",
-		monthly:12500,
+		amt:12500,
 		active:false
 	}
 ])

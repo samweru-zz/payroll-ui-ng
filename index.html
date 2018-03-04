@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="myApp">
 <head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 	<title></title>
 	<script src="js/core/angular.min.js"></script>
 	<script src="js/core/jquery-3.3.1.min.js"></script>
@@ -63,29 +65,6 @@
 			class="tab-head">Tax Relief</a>
 		<br><span>&nbsp;</span>
 		<div ui-view="rate-details"></div>
-
-		<!-- <div ng-init="rateTab='nhif';active=1">
-			<a ng-click="active=1;rateTab='nhif'" 
-				ng-class="{'active': active===1}" class="tab-head">NHIF</a>
-			<span>&nbsp;|&nbsp;</span>
-			<a ng-click="active=2;rateTab='paye'" 
-				ng-class="{'active': active===2}" class="tab-head">PAYE</a>
-			<span>&nbsp;|&nbsp;</span>
-			<a ng-click="active=3;rateTab='tax-relief'" 
-				ng-class="{'active': active===3}" class="tab-head">Tax Relief</a>
-			<br><span>&nbsp;</span>
-			<div ng-switch="rateTab">
-				<div ng-switch-when="nhif">
-					<div ng-controller="nhifController" ng-include src="'nhif.html'"></div>
-				</div>
-				<div ng-switch-when="paye">
-					<div ng-controller="payeController" ng-include src="'paye.html'"></div>
-				</div>
-				<div ng-switch-when="tax-relief">
-					<div ng-controller="taxReliefController" ng-include src="'relief.html'"></div>
-				</div>
-			</div>
-		</div> -->
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="relief.html">
 		<table>
@@ -98,8 +77,8 @@
 			</tr>
 			<tr>
 				<td>
-					Kshs.<input currency type="text" name="monthly" 
-							ng-model="monthly"
+					Kshs.<input currency type="text" name="amount" 
+							ng-model="amount"
 							placeholder="Monthly Amount"
 							style="text-align: right">
 				</td>
@@ -132,7 +111,7 @@
 
 					id:{name:'#', css:{display:'none'}},
 					name:{name:'Name', css:{width:'200px'}},
-					monthly:{name:'Monthly', css:{textAlign:'right', width:'100px'}}
+					amt:{name:'Amount', css:{textAlign:'right', width:'100px'}}
 				}"
 				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
@@ -198,34 +177,18 @@
 		<form>
 			<table>
 				<tr><td>Kshs.
-					<input currency type="text" 
-								name="annual_ubound" 
-								ng-model="annual_ubound"
-								placeholder="Annual Upper Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td>Kshs.
-					<input currency type="text" 
-								name="annual_lbound" 
-								ng-model="annual_lbound"
-								placeholder="Annual Lower Bound"
+					<input type="text" 
+								name="ubound" 
+								ng-model="ubound"
+								placeholder="Upper Bound"
 								style="text-align:right">
 					</td>
 				</tr>
 				<tr><td>Kshs.
 					<input type="text" 
-								name="monthly_ubound" 
-								ng-model="monthly_ubound"
-								placeholder="Monthly Upper Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td>Kshs.
-					<input type="text" 
-								name="monthly_lbound" 
-								ng-model="monthly_lbound"
-								placeholder="Monthly Upper Bound"
+								name="lbound" 
+								ng-model="lbound"
+								placeholder="Upper Bound"
 								style="text-align:right">
 					</td>
 				</tr>
@@ -252,11 +215,9 @@
 				fix-header="true"
 				resize-columns="true"
 				columns = "{
-
-					annual_lbound:{name:'Annual Lower Bound', css:{textAlign:'right', width:'150px'}},
-					annual_ubound:{name:'Annual Upper Bound', css:{textAlign:'right', width:'150px'}},
-					monthly_lbound:{name:'Monthly Lower Bound', css:{textAlign:'right', width:'150px'}},
-					monthly_ubound:{name:'Monthly Upper Bound', css:{textAlign:'right', width:'150px'}},
+					lbound:{name:'Lower Bound', css:{textAlign:'right', width:'150px'}},
+					ubound:{name:'Upper Bound', css:{textAlign:'right', width:'150px'}},
+					rate_perc:{name:'Tax Rate'}
 				}"
 				css="{capsuleWidth:'100%',gridHeight:'300px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
@@ -550,12 +511,14 @@
 				resize-columns="true"
 				columns="{
 
-					'id':{name:'#', css:{display:'none'}},
-					'idno':{name:'IdNo', css:{width:'10%'}},
-					'firstname':{name:'First Name', css:{width:'15%'}},
-					'lastname':{name:'Last Name', css:{width:'15%'}}
+					'id':{name:'#', css:{display:'none', width:'10px'}},
+					'idno':{name:'IdNo', css:{width:'50px'}},
+					'firstname':{name:'First Name', css:{width:'100px'}},
+					'lastname':{name:'Last Name', css:{width:'100px'}},
+					'email':{name:'Email', css:{width:'200px'}},
+					'county':{name:'County', css:{width:'100px'}}
 				}"
-				css="{capsuleWidth:'100%',gridHeight:'400px',gridWidth:'90%'}"
+				css="{capsuleWidth:'100%',gridHeight:'400px', gridWidth:'700px'}"
 				pager="{page:1,rows:10,list:[10,20]}"
 				dbl-click-row="dblClick"
 				custom-ajax-loader="customLoader"
@@ -1004,15 +967,7 @@
 			<li><span>-</span>
 				<a href="">Payroll</a>
 				<ul>
-					<li><a href="#!/rates/nhif">Rates</a>
-					<!-- <span>-</span>
-						<a href="">Rates</a>
-						<ul>
-							<li><a href="#!/nhif">NHIF</a></li>
-							<li><a href="#!/paye">PAYE</a></li>
-							<li><a href="#!/tax">Tax Relief</a></li>
-						</ul> -->
-					</li>
+					<li><a href="#!/rates/nhif">Rates</a></li>
 					<li><a href="#!/benefits">Benefits</a></li>
 					<li><a href="#!/period">Period</a></li>
 					<li><a href="#!/rpt">Reports</a></li>

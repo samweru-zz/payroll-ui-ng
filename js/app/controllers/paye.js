@@ -27,11 +27,9 @@ app.controller("payeController", ['$scope',
 
 		$scope.$apply(function(){
 
-			$scope.annual_ubound = row.annual_ubound
-			$scope.annual_lbound = row.annual_lbound
-			$scope.monthly_ubound = row.monthly_ubound
-			$scope.monthly_lbound = row.monthly_lbound
-			$scope.tax_rate = row.tax_rate.replace("%","")
+			$scope.ubound = row.ubound
+			$scope.lbound = row.lbound
+			$scope.tax_rate = row.rate_perc.replace("%","")
 		})
 	}
 
@@ -45,11 +43,9 @@ app.controller("payeController", ['$scope',
 
 			for(idx in _paye){
 
-				_paye[idx].annual_lbound = $filter("currency")(_paye[idx].annual_lbound, "")
-				_paye[idx].annual_ubound = $filter("currency")(_paye[idx].annual_ubound, "")
-				_paye[idx].monthly_lbound = $filter("currency")(_paye[idx].monthly_lbound, "")
-				_paye[idx].monthly_ubound = $filter("currency")(_paye[idx].monthly_ubound, "")
-				_paye[idx].tax_rate = _paye[idx].rate_perc + "%"
+				_paye[idx].lbound = $filter("currency")(_paye[idx].lbound, "")
+				_paye[idx].ubound = $filter("currency")(_paye[idx].ubound, "")
+				_paye[idx].rate_perc = _paye[idx].rate_perc + "%"
 			}
 
 			data.rows = _paye

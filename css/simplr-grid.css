@@ -100,7 +100,7 @@
 .simplr-grid tbody tr:hover{
 
 	background-color:#ddd;
-	cursor: pointer;
+	/*cursor: pointer;*/
 	color:#000;
 }
 
@@ -116,6 +116,7 @@
 	border-right:1px #000 solid;
 	border-bottom:1px #000 solid;
 	border-left:none;
+	width: 20px;
 }
 
 .simplr-grid tbody tr:last-child td:first-child{

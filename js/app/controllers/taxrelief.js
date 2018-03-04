@@ -29,7 +29,7 @@ app.controller("taxReliefController", ['$scope',
 
 			// $scope.id = row.id
 			$scope.name = row.name
-			$scope.monthly = row.monthly
+			$scope.amount = row.amt
 			$scope.active = row.active
 		})
 	}
@@ -44,7 +44,7 @@ app.controller("taxReliefController", ['$scope',
 
 			for(idx in _relief){
 
-				_relief[idx].monthly = $filter("currency")(_relief[idx].monthly, "")
+				_relief[idx].amt = $filter("currency")(_relief[idx].amt, "")
 				_relief[idx].active = _relief[idx].active?"Yes":"No"
 			}
 
