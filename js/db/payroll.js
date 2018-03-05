@@ -314,6 +314,17 @@ benefits = TAFFY([
 	}
 ])
 
+// benefits.store("benefits")
+// benefits.settings({
+
+// 	onUpdate:function (){
+
+// 		console.log("-----")
+// 		console.log(this)
+// 		console.log("-----")
+// 	}
+// });
+
 
 var randomFixedLengthInteger = function (length) {
 	

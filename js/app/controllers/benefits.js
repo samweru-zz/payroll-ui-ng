@@ -5,13 +5,36 @@ app.controller("benefitsController", [
 								"$filter",
 								'benefitsService', 
 								function($scope, $http, $state, $filter, benefitsService){
+	
+	$scope.benefit_types = benefitsService.getType()
 
 	$scope.submit = function(){
 
-		console.log(this);
-	}
+		var benefit = $scope.benefit;
 
-	$scope.benefit_types = benefitsService.getType()
+		var benefit_data = {
+
+			"name":benefit.name,
+			"amount":benefit.amt,
+			"descr":benefit.descr,
+			"deduct":benefit.type.id == "benefit",
+			"taxable":benefit.taxable == "Yes",
+			"active":benefit.activ == "Yes",
+			"percentage":benefit.perc == "Yes"
+		}
+
+		if(benefit.id != "")
+			benefit_data["id"] = benefit.id;
+
+		benefitsService.update(benefit_data).then(function(data){
+
+			console.log(data)
+
+			$scope.dialogBenefitsOpen = false;
+
+			$("#benefits-tbl").trigger("refresh")
+		})
+	}
 
 	$scope.cancelHandle = function(){
 
@@ -41,7 +64,7 @@ app.controller("benefitsController", [
 
 			[btnAdd]
 		]
-	}
+	} 
 
 	$scope.dblClick = function(){
 
@@ -67,13 +90,31 @@ app.controller("benefitsController", [
 
 	$scope.customLoader = function(table, options, builder){
 
+		// table.find("td[name='amount']").each(function(idx, j){
+
+		// 	var val = $(this).has("div").find("div").html()
+
+		// 	if(val == "")
+		// 		val = $(this).html()
+
+		// 	if(!/\%/.test(val))
+		// 		$(this).children().css({
+
+		// 			textAlign:"right"
+		// 		})
+		// 		.parent().css({
+
+		// 			paddingRight:"10px"
+		// 		})
+		// })
+
 		benefitsService.getBenefits(options.pager).then(function(data){
 
 			options.pager.pages = Math.ceil(data.count/options.pager.rows);
 
-			var _benefits = data.rows;
-
 			var perc, amt;
+
+			var _benefits = data.rows;
 
 			var __benefits = [];
 
@@ -100,24 +141,6 @@ app.controller("benefitsController", [
 			data.rows = __benefits
 
 			builder(table, data, options);
-
-			table.find("td[name='amount']").each(function(idx, j){
-
-				var val = $(this).has("div").find("div").html()
-
-				if(val == "")
-					val = $(this).html()
-
-				if(!/\%/.test(val))
-					$(this).children().css({
-
-						textAlign:"right"
-					})
-					.parent().css({
-
-						paddingRight:"10px"
-					})
-			})
 		})
 	}	
 }]);
