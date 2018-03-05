@@ -51,29 +51,18 @@ app.controller("benefitsController", [
 
 		benefitsService.get(row.id).then(function(data){
 
-			// console.log(data)
+			$scope.benefit = {
 
-			$scope.name = data.name
-			$scope.amt = data.amount
-			$scope.descr = data.descr
-			$scope.perc = data.percentage?"Yes":"No"
-			$scope.benefit_type = benefitsService.getType(data.deduct?"deduction":"benefit")
-			$scope.taxable = data.taxable?"Yes":"No"
-			$scope.active = data.active?"Yes":"No"
+				id:row.id,
+				name:data.name,
+				amt:(!data.percentage)?$filter("currency")(data.amount,""):data.amount,
+				descr:data.descr,
+				perc:data.percentage?"Yes":"No",
+				type:benefitsService.getType(data.deduct?"deduction":"benefit"),
+				taxable:data.taxable?"Yes":"No",
+				active:data.active?"Yes":"No"
+			}
 		})
-
-		// $scope.$apply(function(){
-
-		// 	$scope.dialogBenefitsOpen = true;
-
-		// 	$scope.name = row.name
-		// 	$scope.amt = row.amount
-		// 	$scope.descr = row.descr
-		// 	$scope.perc = row.percentage
-		// 	$scope.benefit_type = benefitsService.getType(row.deduct == "Yes"?"deduction":"benefit")
-		// 	$scope.taxable = row.taxable
-		// 	$scope.active = row.active
-		// })
 	}
 
 	$scope.customLoader = function(table, options, builder){

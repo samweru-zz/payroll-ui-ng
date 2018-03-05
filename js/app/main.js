@@ -132,4 +132,9 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 $.LoadingOverlaySetup({
 
     color:"rgba(0, 0, 0, 0.4)",
+    image:"img/loader.gif",
+    maxSize:"30px",
+    minSize:"20px",
+    resizeInterval:0,
+    size:"50%"
 });

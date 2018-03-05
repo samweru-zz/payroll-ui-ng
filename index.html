@@ -14,6 +14,7 @@
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
 	<script src="js/lib/loadingoverlay.min.js"></script>
+	<script src="js/app/helper.js"></script>
 	<script src="js/db/payroll.js"></script>
 	<script src="js/app/main.js"></script>
 	<script src="js/app/runner.js"></script>
@@ -538,51 +539,55 @@
 					hide-close-button="false"
 					get-toolbars="toolbars">
 				<form id="benefit-form" ng-submit="submit()">
+					<input type="hidden" name="id" ng-model="benefit.id">
 					<table>
 						<tbody>
 							<tr>
 								<td class="caption">Name</td>
 								<td valign="top" align="left" colspan="2">
-									<input id="name" name="name" type="text" ng-model="name">
+									<input id="name" name="name" type="text" ng-model="benefit.name">
 								</td>
 							</tr>
 							<tr>
 								<td class="caption">Amount</td>
-								<td ng-if="perc==='Yes'" valign="top" align="left" colspan="2">
+								<td ng-if="benefit.perc==='Yes'" 
+									valign="top" align="left" colspan="2">
 									<input type="number" 
 											name="amt" 
 											min="1" max="100"
-											ng-model="amt"
+											ng-model="benefit.amt"
 											style="text-align: right">&nbsp;%
 								</td>
-								<td ng-if="perc==='No'" valign="top" align="left" colspan="2">
+								<td ng-if="benefit.perc==='No'" 
+									valign="top" align="left" colspan="2">
 									<input currency 
 											name="amt" 
 											type="text" 
-											ng-model="amt"
+											ng-model="benefit.amt"
 											style="text-align: right">
 								</td>
 							</tr>
 							<tr>
 								<td class="caption">Type</td>
 								<td valign="top" align="left" colspan="2">
-									<select id="benefit_type"
-										name="benefit_type"
-										ng-model="benefit_type"
+									<select id="type"
+										name="type"
+										ng-model="benefit.type"
 										ng-options="type.id as type.name for type in benefit_types track by type.id"></select>
 								</td>
 							</tr>
 							<tr>
 								<td class="caption">Description</td>
 								<td valign="top" align="left" colspan="2">
-									<textarea id="descr" name="descr" rows="5" cols="40" ng-model="descr"></textarea>
+									<textarea id="descr" name="descr" rows="5" cols="40" 
+												ng-model="benefit.descr"></textarea>
 								</td>
 							</tr>
 							<tr>
 								<td></td>
 								<td valign="top" align="left">
 									<label><input type="checkbox" id="perc" name="perc" 
-												ng-model="perc"
+												ng-model="benefit.perc"
 												ng-true-value="'Yes'" 
 												ng-false-value="'No'">
 									Percentage?</label>
@@ -603,7 +608,7 @@
 								<td valign="top" align="left">
 									<label for="taxable">
 										<input type="checkbox" id="taxable" name="taxable" 
-												ng-model="taxable"
+												ng-model="benefit.taxable"
 												ng-true-value="'Yes'" 
 												ng-false-value="'No'">
 									Taxable?</label>
@@ -615,7 +620,7 @@
 								<td valign="top" align="left">
 									<label for="active">
 										<input type="checkbox" id="active" name="active" 
-													ng-model="active"
+													ng-model="benefit.active"
 													ng-true-value="'Yes'" 
 													ng-false-value="'No'">
 									Active?</label>
