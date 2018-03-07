@@ -5,24 +5,6 @@ app.controller("postsController", ['$scope',
 									'deptService',
 									function($scope, $http, $state, postService, deptService){
 
-	function populateDeptSelectBox(scope, row){
-
-		deptService.getList().then(function(data){
-
-			$scope.depts = data
-			$scope.dept = {}
-
-			if(!$.isEmptyObject(row)){
-
-				$scope.dept = {
-
-					"id": row.dept_id,
-					"descr":row.dept_name
-				}
-			}
-		})
-	}
-
 	$scope.cancelHandle = function(){
 
 		$scope.dialogPostOpen = false;
@@ -36,10 +18,16 @@ app.controller("postsController", ['$scope',
 			$scope.$apply(function(){
 
 				$scope.dialogPostOpen = true;
-				$scope.name = "";
-				$scope.descr = "";
 
-				populateDeptSelectBox($scope)
+				$scope.id = ""
+				$scope.name = ""
+				$scope.descr = ""
+				$scope.dept = null
+
+				deptService.getList().then(function(data){
+
+					$scope.depts = data					
+				})
 			})				
 		})
 
@@ -53,13 +41,18 @@ app.controller("postsController", ['$scope',
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		postService.get(row.id).then(function(data){
 
 			$scope.dialogPostOpen = true;
-			$scope.name = row.name
-			$scope.descr = row.descr
 
-			populateDeptSelectBox($scope, row)
+			$scope.id = data.id
+			$scope.name = data.name
+			$scope.descr = data.descr
+			$scope.depts = data.depts
+
+			for(idx in data.depts)
+				if(data.depts[idx].id == data.dept_id)
+					$scope.dept = data.depts[idx]
 		})
 	}
 

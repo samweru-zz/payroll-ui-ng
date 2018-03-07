@@ -793,7 +793,8 @@
 					open={{dialogDeptOpen}}
 					cancel-callback="cancelHandle"
 					hide-close-button="false">
-				<form id="dept-form">
+				<form id="dept-form" ng-submit="submit()">
+					<input type="hidden" name="id" ng-model="id">
 					<table>
 						<tbody>
 							<tr>
@@ -815,7 +816,7 @@
 							<tr>
 								<td valign="top" align="right"></td>
 								<td valign="top">
-									<input type="button" value="Submit">
+									<input type="submit" value="Submit">
 								</td>
 							</tr>
 						</tbody>
@@ -854,7 +855,7 @@
 					open={{dialogRoleOpen}}
 					cancel-callback="cancelHandle"
 					hide-close-button="false">
-				<form id="role-form">
+				<form id="role-form" ng-submit="submit()">
 					<table>
 						<tbody>
 							<tr>
@@ -878,7 +879,7 @@
 							<tr>
 								<td valign="top" align="right"></td>
 								<td valign="top">
-									<input type="button" value="Submit">
+									<input type="submit" value="Submit">
 								</td>
 							</tr>
 						</tbody>

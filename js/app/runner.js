@@ -1,5 +1,77 @@
 app.run(['$httpBackend', function ($httpBackend){
 
+		$httpBackend.whenPOST(/\/role\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
+
+			console.log('Role:', method, url, data, headers, params);
+
+			var roleId = parseInt(params.id)
+
+			var _role = roles({id:roleId}).first()
+
+			var __role = {
+
+				id:_role.id,
+				name:_role.name,
+				descr:_role.descr
+			}
+
+			return [200, __role, {}]
+		})
+
+		$httpBackend.whenPOST("/role/add").respond(function(method, url, data, headers, params){
+
+			console.log('Role Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				var role = roles.insert({
+
+					id:roles().count()+1,
+					name:data.name,
+					descr:data.descr
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
+		$httpBackend.whenPOST("/role/update").respond(function(method, url, data, headers, params){
+
+			console.log('Role Update:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var role = roles({id:data.id}).update(data)
+
+				success = !!role.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
+
 		$httpBackend.whenPOST("/add/employee/pay").respond(function(method, url, data, headers, params){
 
 			console.log('Employee Pay Add:', method, url, data, headers, params);
@@ -17,8 +89,6 @@ app.run(['$httpBackend', function ($httpBackend){
 					salary:data.salary,
 					insurance_relief:data.insurance_relief
 				})
-
-				// console.log(empPay)
 
 				success = true
 			}
@@ -56,7 +126,7 @@ app.run(['$httpBackend', function ($httpBackend){
 		$httpBackend.whenPOST(/\/employee\/(\d+)\/payroll/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
 
 			var employee = employees({id:parseInt(params.id)}).first()
-			var pay_details = employee_pay({id:employee.id}).first()
+			var pay_details = employee_pay({employee:parseInt(params.id)}).first()
 			
 			var _benefits = [] 
 			$.each(benefits().get(), function(idx, benefit){
@@ -95,8 +165,6 @@ app.run(['$httpBackend', function ($httpBackend){
 					benefit:parseInt(params.benefit)
 				})
 				.remove()
-
-				// console.log(deleted)
 
 				success = true
 			}
@@ -139,8 +207,6 @@ app.run(['$httpBackend', function ($httpBackend){
 
 			data = JSON.parse(data)
 			data.id = parseInt(data.id)
-
-			// console.log(data)
 
 			var success;
 
@@ -234,7 +300,7 @@ app.run(['$httpBackend', function ($httpBackend){
       			})
       		})
 
-			return [200, {rows:_benefits, count:_benefits.length}, {}];
+			return [200, {rows:_benefits.reverse(), count:_benefits.length}, {}];
 		});
 
 		$httpBackend.whenPOST('/benefits').respond(function(method, url, data, headers){
@@ -263,7 +329,7 @@ app.run(['$httpBackend', function ($httpBackend){
 				})
 
 
-			return [200, {rows:__benefits, count:benefits().count()}, {}];
+			return [200, {rows:__benefits.reverse(), count:benefits().count()}, {}];
 		});
 
 		$httpBackend.whenPOST(/\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
@@ -300,7 +366,7 @@ app.run(['$httpBackend', function ($httpBackend){
 				})
 			}
 
-			return [200, {rows:__employees, count:employees().count()}, {}];
+			return [200, {rows:__employees.reverse(), count:employees().count()}, {}];
 		});
 
 		$httpBackend.whenPOST('/taxrelief').respond(function(method, url, data, headers){
@@ -417,13 +483,18 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _roles = roles().get()
 
+		    var __roles = []
+
 		    for(idx in _roles){
 
-				delete _roles[idx].___id;
-				delete _roles[idx].___s;
+		    	__roles.push({
+
+		    		id:_roles[idx].id,
+		    		name:_roles[idx].name
+		    	})
 			}
 
-			return [200, _roles, {}];
+			return [200, __roles, {}];
 		});
 
 		$httpBackend.whenPOST('/roles').respond(function(method, url, data, headers){
@@ -436,13 +507,35 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _roles = roles().start(start_from).limit(pager.rows).get()
 
+		    var __roles = []
+
 		    for(idx in _roles){
 
-				delete _roles[idx].___id;
-				delete _roles[idx].___s;
+		    	__roles.push({
+
+		    		id:_roles[idx].id,
+		    		descr:_roles[idx].descr,
+		    		name:_roles[idx].name
+		    	})
 			}
 
-			return [200, {rows:_roles, count:roles().count()}, {}];
+			return [200, {rows:__roles, count:roles().count()}, {}];
+		});
+
+		$httpBackend.whenPOST(/\/dept\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
+
+		    console.log('Dept:', method, url, data, headers, params);
+
+		    var _dept = depts({id:parseInt(params.id)}).first()
+
+		    var __dept = {
+
+	    		id:_dept.id,
+	    		alias:_dept.alias,
+	    		descr:_dept.descr
+	    	}
+
+			return [200, __dept, {}];
 		});
 
 		$httpBackend.whenPOST('/depts').respond(function(method, url, data, headers){
@@ -455,14 +548,74 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _depts = depts().start(start_from).limit(pager.rows).get()
 
+		    var __depts = []
+
 		    for(idx in _depts){
 
-				delete _depts[idx].___id;
-				delete _depts[idx].___s;
+		    	__depts.push({
+
+		    		id:_depts[idx].id,
+		    		alias:_depts[idx].alias,
+		    		descr:_depts[idx].descr,
+		    	})
 			}
 
-			return [200, {rows:_depts, count:depts().count()}, {}];
+			return [200, {rows:__depts, count:depts().count()}, {}];
 		});
+
+		$httpBackend.whenPOST('/dept/update').respond(function(method, url, data, headers){
+
+			console.log('Dept Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var dept = depts({id:data.id}).update(data)
+
+				success = !!dept.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST("/dept/add").respond(function(method, url, data, headers, params){
+
+			console.log('Dept Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				var dept = depts.insert({
+
+					id:depts().count()+1,
+					alias:data.alias,
+					descr:data.descr
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
 
 		$httpBackend.whenPOST('/dept/list').respond(function(method, url, data, headers){
 
@@ -470,14 +623,49 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _depts = depts().get()
 
+			var __depts = []		    
+
 		    for(idx in _depts){
 
-				delete _depts[idx].___id;
-				delete _depts[idx].___s;
+		    	__depts.push({
+
+		    		id:_depts[idx].id,
+		    		descr:_depts[idx].descr,
+		    	})
 			}
 
-			return [200, _depts, {}];
+			return [200, __depts, {}];
 		});
+
+		$httpBackend.whenPOST(/\/post\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
+
+			console.log('Post:', method, url, data, headers, params);
+
+			var _post = posts({id:parseInt(params.id)}).first()
+
+			var _depts = [];
+
+			$.each(depts().get(), function(idx, dept){
+
+				_depts.push({
+
+					id:dept.id,
+					descr:dept.descr
+				})
+			})
+
+			var __post = {
+
+				id:_post.id,
+				name:_post.name,
+				descr:_post.descr,
+				dept_id:_post.dept,
+				depts:_depts
+			}
+
+			return [200, __post, {}]
+		})
+
 
 		$httpBackend.whenPOST('/post/list').respond(function(method, url, data, headers){
 
@@ -512,6 +700,7 @@ app.run(['$httpBackend', function ($httpBackend){
 
 				__posts.push({
 
+					id:_posts[idx].id,
 					dept_name: dept.descr,
 					dept_id: dept.id,
 					name: _posts[idx].name,

@@ -14,6 +14,8 @@ app.controller("payrollController", [
 		$scope.employeeName = data.employee.firstname + " " + data.employee.lastname
 		$scope.benefits = data.benefits
 
+		// console.log(data.pay_details)
+
 		if(data.pay_details){
 
 			$scope.pay = {

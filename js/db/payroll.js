@@ -2,26 +2,31 @@
 paye = TAFFY([
 
 	{
+		id:1,
 		lbound:0,
 		ubound:12298,
 		rate_perc:10,
 	},
 	{
+		id:2,
 		lbound:12299,
 		ubound:23885,
 		rate_perc:15,
 	},
 	{
+		id:3,
 		lbound:23886,
 		ubound:35472,
 		rate_perc:20,
 	},
 	{
+		id:4,
 		lbound:35473,
 		ubound:47059,
 		rate_perc:25,
 	},
 	{
+		id:5,
 		lbound:47059,
 		ubound:1000000000,
 		rate_perc:30,
@@ -31,102 +36,119 @@ paye = TAFFY([
 nhif = TAFFY([
 
 	{
+		id:1,
 		lbound:0,
 		ubound:5999,
 		amt:150,
 		descr:"N/A"
 	},
 	{
+		id:2,
 		lbound:6000,
 		ubound:7999,
 		amt:300,
 		descr:"N/A"
 	},
 	{
+		id:3,
 		lbound:8000,
 		ubound:11999,
 		amt:400,
 		descr:"N/A"
 	},
 	{
+		id:4,
 		lbound:12000,
 		ubound:14999,
 		amt:500,
 		descr:"Plus Self Employed"
 	},
 	{
+		id:5,
 		lbound:15000,
 		ubound:19999,
 		amt:600,
 		descr:"N/A"
 	},
 	{
+		id:6,
 		lbound:20000,
 		ubound:24999,
 		amt:750,
 		descr:"N/A"
 	},
 	{
+		id:7,
 		lbound:25000,
 		ubound:29999,
 		amt:850,
 		descr:"N/A"
 	},
 	{
+		id:8,
 		lbound:30000,
 		ubound:34999,
 		amt:900,
 		descr:"N/A"
 	},
 	{
+		id:9,
 		lbound:35000,
 		ubound:39999,
 		amt:950,
 		descr:"N/A"
 	},
 	{
+		id:10,
 		lbound:40000,
 		ubound:44999,
 		amt:1000,
 		descr:"N/A"
 	},
 	{
+		id:11,
 		lbound:45000,
 		ubound:49999,
 		amt:1100,
 		descr:"N/A"
 	},
 	{
+		id:12,
 		lbound:50000,
 		ubound:59999,
 		amt:1200,
 		descr:"N/A"
 	},
 	{
+		id:13,
 		lbound:60000,
 		ubound:69999,
 		amt:1300,
 		descr:"N/A"
 	},
 	{
+		id:14,
 		lbound:70000,
 		ubound:79999,
 		amt:1400,
 		descr:"N/A"
 	},
 	{
+		id:15,
 		lbound:80000,
 		ubound:89999,
 		amt:1500,
 		descr:"N/A"
 	},
 	{
+		id:16,
 		lbound:90000,
 		ubound:99999,
 		amt:1600,
 		descr:"N/A"
 	},
 	{
+		id:17,
 		lbound:100000,
 		ubound:1000000000,
 		amt:1700,
@@ -172,6 +194,7 @@ relief = TAFFY([
 users = TAFFY([
 
 	{
+		id:1,
 		username:"sa", 
 		password:"p@55w0rd",
 		role:1
@@ -209,7 +232,7 @@ roles = TAFFY([
 		descr:'Payroll Administrator/Payroll Manager'
 	},
 	{
-		id:4,
+		id:3,
 		name:'Payroll User',
 		descr:'Normal User/Payroll User'
 	}
@@ -223,12 +246,12 @@ depts = TAFFY([
 		descr:'Human Resource Department'
 	},
 	{
-		id:3,
+		id:2,
 		alias:'FIN',
 		descr:'Finance Department'
 	},
 	{
-		id:4,
+		id:3,
 		alias:'IT',
 		descr:'Information Technology and Support'
 	}
@@ -243,8 +266,8 @@ posts = TAFFY([
 		descr:'Human Resource Managers'
 	},
 	{
-		id:3,
-		dept:3,
+		id:2,
+		dept:2,
 		name:'Finance Manager',
 		descr:'Finance Head'
 	}
@@ -253,7 +276,7 @@ posts = TAFFY([
 benefits = TAFFY([
 
 	{
-		id:5,
+		id:1,
 		name:'Travel Expenses',
 		amount:10000,
 		descr:'N/A',
@@ -263,7 +286,7 @@ benefits = TAFFY([
 		active:true
 	},
 	{
-		id:6,
+		id:2,
 		name:'Child Allowance',
 		amount:10,
 		descr:'N/A',
@@ -273,7 +296,7 @@ benefits = TAFFY([
 		active:false
 	},
 	{
-		id:9,
+		id:3,
 		name:'Housing Allowance',
 		amount:10000,
 		descr:'N/A',
@@ -283,7 +306,7 @@ benefits = TAFFY([
 		active:true
 	},
 	{
-		id:12,
+		id:4,
 		name:"NSSF (Tier I)",
 		amount:360,
 		descr:"National Social Security Fund",
@@ -293,7 +316,7 @@ benefits = TAFFY([
 		active:true
 	},
 	{
-		id:13,
+		id:5,
 		name:"NSSF (Tier II)",
 		amount:720,
 		descr:"National Social Security Fund",
@@ -303,7 +326,7 @@ benefits = TAFFY([
 		active:true
 	},
 	{
-		id:14,
+		id:6,
 		name:"NSSF (Tier I & II)",
 		amount:1080,
 		descr:"National Social Security Fund",
@@ -313,17 +336,6 @@ benefits = TAFFY([
 		active:true
 	}
 ])
-
-// benefits.store("benefits")
-// benefits.settings({
-
-// 	onUpdate:function (){
-
-// 		console.log("-----")
-// 		console.log(this)
-// 		console.log("-----")
-// 	}
-// });
 
 var i = 1;
 var employees__ = [];
@@ -374,13 +386,13 @@ employee_benefits = TAFFY([
 
 	{
 		id:1,
-		employee:1,
+		employee:10,
 		benefit:5
 	},
 	{
 		id:2,
-		employee:1,
-		benefit:6
+		employee:10,
+		benefit:1
 	},
 ])
 
@@ -388,13 +400,13 @@ employee_pay = TAFFY([
 
 	{
 		id:1,
-		employee:1,
+		employee:10,
 		salary:100000,
 		insurance_relief: 0
 	},
 	{
 		id:2,
-		employee:2,
+		employee:9,
 		salary:90000,
 		insurance_relief: 0
 	}

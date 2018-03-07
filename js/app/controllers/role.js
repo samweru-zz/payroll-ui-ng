@@ -8,6 +8,36 @@ app.controller("rolesController", ['$scope',
 		$scope.dialogRoleOpen = false;
 	}
 
+	$scope.submit = function(){
+
+		var role = {
+
+			name:$scope.name,
+			descr:$scope.descr
+		}
+
+		var roleSrv;
+		if(!!$scope.id){
+
+			role.id = $scope.id
+			roleSrv = roleService.update(role)
+		}
+		else roleSrv = roleService.add(role)
+
+		$("body").LoadingOverlay("show")
+
+		roleSrv.then(function(data){
+
+			$scope.dialogRoleOpen = false;
+
+			setTimeout(function(){
+
+				$("body").LoadingOverlay("hide")
+				$("#roles-tbl").trigger("refresh")
+			})
+		})
+	}
+
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")
@@ -16,6 +46,10 @@ app.controller("rolesController", ['$scope',
 			$scope.$apply(function(){
 
 				$scope.dialogRoleOpen = true;
+
+				$scope.id = ""
+				$scope.name = ""
+				$scope.descr = ""
 			})		
 		})
 
@@ -29,12 +63,13 @@ app.controller("rolesController", ['$scope',
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		roleService.get(row.id).then(function(data){
 
 			$scope.dialogRoleOpen = true;
 			
-			$scope.name = row.name
-			$scope.descr = row.descr
+			$scope.id = data.id
+			$scope.name = data.name
+			$scope.descr = data.descr
 		})
 	}
 

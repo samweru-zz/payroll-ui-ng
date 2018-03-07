@@ -4,6 +4,36 @@ app.controller("deptsController", ['$scope',
 									"deptService",
 									function($scope, $http, $state, deptService){
 
+	$scope.submit = function(){
+
+		var dept = {
+
+			alias: $scope.alias,
+			descr:$scope.descr
+		}
+
+		if(!!$scope.id){
+
+			dept.id = $scope.id
+			deptSrv = deptService.update(dept)
+		}
+		else deptSrv = deptService.add(dept)
+		
+		$("body").LoadingOverlay("show")
+
+		deptSrv.then(function(data){
+
+			$scope.dialogDeptOpen = false;
+
+			setTimeout(function(){
+
+				$("body").LoadingOverlay("hide")
+				$("#depts-tbl").trigger("refresh")
+
+			}, 400)
+		})
+	}
+
 	$scope.cancelHandle = function(){
 
 		$scope.dialogDeptOpen = false;
@@ -17,6 +47,10 @@ app.controller("deptsController", ['$scope',
 			$scope.$apply(function(){
 
 				$scope.dialogDeptOpen = true;
+
+				$scope.id = ""
+				$scope.alias = ""
+				$scope.descr = ""
 			})				
 		})
 
@@ -30,11 +64,13 @@ app.controller("deptsController", ['$scope',
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		deptService.get(row.id).then(function(data){
 
 			$scope.dialogDeptOpen = true;
-			$scope.alias = row.alias
-			$scope.descr = row.descr
+
+			$scope.id = data.id
+			$scope.alias = data.alias
+			$scope.descr = data.descr
 		})
 	}
 
