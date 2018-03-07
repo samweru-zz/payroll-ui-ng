@@ -4,7 +4,7 @@ app.service("postService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/post-list")
+		$http.post("/post/list")
 		.then(function(response){
 
 			deferred.resolve(response.data)
@@ -21,7 +21,7 @@ app.service("postService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/posts", pager)
+		$http.post("/posts", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)

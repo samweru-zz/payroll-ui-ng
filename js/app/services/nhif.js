@@ -9,7 +9,7 @@ app.service("nhifService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/nhif/rates", pager)
+		$http.post("/nhif/rates", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)

@@ -1,8 +1,166 @@
 app.run(['$httpBackend', function ($httpBackend){
 
-		$httpBackend.whenGET(/(\.html)$/).passThrough();
+		$httpBackend.whenPOST("/add/employee/pay").respond(function(method, url, data, headers, params){
 
-		$httpBackend.whenPOST("/data/benefit/update").respond(function(method, url, data, headers, params){
+			console.log('Employee Pay Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				var empPay = employee_pay.insert({
+
+					id:employee_pay().count()+1,
+					employee:data.employee,
+					salary:data.salary,
+					insurance_relief:data.insurance_relief
+				})
+
+				// console.log(empPay)
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}];
+		})
+
+		$httpBackend.whenPOST("/update/employee/pay").respond(function(method, url, data, headers, params){
+
+			console.log('Employee Pay Update:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				employee_pay({id:parseInt(data.id)}).update(data)
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}];
+		})
+
+		$httpBackend.whenPOST(/\/employee\/(\d+)\/payroll/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
+
+			var employee = employees({id:parseInt(params.id)}).first()
+			var pay_details = employee_pay({id:employee.id}).first()
+			
+			var _benefits = [] 
+			$.each(benefits().get(), function(idx, benefit){
+
+				_benefits.push({
+
+					"id":benefit.id,
+					"name":benefit.name
+				})
+			})
+
+			return [200, {
+
+				employee:{
+
+					firstname:employee.firstname,
+					lastname:employee.lastname
+				},
+				pay_details:pay_details,
+				benefits:_benefits,
+
+			}, {}]
+		})
+
+		$httpBackend.whenDELETE(/\/employee\/(\d+)\/remove\/benefit\/(\d+)/, undefined, ["employee","benefit"]).respond(function(method, url, data, headers, params){
+
+			console.log('Employee Add Benefit:', method, url, data, headers, params);
+
+			var success;
+
+			try{
+
+				var deleted = employee_benefits({
+
+					employee:parseInt(params.employee),
+					benefit:parseInt(params.benefit)
+				})
+				.remove()
+
+				// console.log(deleted)
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success": success}, {}];
+		})
+
+		$httpBackend.whenPOST(/\/employee\/(\d+)\/add\/benefit\/(\d+)/, undefined, undefined, ["employee","benefit"]).respond(function(method, url, data, headers, params){
+
+			console.log('Employee Add Benefit:', method, url, data, headers, params);
+
+			var success;
+
+			try{
+
+				var employee_benefit = employee_benefits.insert({
+
+					id:employee_benefits().count()+1,
+					employee:parseInt(params.employee),
+					benefit:parseInt(params.benefit)
+				})
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success": success}, {}];
+		})
+
+		$httpBackend.whenPOST("/employee/update").respond(function(method, url, data, headers, params){
+
+			console.log('Employee Update:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+			data.id = parseInt(data.id)
+
+			// console.log(data)
+
+			var success;
+
+			try{
+
+				employees({id:data.id}).update(data)
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}];
+		})
+
+		$httpBackend.whenPOST("/benefit/update").respond(function(method, url, data, headers, params){
+
+			console.log('Benefit Update:', method, url, data, headers, params);
 
 			data = JSON.parse(data)
 			data.id = parseInt(data.id)
@@ -23,9 +181,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {"success":success}, {}];
 		})
 
-		$httpBackend.whenPOST(/\/data\/benefit\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+		$httpBackend.whenPOST(/\/benefit\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
-			console.log('Received these data:', method, url, data, headers, params);
+			console.log('Benefit:', method, url, data, headers, params);
 
 			var benefit = benefits({id:parseInt(params.id)}).first()
 
@@ -44,9 +202,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, _benefit, {}];
 		})
 
-		$httpBackend.whenPOST(/\/data\/employee\/(\d+)\/benefits/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+		$httpBackend.whenPOST(/\/employee\/(\d+)\/benefits/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
-		    console.log('Received these data:', method, url, data, headers, params);
+		    console.log('Employee Benefits:', method, url, data, headers, params);
 
       		var _benefits = []
 
@@ -79,9 +237,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_benefits, count:_benefits.length}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/benefits').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/benefits').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Benefits:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -108,18 +266,18 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:__benefits, count:benefits().count()}, {}];
 		});
 
-		$httpBackend.whenPOST(/\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+		$httpBackend.whenPOST(/\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
-		    console.log('Received these data:', method, url, data, headers, params);
+		    console.log('Employee:', method, url, data, headers, params);
 
       		var _employee = employees({id:parseInt(params.id)}).first()
 
 			return [200, _employee, {}];
 		});
 
-		$httpBackend.whenPOST('/data/employees').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/employees').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Employees:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -145,9 +303,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:__employees, count:employees().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/taxrelief').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/taxrelief').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Tax Relief:', method, url, data, headers);
 
 		    var _relief = relief().get()
 
@@ -160,9 +318,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_relief, count:relief().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/nhif/rates').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/nhif/rates').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('NHIF Rates:', method, url, data, headers);
 
 		    var _nhif = nhif().get()
 
@@ -175,9 +333,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_nhif, count:nhif().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/paye/rates').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/paye/rates').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('PAYE Rates:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -194,9 +352,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_paye, count:paye().count()}, {}];
 		});
 
-     	$httpBackend.whenPOST('/data/periods').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/periods').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Periods:', method, url, data, headers);
 
 		    var _periods = period().get()
 
@@ -209,9 +367,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_periods, count:period().count()}, {}];
 		}); 
 
-     	$httpBackend.whenPOST('/data/users').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/users').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Users:', method, url, data, headers);
 
 		    var _users = users().get()
 
@@ -232,9 +390,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:__users, count:users().count()}, {}];
 		});  
 
-     	$httpBackend.whenPOST('/data/login').respond(function(method, url, data, headers){
+     	$httpBackend.whenPOST('/login').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Login:', method, url, data, headers);
 
 		    data = JSON.parse(data)
 
@@ -253,9 +411,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, response, {}];
 		});
 
-		$httpBackend.whenPOST('/data/role-list').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/role/list').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Role List:', method, url, data, headers);
 
 		    var _roles = roles().get()
 
@@ -268,9 +426,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, _roles, {}];
 		});
 
-		$httpBackend.whenPOST('/data/roles').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/roles').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Roles:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -287,9 +445,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_roles, count:roles().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/depts').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/depts').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Depts:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -306,9 +464,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_depts, count:depts().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/dept-list').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/dept/list').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Dept List:', method, url, data, headers);
 
 		    var _depts = depts().get()
 
@@ -321,9 +479,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, _depts, {}];
 		});
 
-		$httpBackend.whenPOST('/data/post-list').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/post/list').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Post List:', method, url, data, headers);
 
 		    var _posts = posts().get()
 
@@ -336,9 +494,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, _posts, {}];
 		});
 
-		$httpBackend.whenPOST('/data/posts').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/posts').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Posts:', method, url, data, headers);
 
 		    var pager = JSON.parse(data);
 
@@ -364,9 +522,9 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:__posts, count:posts().count()}, {}];
 		});
 
-		$httpBackend.whenPOST('/data/benefits-list').respond(function(method, url, data, headers){
+		$httpBackend.whenPOST('/benefits/list').respond(function(method, url, data, headers){
 
-		    console.log('Received these data:', method, url, data, headers);
+		    console.log('Benefit List:', method, url, data, headers);
 
 		    var _benefits = benefits().get()
 

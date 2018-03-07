@@ -307,6 +307,7 @@
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee.html">
 		<form>
+			<input type="hidden" name="id" ng-model="employee.id">
 			<table>
 				<tr>
 					<td class="caption">IDNo</td>
@@ -413,48 +414,67 @@
 					<td></td>
 					<td colspan="3">
 						<input type="submit" value="Submit" ng-click="submit()">
-						<input type="reset" value="Reset">
+						<!-- <input type="reset" value="Reset"> -->
 					</td>
 				</tr>
 			</table>
 		</form>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="payroll-details.html">
-		<form>
-			<span>
-				Employee:
-				<b>{{employeeName}}</b>
-			</span></br>
-			<span>&nbsp;</span>
+		<div ng-controller="payrollController" ng-init="mask=true">
+			<form ng-submit="submit()">
+				<input type="hidden" name="id" ng-model="pay.id">
+				<span>
+					Employee:
+					<b>{{employeeName}}</b>
+				</span></br>
+				<span>&nbsp;</span>
+				<table>
+					<tr>
+						<td class="caption">Basic Salary</td>
+						<td>
+							<input ng-hide="mask" currency 
+									type="text" name="salary" 
+									ng-model="pay.salary"
+									style="text-align:right">
+							<input ng-show="mask" type="password" name="salary" 
+									ng-model="pay.salary"
+									style="text-align:right">
+							<label for="mask">Mask
+								<input name="mask" type="checkbox" ng-model="mask">
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="caption">Insurance Relief</td>
+						<td>
+							<input currency type="text" name="in_relief" ng-model="pay.in_relief"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" value="Submit">
+						</td>
+					</tr>
+				</table>
+			</form>
 			<table>
 				<tr>
-					<td class="caption">Salary</td>
 					<td>
-						<input type="text" name="salary" ng-model="salary">
-					</td>
-				</tr>
-				<tr>
-					<td class="caption">Insurance Relief</td>
-					<td>
-						<input type="text" name="in_relief" ng-model="in_relief">
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type="submit" value="Submit">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
 						<span>&nbsp;</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<button>Add</button>
-						<select ng-model="benefit" ng-options="benefit.id as benefit.name for benefit in benefits track by benefit.id">
-							<option disabled value="">Benefit/Deduction</option>
+					<td>
+						<button ng-click="removeEmployeeBenefit()">Remove</button>
+						&nbsp;|&nbsp;
+						<select name="benefit"
+								ng-model="benefit" 
+								ng-options="benefit.id as benefit.name for benefit in benefits track by benefit.id"
+								ng-change="addEmployeeBenefit()">
+							<option disabled value="">Add Benefit/Deduction</option>
 						</select>
 					</td>
 				</tr>
@@ -483,8 +503,18 @@
 						dbl-click-row="dblClick"
 						custom-ajax-loader="customLoader"></table>
 				</div>
+			</div>
+			<div jq-dialog
+					id="benefits-dlg"
+					title="Benefits/Deductions"
+					modal="true"
+					open={{dialogMsgOpen}}
+					ok-button="Ok"
+					ok-callback="okHandle"
+					width="300">
+				{{message}}
 			</div>	
-		</form>
+		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee-add.html">
 		<div ng-controller="employeeController" ng-include src="'employee.html'"></div>
@@ -495,7 +525,7 @@
 			ng-class="{'active':active===1}"
 			class="tab-head">Employee Details</a>
 		<span>&nbsp;|&nbsp;</span>
-		<a ui-sref="employee.details.payroll" 
+		<a ui-sref="employee.payroll" 
 			ng-click="active=2"
 			ng-class="{'active':active===2}"
 			class="tab-head">Payroll Details</a>
@@ -536,8 +566,7 @@
 					modal="true"
 					open={{dialogBenefitsOpen}}
 					cancel-callback="cancelHandle"
-					hide-close-button="false"
-					get-toolbars="toolbars">
+					hide-close-button="false">
 				<form id="benefit-form" ng-submit="submit()">
 					<input type="hidden" name="id" ng-model="benefit.id">
 					<table>

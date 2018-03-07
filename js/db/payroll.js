@@ -325,12 +325,6 @@ benefits = TAFFY([
 // 	}
 // });
 
-
-var randomFixedLengthInteger = function (length) {
-	
-    return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
-}
-
 var i = 1;
 var employees__ = [];
 while(i<=20){
@@ -340,7 +334,7 @@ while(i<=20){
 	var emailAddr = firstName+"."+lastName+"@"+faker.internet.domainName()
 
 	var banks = ["Barclays", "Equity", "Co-operative", "I&M"]
-	var bank = faker.finance.account() + " " + faker.random.arrayElement(banks) 
+	var bank = faker.finance.account() + " " + faker.random.arrayElement(banks) + " Bank"
 
 	employees__.push({
 
@@ -360,9 +354,9 @@ while(i<=20){
 		county: faker.address.county(), 
 		country:faker.address.country(),
 		city:faker.address.city(),
-		dob:faker.date.past(10, new Date("01/01/1990")),
-		start_date:faker.date.future(1, new Date()),
-		end_date:faker.date.past(1, new Date()),
+		dob:faker.date.past(10, new Date("01/01/1990")).toDateString(),
+		start_date:faker.date.future(1, new Date()).toDateString(),
+		end_date:faker.date.past(1, new Date()).toDateString(),
 		bank_details:bank,
 		other_address:"",
 		other_email:"",
@@ -388,4 +382,20 @@ employee_benefits = TAFFY([
 		employee:1,
 		benefit:6
 	},
+])
+
+employee_pay = TAFFY([
+
+	{
+		id:1,
+		employee:1,
+		salary:100000,
+		insurance_relief: 0
+	},
+	{
+		id:2,
+		employee:2,
+		salary:90000,
+		insurance_relief: 0
+	}
 ])

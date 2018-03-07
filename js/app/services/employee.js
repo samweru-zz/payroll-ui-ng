@@ -1,10 +1,27 @@
 app.service("employeeService", ["$http", "$q", function($http, $q){
 
+	this.update = function(data){
+
+		var deferred = $q.defer();
+
+		$http.post("/employee/update", data)
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
 	this.get = function(id){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/employee/".concat(id)).then(function(response){
+		$http.post("/employee/".concat(id)).then(function(response){
 
 			deferred.resolve(response.data)
 		},
@@ -20,7 +37,7 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/employees", pager).then(function(response){
+		$http.post("/employees", pager).then(function(response){
 
 			deferred.resolve(response.data)
 		},

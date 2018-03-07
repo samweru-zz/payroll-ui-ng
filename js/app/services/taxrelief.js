@@ -9,7 +9,7 @@ app.service("taxReliefService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/taxrelief", pager)
+		$http.post("/taxrelief", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)

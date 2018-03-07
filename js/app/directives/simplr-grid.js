@@ -40,7 +40,7 @@ app.directive('jqSimplrGrid', function ($timeout){
             	css: eval("("+attrs.css+")") || null,
     		}
 
-    		console.log(gridOptions)
+    		// console.log(gridOptions)
 
     		if(scope.getToolbars)
     			gridOptions["toolbars"] = scope.getToolbars();

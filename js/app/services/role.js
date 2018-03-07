@@ -4,7 +4,7 @@ app.service("roleService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/role-list")
+		$http.post("/role/list")
 		.then(function(response){
 
 			deferred.resolve(response.data)
@@ -21,7 +21,7 @@ app.service("roleService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/roles", pager)
+		$http.post("/roles", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)

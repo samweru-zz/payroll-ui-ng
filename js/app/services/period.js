@@ -9,7 +9,7 @@ app.service("periodService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/periods", pager)
+		$http.post("/periods", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)

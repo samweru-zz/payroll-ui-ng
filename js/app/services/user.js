@@ -9,7 +9,7 @@ app.service("userService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/users", pager).then(function(response){
+		$http.post("/users", pager).then(function(response){
 
 			deferred.resolve(response.data)
 		},
@@ -25,7 +25,7 @@ app.service("userService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/login", {"username":username, "password":password}).then(function(response){
+		$http.post("/login", {"username":username, "password":password}).then(function(response){
 
 			deferred.resolve(response.data)
 		},

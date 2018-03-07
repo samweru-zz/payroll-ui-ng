@@ -41,12 +41,12 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
         })
         .state('employee', {
 
-            url: '/employee',
+            url: '/employee/:id',
             templateUrl : "employee-edit.html"
         })
         .state('employee.details', {
 
-            url: '/:id',
+            url: '/details',
             views:{
 
                 "employee-details@employee":{
@@ -56,9 +56,9 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
                 }
             } 
         })
-        .state('employee.details.payroll', {
+        .state('employee.payroll', {
 
-            url: '/payroll',
+            url:'/payroll',
             views:{
 
                 "employee-details@employee":{

@@ -9,7 +9,7 @@ app.service("benefitsService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/benefit/update", data)
+		$http.post("/benefit/update", data)
 		.then(function(response){
 
 			deferred.resolve(response.data)
@@ -26,7 +26,7 @@ app.service("benefitsService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/benefit/".concat(id))
+		$http.post("/benefit/".concat(id))
 		.then(function(response){
 
 			deferred.resolve(response.data)
@@ -43,7 +43,7 @@ app.service("benefitsService", ["$http", "$q", function($http, $q){
 
 		var deferred = $q.defer();
 
-		$http.post("/data/benefits", pager)
+		$http.post("/benefits", pager)
 		.then(function(response){
 
 			deferred.resolve(response.data)
