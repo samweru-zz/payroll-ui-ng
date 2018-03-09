@@ -69,75 +69,84 @@
 		<div ui-view="rate-details"></div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="relief.html">
-		<table>
-			<tr>
-				<td>
-					<input type="text" name="name" 
-							ng-model="name"
-							placeholder="Name">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Kshs.<input currency type="text" name="amount" 
-							ng-model="amount"
-							placeholder="Monthly Amount"
-							style="text-align: right">
-				</td>
-			</tr>
-			<tr>
-				<td><label for="active">
-					<input type="checkbox" name="active" 
-							ng-model="active"
-							ng-true-value="'Yes'" 
-							ng-false-value="'No'">
-				Active?</label></td>
-			</tr>
-			<tr>
-				<td>
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-		<table jq-simplr-grid 
-				id='relief-tbl'
-				url="/data/relief"
-				method="POST"
-				title="Tax Relief"
-				use-pager="false"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				columns="{
-
-					id:{name:'#', css:{display:'none'}},
-					name:{name:'Name', css:{width:'200px'}},
-					amt:{name:'Amount', css:{textAlign:'right', width:'100px'}}
-				}"
-				css="{capsuleWidth:'100%',gridHeight:'300px'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
-	</script>
-	<script type="text/ng-template" charset="utf-8" id="nhif.html">
-		<div ng-controller="nhifController">
+		<div ng-controller="taxReliefController" ng-init="newDisable=true">
 			<form ng-submit="submit()">
+				<input type="hidden" name="id" ng-model="id">
 				<table>
-					<tr><td>Kshs.
-						<input currency type="text" 
-									name="ubound" 
-									ng-model="ubound"
-									placeholder="Upper Bound"
-									style="text-align:right">
+					<tr>
+						<td>
+							<input type="text" name="name" 
+									ng-model="name"
+									placeholder="Name"
+									size='32'>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							Kshs.&nbsp;<input currency type="text" name="amount" 
+									ng-model="amount"
+									placeholder="Monthly Amount"
+									style="text-align: right">
+						</td>
+					</tr>
+					<tr>
+						<td><label for="active">
+							<input type="checkbox" name="active" 
+									ng-model="active"
+									ng-true-value="'Yes'" 
+									ng-false-value="'No'">
+						Active?</label></td>
+					</tr>
+					<tr>
+						<td>
+							<input type="button" value="New" 
+									ng-click="addNew()" ng-disabled="newDisable">
+							<input type="submit" value="Submit">
+						</td>
+					</tr>
+				</table>
+			</form>
+			<table jq-simplr-grid 
+					id='relief-tbl'
+					url="/data/relief"
+					method="POST"
+					title="Tax Relief"
+					use-pager="false"
+					single-select="true"
+					fix-left-column="true"
+					fix-header="true"
+					resize-columns="true"
+					columns="{
+
+						id:{name:'#', css:{display:'none'}},
+						name:{name:'Name', css:{width:'200px'}},
+						amount:{name:'Amount', css:{textAlign:'right', width:'100px'}},
+						active:{name:'Active&nbsp;'}
+					}"
+					css="{capsuleWidth:'100%',gridHeight:'300px'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+		</div>
+	</script>
+	<script type="text/ng-template" charset="utf-8" id="nhif.html">
+		<div ng-controller="nhifController" ng-init="disableNew=true">
+			<form ng-submit="submit()">
+				<table>
 					<tr><td>Kshs.
 						<input currency type="text" 
 									name="lbound" 
 									ng-model="lbound"
 									placeholder="Lower Bound"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td>Kshs.
+						<input currency type="text" 
+									name="ubound" 
+									ng-model="ubound"
+									placeholder="Upper Bound"
 									style="text-align:right">
 						</td>
 					</tr>
@@ -149,7 +158,11 @@
 									style="text-align:right">
 						</td>
 					</tr>
-					<tr><td><input type="submit" text="Submit">
+					<tr><td>
+							<input type="button" value="New" 
+								ng-disabled="disableNew"
+								ng-click="addNew()">
+							<input type="submit" text="Submit">
 						</td>
 					</tr>
 				</table>
@@ -164,6 +177,7 @@
 					fix-left-column="true"
 					columns="{
 
+						id:{css:{display:'none'}},
 						lbound:{name:'Lower Bound', css:{textAlign:'right', width:'100px'}},
 						ubound:{name:'Upper Bound', css:{textAlign:'right', width:'100px'}},
 						amt:{name:'Amount', css:{textAlign:'right', width:'100px'}},
@@ -178,56 +192,64 @@
 		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="paye.html">
-		<form>
-			<table>
-				<tr><td>Kshs.
-					<input type="text" 
-								name="ubound" 
-								ng-model="ubound"
-								placeholder="Upper Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td>Kshs.
-					<input type="text" 
-								name="lbound" 
-								ng-model="lbound"
-								placeholder="Upper Bound"
-								style="text-align:right">
-					</td>
-				</tr>
-				<tr><td><input type="text" 
-								name="tax_rate" 
-								ng-model="tax_rate"
-								placeholder="Tax Rate"
-								style="text-align:right"> %
-					</td>
-				</tr>
-				<tr><td><input type="submit" text="Submit">
-					</td>
-				</tr>
-			</table>
-		</form>
-		<table jq-simplr-grid 
-				id='paye-tbl'
-				url="/data/paye"
-				method="POST"
-				title="Paye"
-				use-pager="false"
-				single-select="true"
-				fix-left-column="true"
-				fix-header="true"
-				resize-columns="true"
-				columns = "{
-					lbound:{name:'Lower Bound', css:{textAlign:'right', width:'150px'}},
-					ubound:{name:'Upper Bound', css:{textAlign:'right', width:'150px'}},
-					rate_perc:{name:'Tax Rate'}
-				}"
-				css="{capsuleWidth:'100%',gridHeight:'300px'}"
-				pager="{page:1,rows:10,list:[10,20]}"
-				dbl-click-row="dblClick"
-				custom-ajax-loader="customLoader"
-				get-toolbars="toolbars"></table>
+		<div ng-controller="payeController" ng-init="disableNew=true">
+			<form ng-submit="submit()">
+				<input type="hidden" name="id" ng-model="id">
+				<table>
+					<tr><td>Kshs.
+						<input currency type="text" 
+									name="lbound" 
+									ng-model="lbound"
+									placeholder="Lower Bound"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td>Kshs.
+						<input currency type="text" 
+									name="ubound" 
+									ng-model="ubound"
+									placeholder="Upper Bound"
+									style="text-align:right">
+						</td>
+					</tr>
+					<tr><td><input type="text" 
+									name="tax_rate" 
+									ng-model="tax_rate"
+									placeholder="Tax Rate"
+									style="text-align:right"> %
+						</td>
+					</tr>
+					<tr><td>
+							<input type="button" value="New" 
+									ng-disabled="disableNew"
+									ng-click="addNew()">
+							<input type="submit" text="Submit" ng-click="submit">
+						</td>
+					</tr>
+				</table>
+			</form>
+			<table jq-simplr-grid 
+					id='paye-tbl'
+					url="/data/paye"
+					method="POST"
+					title="Paye"
+					use-pager="false"
+					single-select="true"
+					fix-left-column="true"
+					fix-header="true"
+					resize-columns="true"
+					columns = "{
+						id:{css:{display:'none'}},
+						lbound:{name:'Lower Bound', css:{textAlign:'right', width:'150px'}},
+						ubound:{name:'Upper Bound', css:{textAlign:'right', width:'150px'}},
+						rate_perc:{name:'Tax Rate&nbsp;'}
+					}"
+					css="{capsuleWidth:'100%',gridHeight:'300px'}"
+					pager="{page:1,rows:10,list:[10,20]}"
+					dbl-click-row="dblClick"
+					custom-ajax-loader="customLoader"
+					get-toolbars="toolbars"></table>
+		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="period.html">
 		<div ng-controller="periodController">
@@ -725,7 +747,8 @@
 					open={{dialogPostOpen}}
 					cancel-callback="cancelHandle"
 					hide-close-button="false">
-				<form id="post-form">
+				<form id="post-form" ng-submit="submit()">
+					<input type="hidden" name="id" ng-model="id">
 					<table>
 						<tbody>
 							<tr>
@@ -754,7 +777,7 @@
 							<tr>
 								<td valign="top" align="right"></td>
 								<td valign="top">
-									<input type="button" value="Submit">
+									<input type="submit" value="Submit">
 								</td>
 							</tr>
 						</tbody>

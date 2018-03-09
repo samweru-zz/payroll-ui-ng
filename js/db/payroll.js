@@ -40,119 +40,102 @@ nhif = TAFFY([
 		lbound:0,
 		ubound:5999,
 		amt:150,
-		descr:"N/A"
 	},
 	{
 		id:2,
 		lbound:6000,
 		ubound:7999,
 		amt:300,
-		descr:"N/A"
 	},
 	{
 		id:3,
 		lbound:8000,
 		ubound:11999,
 		amt:400,
-		descr:"N/A"
 	},
 	{
 		id:4,
 		lbound:12000,
 		ubound:14999,
-		amt:500,
-		descr:"Plus Self Employed"
+		amt:500
 	},
 	{
 		id:5,
 		lbound:15000,
 		ubound:19999,
 		amt:600,
-		descr:"N/A"
 	},
 	{
 		id:6,
 		lbound:20000,
 		ubound:24999,
 		amt:750,
-		descr:"N/A"
 	},
 	{
 		id:7,
 		lbound:25000,
 		ubound:29999,
 		amt:850,
-		descr:"N/A"
 	},
 	{
 		id:8,
 		lbound:30000,
 		ubound:34999,
 		amt:900,
-		descr:"N/A"
 	},
 	{
 		id:9,
 		lbound:35000,
 		ubound:39999,
 		amt:950,
-		descr:"N/A"
 	},
 	{
 		id:10,
 		lbound:40000,
 		ubound:44999,
 		amt:1000,
-		descr:"N/A"
 	},
 	{
 		id:11,
 		lbound:45000,
 		ubound:49999,
 		amt:1100,
-		descr:"N/A"
 	},
 	{
 		id:12,
 		lbound:50000,
 		ubound:59999,
 		amt:1200,
-		descr:"N/A"
 	},
 	{
 		id:13,
 		lbound:60000,
 		ubound:69999,
 		amt:1300,
-		descr:"N/A"
 	},
 	{
 		id:14,
 		lbound:70000,
 		ubound:79999,
 		amt:1400,
-		descr:"N/A"
 	},
 	{
 		id:15,
 		lbound:80000,
 		ubound:89999,
 		amt:1500,
-		descr:"N/A"
 	},
 	{
 		id:16,
 		lbound:90000,
 		ubound:99999,
 		amt:1600,
-		descr:"N/A"
 	},
 	{
 		id:17,
 		lbound:100000,
 		ubound:1000000000,
 		amt:1700,
-		descr:"N/A"
 	}
 ])
 

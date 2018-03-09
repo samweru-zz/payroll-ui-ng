@@ -15,18 +15,24 @@ app.controller("benefitsController", [
 		var benefit_data = {
 
 			"name":benefit.name,
-			"amount":benefit.amt,
+			"amount":benefit.amt.toString().replace(",",""),
 			"descr":benefit.descr,
 			"deduct":benefit.type.id == "benefit",
 			"taxable":benefit.taxable == "Yes",
-			"active":benefit.activ == "Yes",
+			"active":benefit.active == "Yes",
 			"percentage":benefit.perc == "Yes"
 		}
 
-		if(benefit.id != "")
-			benefit_data["id"] = benefit.id;
+		var benefitSvr;
 
-		benefitsService.update(benefit_data).then(function(data){
+		if(!!benefit.id){
+
+			benefit_data["id"] = benefit.id;
+			benefitSvr = benefitsService.update(benefit_data)
+		}
+		else benefitSvr = benefitsService.add(benefit_data)
+
+		benefitSvr.then(function(data){
 
 			console.log(data)
 
@@ -50,13 +56,16 @@ app.controller("benefitsController", [
 
 				$scope.dialogBenefitsOpen = true;
 
-				$scope.name = ""
-				$scope.amt = ""
-				$scope.descr = ""
-				$scope.perc = ""
-				$scope.deduct = ""
-				$scope.taxable = ""
-				$scope.active = ""
+				$scope.benefit = {
+
+					name:"",
+					amt:"",
+					descr:"",
+					perc:"No",
+					deduct:"",
+					taxable:"",
+					active:""
+				}
 			})				
 		})
 
@@ -89,24 +98,6 @@ app.controller("benefitsController", [
 	}
 
 	$scope.customLoader = function(table, options, builder){
-
-		// table.find("td[name='amount']").each(function(idx, j){
-
-		// 	var val = $(this).has("div").find("div").html()
-
-		// 	if(val == "")
-		// 		val = $(this).html()
-
-		// 	if(!/\%/.test(val))
-		// 		$(this).children().css({
-
-		// 			textAlign:"right"
-		// 		})
-		// 		.parent().css({
-
-		// 			paddingRight:"10px"
-		// 		})
-		// })
 
 		benefitsService.getBenefits(options.pager).then(function(data){
 

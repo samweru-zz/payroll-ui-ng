@@ -7,18 +7,45 @@ app.controller("taxReliefController", ['$scope',
 
 	$scope.$parent.active = 3
 
-	$scope.toolbars = function(){
+	$scope.submit = function(){
 
-		var btnAdd = $(document.createElement("BUTTON")).html("Add")
-		btnAdd.click(function(){
-			
-			//			
+		var relief = {
+
+			name:$scope.name,
+			amt:$scope.amount,
+			active:$scope.active == "Yes"
+		}
+
+		var taxReliefSrv;
+		if(!!$scope.id){
+
+			relief.id = $scope.id
+			taxReliefSrv = taxReliefService.update(relief)
+		}
+		else taxReliefSrv = taxReliefService.add(relief)
+
+		$("body").LoadingOverlay("show")
+
+		taxReliefSrv.then(function(data){
+
+			setTimeout(function(){
+
+				$("body").LoadingOverlay("hide")
+				$("#relief-tbl").trigger("refresh")
+				
+				$scope.addNew()
+
+			},400)
 		})
+	}
 
-		return [
+	$scope.addNew = function(){
 
-			[btnAdd]
-		]
+		$scope.newDisable = true
+		$scope.id = ""
+		$scope.name = ""
+		$scope.amount = ""
+		$scope.active = "No"
 	}
 
 	$scope.dblClick = function(){
@@ -27,9 +54,11 @@ app.controller("taxReliefController", ['$scope',
 
 		$scope.$apply(function(){
 
-			// $scope.id = row.id
+			$scope.newDisable = false
+
+			$scope.id = row.id
 			$scope.name = row.name
-			$scope.amount = row.amt
+			$scope.amount = row.amount
 			$scope.active = row.active
 		})
 	}
@@ -44,7 +73,7 @@ app.controller("taxReliefController", ['$scope',
 
 			for(idx in _relief){
 
-				_relief[idx].amt = $filter("currency")(_relief[idx].amt, "")
+				_relief[idx].amount = $filter("currency")(_relief[idx].amount, "")
 				_relief[idx].active = _relief[idx].active?"Yes":"No"
 			}
 

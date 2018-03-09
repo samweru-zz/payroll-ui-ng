@@ -1,5 +1,50 @@
 app.run(['$httpBackend', function ($httpBackend){
 
+		$httpBackend.whenPOST('/role/list').respond(function(method, url, data, headers){
+
+		    console.log('Role List:', method, url, data, headers);
+
+		    var _roles = roles().get()
+
+		    var __roles = []
+
+		    for(idx in _roles){
+
+		    	__roles.push({
+
+		    		id:_roles[idx].id,
+		    		name:_roles[idx].name
+		    	})
+			}
+
+			return [200, __roles, {}];
+		});
+
+		$httpBackend.whenPOST('/roles').respond(function(method, url, data, headers){
+
+		    console.log('Roles:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _roles = roles().start(start_from).limit(pager.rows).get()
+
+		    var __roles = []
+
+		    for(idx in _roles){
+
+		    	__roles.push({
+
+		    		id:_roles[idx].id,
+		    		descr:_roles[idx].descr,
+		    		name:_roles[idx].name
+		    	})
+			}
+
+			return [200, {rows:__roles, count:roles().count()}, {}];
+		});
+
 		$httpBackend.whenPOST(/\/role\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
 
 			console.log('Role:', method, url, data, headers, params);
@@ -224,50 +269,6 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {"success":success}, {}];
 		})
 
-		$httpBackend.whenPOST("/benefit/update").respond(function(method, url, data, headers, params){
-
-			console.log('Benefit Update:', method, url, data, headers, params);
-
-			data = JSON.parse(data)
-			data.id = parseInt(data.id)
-
-			var success;
-
-			try{
-
-				benefits({id:data.id}).update(data)
-
-				success = true
-			}
-			catch(err){
-
-				success = false
-			}
-
-			return [200, {"success":success}, {}];
-		})
-
-		$httpBackend.whenPOST(/\/benefit\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
-
-			console.log('Benefit:', method, url, data, headers, params);
-
-			var benefit = benefits({id:parseInt(params.id)}).first()
-
-			var _benefit = {
-
-				id:benefit.id,
-				name:benefit.name,
-				amount:benefit.amount,
-				descr:benefit.descr,
-				percentage:benefit.percentage,
-				deduct:benefit.deduct,
-				taxable:benefit.taxable,
-				active:benefit.active
-			}
-
-			return [200, _benefit, {}];
-		})
-
 		$httpBackend.whenPOST(/\/employee\/(\d+)\/benefits/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
 		    console.log('Employee Benefits:', method, url, data, headers, params);
@@ -303,34 +304,6 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:_benefits.reverse(), count:_benefits.length}, {}];
 		});
 
-		$httpBackend.whenPOST('/benefits').respond(function(method, url, data, headers){
-
-		    console.log('Benefits:', method, url, data, headers);
-
-		    var pager = JSON.parse(data);
-
-		    var start_from = (pager.page - 1) * pager.rows;
-
-		    var _benefits = benefits().start(start_from).limit(pager.rows).get()
-
-			var __benefits = []
-
-			for(idx in _benefits)
-				__benefits.push({
-
-					id:_benefits[idx].id,
-					name:_benefits[idx].name,
-					amount:_benefits[idx].amount,
-					descr:_benefits[idx].descr,
-					percentage:_benefits[idx].percentage,
-					deduct:_benefits[idx].deduct,
-					taxable:_benefits[idx].taxable,
-					active:_benefits[idx].active
-				})
-
-
-			return [200, {rows:__benefits.reverse(), count:benefits().count()}, {}];
-		});
 
 		$httpBackend.whenPOST(/\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
 
@@ -369,19 +342,135 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {rows:__employees.reverse(), count:employees().count()}, {}];
 		});
 
+		$httpBackend.whenPOST('/taxrelief/update').respond(function(method, url, data, headers){
+
+			console.log('Tax Relief Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var taxrelief = relief({id:data.id}).update(data)
+
+				success = !!taxrelief.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST("/taxrelief/add").respond(function(method, url, data, headers, params){
+
+			console.log('Tex Relief Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				relief.insert({
+
+					id:relief().count()+1,
+					name:data.name,
+					amt:data.amt,
+					active:data.active
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
 		$httpBackend.whenPOST('/taxrelief').respond(function(method, url, data, headers){
 
 		    console.log('Tax Relief:', method, url, data, headers);
 
 		    var _relief = relief().get()
 
+		    var __relief = []
+
 		    for(idx in _relief){
 
-				delete _relief[idx].___id;
-				delete _relief[idx].___s;
+		    	__relief.push({
+
+		    		id:_relief[idx].id,
+		    		name:_relief[idx].name,
+		    		amount:_relief[idx].amt,
+		    		active:_relief[idx].active
+		    	})
 			}
 
-			return [200, {rows:_relief, count:relief().count()}, {}];
+			return [200, {rows:__relief, count:relief().count()}, {}];
+		});
+
+		$httpBackend.whenPOST('/nhif/update').respond(function(method, url, data, headers){
+
+			console.log('NHIF Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var nhif_ = nhif({id:data.id}).update(data)
+
+				success = !!nhif_.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST("/nhif/add").respond(function(method, url, data, headers, params){
+
+			console.log('NHIF Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				paye.insert({
+
+					id:paye().count()+1,
+					lbound:data.lbound,
+					ubound:data.ubound,
+					amt:data.amt,
+					descr:data.descr
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
 		});
 
 		$httpBackend.whenPOST('/nhif/rates').respond(function(method, url, data, headers){
@@ -390,13 +479,20 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _nhif = nhif().get()
 
+		    var __nhif = []
+
 		    for(idx in _nhif){
 
-				delete _nhif[idx].___id;
-				delete _nhif[idx].___s;
+		    	__nhif.push({
+
+		    		id:_nhif[idx].id,
+		    		lbound:_nhif[idx].lbound,
+		    		ubound:_nhif[idx].ubound,
+		    		amt:_nhif[idx].amt
+		    	})
 			}
 
-			return [200, {rows:_nhif, count:nhif().count()}, {}];
+			return [200, {rows:__nhif, count:nhif().count()}, {}];
 		});
 
 		$httpBackend.whenPOST('/paye/rates').respond(function(method, url, data, headers){
@@ -409,14 +505,75 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _paye = paye().start(start_from).limit(pager.rows).get()
 
+		    var __paye = []
+
 		    for(idx in _paye){
 
-				delete _paye[idx].___id;
-				delete _paye[idx].___s;
+				__paye.push({
+
+					id:_paye[idx].id,
+					lbound:_paye[idx].lbound,
+					ubound:_paye[idx].ubound,
+					rate_perc:_paye[idx].rate_perc
+				})
 			}
 
-			return [200, {rows:_paye, count:paye().count()}, {}];
+			return [200, {rows:__paye, count:paye().count()}, {}];
 		});
+
+		$httpBackend.whenPOST('/paye/update').respond(function(method, url, data, headers){
+
+			console.log('Paye Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var paye_ = paye({id:data.id}).update(data)
+
+				success = !!paye_.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST("/paye/add").respond(function(method, url, data, headers, params){
+
+			console.log('Paye Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				paye.insert({
+
+					id:paye().count()+1,
+					lbound:data.lbound,
+					ubound:data.ubound,
+					rate_perc:data.rate_perc
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
 
      	$httpBackend.whenPOST('/periods').respond(function(method, url, data, headers){
 
@@ -475,51 +632,6 @@ app.run(['$httpBackend', function ($httpBackend){
 		    	response.isLoggedIn = true
 
 			return [200, response, {}];
-		});
-
-		$httpBackend.whenPOST('/role/list').respond(function(method, url, data, headers){
-
-		    console.log('Role List:', method, url, data, headers);
-
-		    var _roles = roles().get()
-
-		    var __roles = []
-
-		    for(idx in _roles){
-
-		    	__roles.push({
-
-		    		id:_roles[idx].id,
-		    		name:_roles[idx].name
-		    	})
-			}
-
-			return [200, __roles, {}];
-		});
-
-		$httpBackend.whenPOST('/roles').respond(function(method, url, data, headers){
-
-		    console.log('Roles:', method, url, data, headers);
-
-		    var pager = JSON.parse(data);
-
-		    var start_from = (pager.page - 1) * pager.rows;
-
-		    var _roles = roles().start(start_from).limit(pager.rows).get()
-
-		    var __roles = []
-
-		    for(idx in _roles){
-
-		    	__roles.push({
-
-		    		id:_roles[idx].id,
-		    		descr:_roles[idx].descr,
-		    		name:_roles[idx].name
-		    	})
-			}
-
-			return [200, {rows:__roles, count:roles().count()}, {}];
 		});
 
 		$httpBackend.whenPOST(/\/dept\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
@@ -637,6 +749,60 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, __depts, {}];
 		});
 
+		$httpBackend.whenPOST("/post/add").respond(function(method, url, data, headers, params){
+
+			console.log('Post Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				var post = posts.insert({
+
+					id:posts().count()+1,
+					name:data.name,
+					descr:data.descr,
+					dept:data.dept
+				})
+
+				success = !!post.first();
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
+		$httpBackend.whenPOST('/post/update').respond(function(method, url, data, headers){
+
+			console.log('Post Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var post = posts({id:data.id}).update(data)
+
+				success = !!post.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
 		$httpBackend.whenPOST(/\/post\/(\d+)/, undefined, undefined, ["id"]).respond(function(method, url, data, headers, params){
 
 			console.log('Post:', method, url, data, headers, params);
@@ -673,13 +839,18 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    var _posts = posts().get()
 
+		    var __posts = []
+
 		    for(idx in _posts){
 
-				delete _posts[idx].___id;
-				delete _posts[idx].___s;
+		    	__posts.push({
+
+		    		id:_posts[idx].id,
+		    		name:_posts[idx].name
+		    	})
 			}
 
-			return [200, _posts, {}];
+			return [200, __posts, {}];
 		});
 
 		$httpBackend.whenPOST('/posts').respond(function(method, url, data, headers){
@@ -708,7 +879,114 @@ app.run(['$httpBackend', function ($httpBackend){
 				})
 			}
 
-			return [200, {rows:__posts, count:posts().count()}, {}];
+			return [200, {rows:__posts.reverse(), count:posts().count()}, {}];
+		});
+
+		$httpBackend.whenPOST("/benefit/add").respond(function(method, url, data, headers, params){
+
+			console.log('Benefit Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				var benefit = benefits.insert({
+
+					id:benefits().count()+1,
+					name:data.name,
+					amount:data.amount,
+					descr:data.descr,
+					deduct:data.deduct,
+					taxable:data.taxable,
+					active:data.active,
+					percentage:data.percentage
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
+		$httpBackend.whenPOST("/benefit/update").respond(function(method, url, data, headers, params){
+
+			console.log('Benefit Update:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				// console.log(data)
+
+				benefits({id:data.id}).update(data)
+
+				success = true
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}];
+		})
+
+		$httpBackend.whenPOST(/\/benefit\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+			console.log('Benefit:', method, url, data, headers, params);
+
+			var benefit = benefits({id:parseInt(params.id)}).first()
+
+			var _benefit = {
+
+				id:benefit.id,
+				name:benefit.name,
+				amount:benefit.amount,
+				descr:benefit.descr,
+				percentage:benefit.percentage,
+				deduct:benefit.deduct,
+				taxable:benefit.taxable,
+				active:benefit.active
+			}
+
+			return [200, _benefit, {}];
+		})
+
+		$httpBackend.whenPOST('/benefits').respond(function(method, url, data, headers){
+
+		    console.log('Benefits:', method, url, data, headers);
+
+		    var pager = JSON.parse(data);
+
+		    var start_from = (pager.page - 1) * pager.rows;
+
+		    var _benefits = benefits().start(start_from).limit(pager.rows).get()
+
+			var __benefits = []
+
+			for(idx in _benefits)
+				__benefits.push({
+
+					id:_benefits[idx].id,
+					name:_benefits[idx].name,
+					amount:_benefits[idx].amount,
+					descr:_benefits[idx].descr,
+					percentage:_benefits[idx].percentage,
+					deduct:_benefits[idx].deduct,
+					taxable:_benefits[idx].taxable,
+					active:_benefits[idx].active
+				})
+
+
+			return [200, {rows:__benefits.reverse(), count:benefits().count()}, {}];
 		});
 
 		$httpBackend.whenPOST('/benefits/list').respond(function(method, url, data, headers){

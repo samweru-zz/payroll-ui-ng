@@ -7,18 +7,46 @@ app.controller("payeController", ['$scope',
 
 	$scope.$parent.active = 2
 
-	$scope.toolbars = function(){
+	$scope.addNew = function(){
 
-		var btnAdd = $(document.createElement("BUTTON")).html("Add")
-		btnAdd.click(function(){
-			
-			//				
+		$scope.disableNew = true
+
+		$scope.id = ""
+		$scope.ubound = ""
+		$scope.lbound = ""
+		$scope.tax_rate = ""
+	}
+
+	$scope.submit = function(){
+
+		var paye = {
+
+			ubound:$scope.ubound.replace(",",""),
+			lbound:$scope.lbound.replace(",",""),
+			rate_perc:$scope.tax_rate
+		}
+
+		var payeSrv;
+		if(!!$scope.id){
+
+			paye.id = $scope.id
+			payeSrv = payeService.update(paye)
+		}
+		else payeSrv = payeService.add(paye)
+
+		$("body").LoadingOverlay("show")
+
+		payeSrv.then(function(data){
+
+			setTimeout(function(){
+
+				$("body").LoadingOverlay("hide")
+				$("#paye-tbl").trigger("refresh")
+
+				$scope.addNew()
+
+			}, 400)
 		})
-
-		return [
-
-			[btnAdd]
-		]
 	}
 
 	$scope.dblClick = function(){
@@ -27,6 +55,9 @@ app.controller("payeController", ['$scope',
 
 		$scope.$apply(function(){
 
+			$scope.disableNew = false
+
+			$scope.id = row.id
 			$scope.ubound = row.ubound
 			$scope.lbound = row.lbound
 			$scope.tax_rate = row.rate_perc.replace("%","")

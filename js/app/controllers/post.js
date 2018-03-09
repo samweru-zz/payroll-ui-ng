@@ -10,6 +10,38 @@ app.controller("postsController", ['$scope',
 		$scope.dialogPostOpen = false;
 	}
 
+	$scope.submit = function(){
+
+		var post = {
+
+			name:$scope.name,
+			descr:$scope.descr,
+			dept:$scope.dept.id
+		}
+
+		var postSrv;
+		if(!!$scope.id){
+
+			post.id = $scope.id
+			postSrv = postService.update(post)
+		}
+		else postSrv = postService.add(post)
+
+		$("body").LoadingOverlay("show")
+
+		postSrv.then(function(data){
+
+			$scope.dialogPostOpen = false;
+
+			setTimeout(function(){
+
+				$("body").LoadingOverlay("hide")
+				$("#posts-tbl").trigger("refresh")
+
+			},400)
+		})
+	}
+
 	$scope.toolbars = function(){
 
 		var btnAdd = $(document.createElement("BUTTON")).html("Add")

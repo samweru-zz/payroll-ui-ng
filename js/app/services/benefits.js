@@ -5,6 +5,23 @@ app.service("benefitsService", ["$http", "$q", function($http, $q){
 		//
 	}
 
+	this.add = function(data){
+
+		var deferred = $q.defer();
+
+		$http.post("/benefit/add", data)
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
 	this.update = function(data){
 
 		var deferred = $q.defer();
