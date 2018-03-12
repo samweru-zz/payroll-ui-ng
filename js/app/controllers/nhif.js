@@ -18,23 +18,77 @@ app.controller("nhifController", ['$scope',
 			amt:$scope.amount
 		}
 
-		var nhifSrv;
-		if(!!$scope.id){
+		var validator = validate(nhif, {
 
-			nhif.id = $scope.id
-			nhifSrv = nhifService.update(nhif)
-		}
-		else nhifSrv = nhifService.add(nhif)
+			lbound:{
 
-		$("body").LoadingOverlay("show")
+				name:"Lower Bound",
+				format:"currency",
+				required:true
+			},
+			ubound:{
 
-		nhifSrv.then(function(data){
+				name:"Upper Bound",
+				format:"currency",
+				required:true
+			},
+			amt:{
 
-			$("body").LoadingOverlay("hide")
-			$("#nhif-tbl").trigger("refresh")
-
-			$scope.addNew()
+				name:"Amount",
+				format:"currency",
+				required:true
+			}
 		})
+
+		console.log(validator.getState())
+
+		if(validator.isValid()){
+
+			var nhifSrv;
+			if(!!$scope.id){
+
+				nhif.id = $scope.id
+				nhifSrv = nhifService.update(nhif)
+			}
+			else nhifSrv = nhifService.add(nhif)
+
+			$("body").LoadingOverlay("show")
+
+			nhifSrv.then(function(data){
+
+				$("body").LoadingOverlay("hide")
+				$("#nhif-tbl").trigger("refresh")
+
+				$scope.addNew()
+			})
+		}
+		else{
+
+			var state = validator.getState()
+
+			var messages = []
+
+			var keys = Object.keys(state)
+			var lastKey = keys[keys.length-1]
+
+			for(key in state){
+
+				if(state[key].valid == false){
+
+					messages.push("<b>"+ state[key].name +"</b><br>")
+					messages.push("Has to be a " + state[key].format + "!<br>");
+
+					if(Object.keys(state[key]).includes("empty"))
+						if(state[key].empty)
+							messages.push("Is required!<br>")
+
+					if(lastKey != key)
+						messages.push("<hr>")
+				}
+			}
+
+			$.growl({ title:"NHIF", message: messages.join("") });
+		}
 	}
 
 	$scope.addNew = function(){

@@ -454,13 +454,12 @@ app.run(['$httpBackend', function ($httpBackend){
 
 			try{
 
-				paye.insert({
+				nhif.insert({
 
-					id:paye().count()+1,
+					id:nhif().count()+1,
 					lbound:data.lbound,
 					ubound:data.ubound,
-					amt:data.amt,
-					descr:data.descr
+					amt:data.amt
 				})
 
 				success = true;

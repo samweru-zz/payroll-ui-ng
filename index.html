@@ -14,10 +14,12 @@
 	<script src="js/lib/jquery-ui.min.js"></script>
 	<script src="js/lib/jquery.simplr-grid.min.js"></script>
 	<script src="js/lib/loadingoverlay.min.js"></script>
+	<script src="js/lib/jquery.growl.js" type="text/javascript"></script>
 	<script src="js/app/helper.js"></script>
 	<script src="js/db/payroll.js"></script>
 	<script src="js/app/main.js"></script>
 	<script src="js/app/runner.js"></script>
+	<script src="js/app/validation.js"></script>
 	<script src="js/app/directives/dialog.js"></script>
 	<script src="js/app/directives/simplr-grid.js"></script>
 	<script src="js/app/directives/tree-menu.js"></script>
@@ -48,6 +50,7 @@
 	<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link type="text/css" rel="stylesheet" href="css/simplr-grid.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.growl.css">
 </head>
 <body>
 	<script type="text/ng-template" charset="utf-8" id="rates.html">
@@ -79,7 +82,7 @@
 									ng-model="name"
 									placeholder="Name"
 									size='32'>
-						</td>
+						</td>`
 					</tr>
 					<tr>
 						<td>
@@ -151,7 +154,7 @@
 						</td>
 					</tr>
 					<tr><td>Kshs.
-						<input type="text" 
+						<input currency type="text" 
 									name="amount" 
 									ng-model="amount"
 									placeholder="Amount"

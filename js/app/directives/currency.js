@@ -2,24 +2,26 @@ app.directive('currency', function($filter){
 
     return {
 
-        require: '?ngModel',
-        link: function(scope, el, attrs, ctrl){
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
 
-            el.val($filter('currency')(ctrl.$modelValue));
+            ngModel: '='
+        },
+        link: function(scope, el, attrs, ngModel){
+
+            el.val($filter('currency')(ngModel.$modelValue));
 
             el.bind('focus', function(){
 
                 el.val(el.val().replace(/,/g,''));
             });
 
-            // el.bind('input', function(){
-            //   scope.amount = el.val();
-            //   scope.$apply();
-            // });
-
             el.bind('blur', function(){
 
-                el.val($filter('currency')(el.val(), ""));
+                var formattedVal = $filter('currency')(el.val(), "")
+                el.val(formattedVal);
+                scope.ngModel = formattedVal
             });
         }
     }
