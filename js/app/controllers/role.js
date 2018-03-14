@@ -48,7 +48,8 @@ app.controller("rolesController", ['$scope',
 
 					$("body").LoadingOverlay("hide")
 					$("#roles-tbl").trigger("refresh")
-				})
+					
+				}, 400)
 			})
 		}
 		else validator.flushMessage("Roles")

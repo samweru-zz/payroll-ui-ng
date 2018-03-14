@@ -69,15 +69,3 @@ function randomFixedLengthInteger(length) {
 	
     return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
 }
-
-//https://goo.gl/9iBmSD
-function isInt(n){
-
-    return Number(n) === n && n % 1 === 0;
-}
-
-//https://goo.gl/9iBmSD
-function isFloat(n){
-
-    return Number(n) === n && n % 1 !== 0;
-}

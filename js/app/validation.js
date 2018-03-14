@@ -7,16 +7,14 @@ function validate(data, meta){
 
 	self.validator = function(val, format){
 
-		if(self.isEmpty(val))
+		if(isEmpty(val))
 			return false;
 
 		var validators = {
 
 			currency:function(val){
 
-				var currFormat = /(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/
-
-				return currFormat.test(val)
+				return isCurrency(val)
 			},
 			number:function(val){
 
@@ -45,7 +43,7 @@ function validate(data, meta){
 			},
 			_float:function(val){
 
-				return parseFloat(self._trim(val))
+				return parseFloat(this._trim(val))
 			},
 			number:function(val){
 
@@ -58,11 +56,6 @@ function validate(data, meta){
 		}
 
 		return sanitizers[format](val)
-	}
-
-	self.isEmpty = function(val){
-
-		return typeof val == "undefined" || val.trim("") == ""
 	}
 
 	self.between = function(val, between){
@@ -97,7 +90,7 @@ function validate(data, meta){
 			}
 
 			if(keys.includes("required"))
-				state[key].empty = self.isEmpty(val)
+				state[key].empty = isEmpty(val)
 
 			if(keys.includes("range")){
 
@@ -123,7 +116,7 @@ function validate(data, meta){
 			if(keys.includes("format"))
 				sanitized[key] = self.sanitize(state[key].value, state[key].format)
 			else
-				if(Number.isNaN(val) == false)
+				if(isNumeric(val))
 					sanitized[key] = self.sanitize(val, "number")
 				else
 					sanitized[key] = self.sanitize(val, "_trim")
@@ -259,4 +252,34 @@ function validate(data, meta){
 	}
 
 	return self;
+}
+
+//https://goo.gl/9iBmSD
+function isInt(n){
+
+    return Number(n) === n && n % 1 === 0;
+}
+
+//https://goo.gl/9iBmSD
+function isFloat(n){
+
+    return Number(n) === n && n % 1 !== 0;
+}
+
+function isEmpty(val){
+
+	return typeof val == "undefined" || val.trim("") == ""
+}
+
+//https://goo.gl/tFHuWG
+function isNumeric(val){
+
+	 return !isNaN(val)
+}
+
+function isCurrency(val){
+
+	var currFormat = /(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/
+
+	return currFormat.test(val)
 }
