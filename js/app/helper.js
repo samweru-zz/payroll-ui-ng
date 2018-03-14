@@ -4,6 +4,17 @@ Number.prototype.toMoney = function(){
 	return this.toFixed(2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
 
+//https://goo.gl/RqTmkC
+String.prototype.toSlug = function(){
+
+	return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+}
+
+//https://goo.gl/RqTmkC
+String.prototype.toCamel = function(){
+	
+	return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+};
 
 // https://goo.gl/d2r24q
 function getMonthFirstDay(date){
@@ -54,7 +65,19 @@ function unformatMoney(moneyStr){
 	return parseFloat(moneyStr.toString().replace(",", ""));
 }
 
-var randomFixedLengthInteger = function (length) {
+function randomFixedLengthInteger(length) {
 	
     return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
+}
+
+//https://goo.gl/9iBmSD
+function isInt(n){
+
+    return Number(n) === n && n % 1 === 0;
+}
+
+//https://goo.gl/9iBmSD
+function isFloat(n){
+
+    return Number(n) === n && n % 1 !== 0;
 }

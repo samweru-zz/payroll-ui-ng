@@ -21,32 +21,67 @@ app.controller("payeController", ['$scope',
 
 		var paye = {
 
-			ubound:$scope.ubound.replace(",",""),
-			lbound:$scope.lbound.replace(",",""),
+			ubound:$scope.ubound,
+			lbound:$scope.lbound,
 			rate_perc:$scope.tax_rate
 		}
 
-		var payeSrv;
-		if(!!$scope.id){
+		var validator = validate(paye, {
 
-			paye.id = $scope.id
-			payeSrv = payeService.update(paye)
-		}
-		else payeSrv = payeService.add(paye)
+			lbound:{
 
-		$("body").LoadingOverlay("show")
+				name:"Lower Bound",
+				format:"currency",
+				required:true
+			},
+			ubound:{
 
-		payeSrv.then(function(data){
+				name:"Upper Bound",
+				format:"currency",
+				required:true
+			},
+			rate_perc:{
 
-			setTimeout(function(){
+				name:"Rate",
+				format:"number",
+				range:{
 
-				$("body").LoadingOverlay("hide")
-				$("#paye-tbl").trigger("refresh")
-
-				$scope.addNew()
-
-			}, 400)
+					from:1,
+					to:100
+				},
+				required:true
+			}
 		})
+
+		// console.log(validator.getState())
+
+		if(validator.isValid()){
+
+			paye = validator.getSanitized()
+
+			var payeSrv;
+			if(!!$scope.id){
+
+				paye.id = $scope.id
+				payeSrv = payeService.update(paye)
+			}
+			else payeSrv = payeService.add(paye)
+
+			$("body").LoadingOverlay("show")
+
+			payeSrv.then(function(data){
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#paye-tbl").trigger("refresh")
+
+					$scope.addNew()
+
+				}, 400)
+			})
+		}
+		else validator.flushMessage("PAYE")
 	}
 
 	$scope.dblClick = function(){

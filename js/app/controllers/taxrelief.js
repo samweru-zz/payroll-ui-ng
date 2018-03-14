@@ -16,27 +16,49 @@ app.controller("taxReliefController", ['$scope',
 			active:$scope.active == "Yes"
 		}
 
-		var taxReliefSrv;
-		if(!!$scope.id){
+		var validator = validate(relief,{
 
-			relief.id = $scope.id
-			taxReliefSrv = taxReliefService.update(relief)
-		}
-		else taxReliefSrv = taxReliefService.add(relief)
+			name:{
 
-		$("body").LoadingOverlay("show")
+				name:"Name",
+				format:"alphaOrNumericOrBoth",
+				required:true
+			},
+			amt:{
 
-		taxReliefSrv.then(function(data){
-
-			setTimeout(function(){
-
-				$("body").LoadingOverlay("hide")
-				$("#relief-tbl").trigger("refresh")
-				
-				$scope.addNew()
-
-			},400)
+				name:"Amount",
+				format:"currency",
+				required:true
+			}
 		})
+
+		if(validator.isValid()){
+
+			relief = $.extend(relief, validator.getSanitized())
+
+			var taxReliefSrv;
+			if(!!$scope.id){
+
+				relief.id = $scope.id
+				taxReliefSrv = taxReliefService.update(relief)
+			}
+			else taxReliefSrv = taxReliefService.add(relief)
+
+			$("body").LoadingOverlay("show")
+
+			taxReliefSrv.then(function(data){
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#relief-tbl").trigger("refresh")
+					
+					$scope.addNew()
+
+				},400)
+			})
+		}
+		else validator.flushMessage("Tax Relief")
 	}
 
 	$scope.addNew = function(){

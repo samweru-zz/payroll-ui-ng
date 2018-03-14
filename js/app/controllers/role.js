@@ -16,26 +16,42 @@ app.controller("rolesController", ['$scope',
 			descr:$scope.descr
 		}
 
-		var roleSrv;
-		if(!!$scope.id){
+		var validator = validate(role, {
 
-			role.id = $scope.id
-			roleSrv = roleService.update(role)
-		}
-		else roleSrv = roleService.add(role)
+			name:{
 
-		$("body").LoadingOverlay("show")
-
-		roleSrv.then(function(data){
-
-			$scope.dialogRoleOpen = false;
-
-			setTimeout(function(){
-
-				$("body").LoadingOverlay("hide")
-				$("#roles-tbl").trigger("refresh")
-			})
+				name:"Name",
+				required:true
+			}
 		})
+
+		if(validator.isValid()){
+
+			role = $.extend(role, validator.getSanitized())
+
+			var roleSrv;
+
+			if(!!$scope.id){
+
+				role.id = $scope.id
+				roleSrv = roleService.update(role)
+			}
+			else roleSrv = roleService.add(role)
+
+			$("body").LoadingOverlay("show")
+
+			roleSrv.then(function(data){
+
+				$scope.dialogRoleOpen = false;
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#roles-tbl").trigger("refresh")
+				})
+			})
+		}
+		else validator.flushMessage("Roles")
 	}
 
 	$scope.toolbars = function(){

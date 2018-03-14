@@ -40,9 +40,11 @@ app.controller("nhifController", ['$scope',
 			}
 		})
 
-		console.log(validator.getState())
+		// console.log(validator.getState())
 
 		if(validator.isValid()){
+
+			nhif = validator.getSanitized()
 
 			var nhifSrv;
 			if(!!$scope.id){
@@ -56,39 +58,17 @@ app.controller("nhifController", ['$scope',
 
 			nhifSrv.then(function(data){
 
-				$("body").LoadingOverlay("hide")
-				$("#nhif-tbl").trigger("refresh")
+				setTimeout(function(){
 
-				$scope.addNew()
+					$("body").LoadingOverlay("hide")
+					$("#nhif-tbl").trigger("refresh")
+
+					$scope.addNew()
+					
+				}, 400)
 			})
 		}
-		else{
-
-			var state = validator.getState()
-
-			var messages = []
-
-			var keys = Object.keys(state)
-			var lastKey = keys[keys.length-1]
-
-			for(key in state){
-
-				if(state[key].valid == false){
-
-					messages.push("<b>"+ state[key].name +"</b><br>")
-					messages.push("Has to be a " + state[key].format + "!<br>");
-
-					if(Object.keys(state[key]).includes("empty"))
-						if(state[key].empty)
-							messages.push("Is required!<br>")
-
-					if(lastKey != key)
-						messages.push("<hr>")
-				}
-			}
-
-			$.growl({ title:"NHIF", message: messages.join("") });
-		}
+		else validator.flushMessage("NHIF")
 	}
 
 	$scope.addNew = function(){
