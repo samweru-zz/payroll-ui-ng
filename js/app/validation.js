@@ -99,6 +99,8 @@ function validate(data, meta){
 			}
 		}
 
+		// console.log(state)
+
 		return state;
 	}
 
@@ -266,15 +268,19 @@ function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
 }
 
-function isEmpty(val){
+function isNull(val){
 
-	return typeof val == "undefined" || val.trim("") == ""
+	return val == null
 }
 
-//https://goo.gl/tFHuWG
+function isEmpty(val){
+
+	return isNull(val) || typeof val == "undefined" || val.toString().trim() == ""
+}
+
 function isNumeric(val){
 
-	 return !isNaN(val)
+	 return !isNaN(val) && !isNull(val) && !isEmpty(val)
 }
 
 function isCurrency(val){

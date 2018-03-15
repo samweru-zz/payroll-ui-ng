@@ -761,20 +761,20 @@
 														ng-model="name"></td>
 							</tr>
 							<tr>
-								<td valign="top" align="right">Description</td>
-								<td valign="top">
-									<textarea id="descr" 
-												name="descr" rows="5" cols="30"
-												ng-model="descr"></textarea>
-								</td>
-							</tr>
-							<tr>
 								<td valign="top" align="right">Dept.</td>
 								<td valign="top">
 									<select id="dept" 
 											name="dept"
 											ng-model="dept"
 											ng-options="dept.id as dept.descr for dept in depts track by dept.id"></select>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" align="right">Description</td>
+								<td valign="top">
+									<textarea id="descr" 
+												name="descr" rows="5" cols="30"
+												ng-model="descr"></textarea>
 								</td>
 							</tr>
 							<tr>

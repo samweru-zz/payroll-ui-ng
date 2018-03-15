@@ -12,34 +12,57 @@ app.controller("postsController", ['$scope',
 
 	$scope.submit = function(){
 
+		console.log($scope.dept)
+
 		var post = {
 
 			name:$scope.name,
 			descr:$scope.descr,
-			dept:$scope.dept.id
+			dept:$scope.dept
 		}
 
-		var postSrv;
-		if(!!$scope.id){
+		var validator = validate(post, {
 
-			post.id = $scope.id
-			postSrv = postService.update(post)
-		}
-		else postSrv = postService.add(post)
+			name:{
 
-		$("body").LoadingOverlay("show")
+				name:"Name",
+				format:"alphaOrNumericOrBoth",
+				required:true
+			},
+			dept:{
 
-		postSrv.then(function(data){
-
-			$scope.dialogPostOpen = false;
-
-			setTimeout(function(){
-
-				$("body").LoadingOverlay("hide")
-				$("#posts-tbl").trigger("refresh")
-
-			},400)
+				name:"Department Name",
+				required:true
+			}
 		})
+
+		if(validator.isValid()){
+
+			post = $.extend(post, validator.getSanitized())
+
+			var postSrv;
+			if(!!$scope.id){
+
+				post.id = $scope.id
+				postSrv = postService.update(post)
+			}
+			else postSrv = postService.add(post)
+
+			$("body").LoadingOverlay("show")
+
+			postSrv.then(function(data){
+
+				$scope.dialogPostOpen = false;
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#posts-tbl").trigger("refresh")
+
+				},400)
+			})
+		}
+		else validator.flushMessage("Post")
 	}
 
 	$scope.toolbars = function(){

@@ -12,26 +12,42 @@ app.controller("deptsController", ['$scope',
 			descr:$scope.descr
 		}
 
-		if(!!$scope.id){
+		var validator = validate(dept, {
 
-			dept.id = $scope.id
-			deptSrv = deptService.update(dept)
-		}
-		else deptSrv = deptService.add(dept)
-		
-		$("body").LoadingOverlay("show")
+			alias:{
 
-		deptSrv.then(function(data){
-
-			$scope.dialogDeptOpen = false;
-
-			setTimeout(function(){
-
-				$("body").LoadingOverlay("hide")
-				$("#depts-tbl").trigger("refresh")
-
-			}, 400)
+				name:"Alias",
+				format:"alphaOrNumericOrBoth",
+				required:true
+			}
 		})
+
+		if(validator.isValid()){
+
+			dept = $.extend(dept, validator.getSanitized())
+
+			if(!!$scope.id){
+
+				dept.id = $scope.id
+				deptSrv = deptService.update(dept)
+			}
+			else deptSrv = deptService.add(dept)
+			
+			$("body").LoadingOverlay("show")
+
+			deptSrv.then(function(data){
+
+				$scope.dialogDeptOpen = false;
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#depts-tbl").trigger("refresh")
+
+				}, 400)
+			})
+		}
+		else validator.flushMessage("Department")
 	}
 
 	$scope.cancelHandle = function(){
