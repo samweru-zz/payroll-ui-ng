@@ -69,3 +69,13 @@ function randomFixedLengthInteger(length) {
 	
     return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
 }
+
+function trimAny(val){
+
+	return val.toString().trim()
+}
+
+function toFloat(val){
+
+	return parseFloat(trimAny(val))
+}

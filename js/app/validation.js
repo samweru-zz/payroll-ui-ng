@@ -1,59 +1,60 @@
-function validate(data, meta){
+function validate(data, meta, customValidation){
 
 	var self = this;
 
 	self.__data = data;
 	self.__meta = meta;
 
+	var sanitizers = {
+
+		currency:function(val){
+
+			return parseFloat(val.toString().split(",").join(""))
+		},
+		number:function(val){
+
+			return toFloat(val)
+		},
+		alphaOrNumericOrBoth:function(val){
+
+			return trimAny(val)
+		}
+	}
+
+	var validators = {
+
+		currency:function(val){
+
+			return isCurrency(val)
+		},
+		number:function(val){
+
+			return self.sanitize(val, "number")
+		},
+		alphaOrNumericOrBoth:function(val){
+
+			return /^[\w.\s]+$/i.test(self.sanitize(val, "alphaOrNumericOrBoth"))
+		}
+	}
+
+	var custVal = {};
+
+	for(funcName in customValidation){
+
+		custVal[funcName] = customValidation[funcName].format
+	}
+
+	validators = $.extend(validators, custVal)
+
 	self.validator = function(val, format){
 
 		if(isEmpty(val))
 			return false;
 
-		var validators = {
-
-			currency:function(val){
-
-				return isCurrency(val)
-			},
-			number:function(val){
-
-				return self.sanitize(val, "number")
-			},
-			alphaOrNumericOrBoth:function(val){
-
-				return /^[\w.\s]+$/i.test(self.sanitize(val, "alphaOrNumericOrBoth"))
-			}
-		}
-
 		return validators[format](val)
 	}
 
 	self.sanitize = function(val, format){
-
-		var sanitizers = {
-
-			currency:function(val){
-
-				return parseFloat(val.toString().split(",").join(""))
-			},
-			_trim:function(val){
-
-				return val.toString().trim()
-			},
-			_float:function(val){
-
-				return parseFloat(this._trim(val))
-			},
-			number:function(val){
-
-				return this._float(val)
-			},
-			alphaOrNumericOrBoth:function(val){
-
-				return this._trim(val)
-			}
-		}
 
 		return sanitizers[format](val)
 	}
@@ -115,13 +116,20 @@ function validate(data, meta){
 			var keys = Object.keys(state[key])
 			var val = state[key].value
 
-			if(keys.includes("format"))
-				sanitized[key] = self.sanitize(state[key].value, state[key].format)
-			else
+			if(keys.includes("format")){
+
+				if(Object.keys(sanitizers).includes("format"))
+					sanitized[key] = self.sanitize(state[key].value, state[key].format)
+			}
+			else{
+
 				if(isNumeric(val))
 					sanitized[key] = self.sanitize(val, "number")
+				else if(isBool(val))
+					sanitized[key] = val
 				else
-					sanitized[key] = self.sanitize(val, "_trim")
+					sanitized[key] = trimAny(val)
+			}
 		}
 
 		return sanitized;
@@ -268,6 +276,11 @@ function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
 }
 
+function isBool(val){
+
+	return typeof val == "boolean"
+}
+
 function isNull(val){
 
 	return val == null
@@ -280,7 +293,7 @@ function isEmpty(val){
 
 function isNumeric(val){
 
-	 return !isNaN(val) && !isNull(val) && !isEmpty(val)
+	 return !isBool(val) && !isNaN(val) && !isNull(val) && !isEmpty(val)
 }
 
 function isCurrency(val){

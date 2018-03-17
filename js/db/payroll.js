@@ -191,6 +191,7 @@ period = TAFFY([
 		start: newDate("01/01/2018"),
 		end: newDate("01/31/2018"),
 		status: "Closed",
+		descr:"N/A",
 		active: false
 	},
 	{
@@ -198,6 +199,7 @@ period = TAFFY([
 		start: getMonthFirstDay(new Date()).toDateString(),
 		end: getMonthLastDay(new Date()).toDateString(),
 		status: "Open",
+		descr:"N/A",
 		active: true
 	}
 ])

@@ -574,20 +574,127 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {"success":success}, {}]
 		})
 
+		$httpBackend.whenPOST('/period/update').respond(function(method, url, data, headers){
+
+			console.log('Period Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success;
+
+			try{
+
+				var period_ = period({id:data.id}).update(data)
+
+				success = !!period_.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST("/period/add").respond(function(method, url, data, headers, params){
+
+			console.log('Period Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				period.insert({
+
+					id:period().count()+1,
+					start:data.start,
+					end:data.end,
+					status:data.status,
+					active:data.active,
+					descr:data.descr
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
      	$httpBackend.whenPOST('/periods').respond(function(method, url, data, headers){
 
 		    console.log('Periods:', method, url, data, headers);
 
 		    var _periods = period().get()
 
+		    var __periods = []
+
 		    for(idx in _periods){
 
-		    	delete _periods[idx].___id;
-				delete _periods[idx].___s;
-		    }
+			    __periods.push({
 
-			return [200, {rows:_periods, count:period().count()}, {}];
+			    	id:_periods[idx].id,
+					start:_periods[idx].start,
+					end:_periods[idx].end,
+					status:_periods[idx].status,
+					active:_periods[idx].active
+			    })
+			}
+
+			return [200, {rows:__periods.reverse(), count:period().count()}, {}];
 		}); 
+
+		$httpBackend.whenPOST(/\/period\/(\d+)\/close/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('Period Close:', method, url, data, headers);
+
+			var success;
+
+			try{
+
+				var _period = period({id:parseInt(params.id)}).update({status:"Closed"})
+
+				// console.log(_period.first())
+
+				success = !!_period.first();
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		});
+
+		$httpBackend.whenPOST(/\/period\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('Period:', method, url, data, headers, params);
+
+      		var _period = period({id:parseInt(params.id)}).first()
+
+      		var __period = {
+
+      			id:_period.id,
+				start:_period.start,
+				end:_period.end,
+				descr:_period.descr,
+				status:_period.status,
+				active:_period.active
+      		}
+
+			return [200, __period, {}];
+		});
 
      	$httpBackend.whenPOST('/users').respond(function(method, url, data, headers){
 

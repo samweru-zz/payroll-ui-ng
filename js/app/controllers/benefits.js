@@ -10,36 +10,70 @@ app.controller("benefitsController", [
 
 	$scope.submit = function(){
 
-		var benefit = $scope.benefit;
+		// console.log($scope.type?$scope.type.id == "deduction":"")
 
-		var benefit_data = {
+		var benefit = {
 
-			"name":benefit.name,
-			"amount":benefit.amt.toString().replace(",",""),
-			"descr":benefit.descr,
-			"deduct":benefit.type.id == "benefit",
-			"taxable":benefit.taxable == "Yes",
-			"active":benefit.active == "Yes",
-			"percentage":benefit.perc == "Yes"
+			"name":$scope.name,
+			"amount":$scope.amt,
+			"descr":$scope.descr,
+			"deduct":$scope.type?$scope.type.id == "deduction":"",
+			"taxable":$scope.taxable == "Yes",
+			"active":$scope.active == "Yes",
+			"percentage":$scope.perc == "Yes"
 		}
 
-		var benefitSvr;
+		var validator = validate(benefit, {
 
-		if(!!benefit.id){
+			name:{
 
-			benefit_data["id"] = benefit.id;
-			benefitSvr = benefitsService.update(benefit_data)
-		}
-		else benefitSvr = benefitsService.add(benefit_data)
+				name:"Name",
+				required:true,
+			},
+			amount:{
 
-		benefitSvr.then(function(data){
+				name:"Amount",
+				required:true,
+				format:"currency"
+			},
+			deduct:{
 
-			console.log(data)
-
-			$scope.dialogBenefitsOpen = false;
-
-			$("#benefits-tbl").trigger("refresh")
+				name:"Benefit/Deduction Type",
+				required:true
+			}
 		})
+
+
+		if(validator.isValid()){
+
+			benefit = $.extend(benefit, validator.getSanitized())
+
+			console.log(benefit)
+
+			var benefitSvr;
+
+			if(!!$scope.id){
+
+				benefit.id = $scope.id;
+				benefitSvr = benefitsService.update(benefit)
+			}
+			else benefitSvr = benefitsService.add(benefit)
+
+			$("body").LoadingOverlay("show")
+
+			benefitSvr.then(function(data){
+
+				$scope.dialogBenefitsOpen = false;
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#benefits-tbl").trigger("refresh")
+
+				}, 400)
+			})
+		}
+		else validator.flushMessage("Benefit/Deduction")
 	}
 
 	$scope.cancelHandle = function(){
@@ -56,16 +90,13 @@ app.controller("benefitsController", [
 
 				$scope.dialogBenefitsOpen = true;
 
-				$scope.benefit = {
-
-					name:"",
-					amt:"",
-					descr:"",
-					perc:"No",
-					deduct:"",
-					taxable:"",
-					active:""
-				}
+				$scope.name = "",
+				$scope.amt = "",
+				$scope.descr = "",
+				$scope.perc = "No",
+				$scope.deduct = "",
+				$scope.taxable = "",
+				$scope.active = ""
 			})				
 		})
 
@@ -83,17 +114,14 @@ app.controller("benefitsController", [
 
 		benefitsService.get(row.id).then(function(data){
 
-			$scope.benefit = {
-
-				id:row.id,
-				name:data.name,
-				amt:(!data.percentage)?$filter("currency")(data.amount,""):data.amount,
-				descr:data.descr,
-				perc:data.percentage?"Yes":"No",
-				type:benefitsService.getType(data.deduct?"deduction":"benefit"),
-				taxable:data.taxable?"Yes":"No",
-				active:data.active?"Yes":"No"
-			}
+			$scope.id = row.id,
+			$scope.name = data.name,
+			$scope.amt = (!data.percentage)?$filter("currency")(data.amount,""):data.amount,
+			$scope.descr = data.descr,
+			$scope.perc = data.percentage?"Yes":"No",
+			$scope.type = benefitsService.getType(data.deduct?"deduction":"benefit"),
+			$scope.taxable = data.taxable?"Yes":"No",
+			$scope.active = data.active?"Yes":"No"
 		})
 	}
 

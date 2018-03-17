@@ -257,6 +257,27 @@
 	<script type="text/ng-template" charset="utf-8" id="period.html">
 		<div ng-controller="periodController">
 			<div jq-dialog
+					id="period-msg-dlg"
+					title="Period"
+					modal="true"
+					open={{dialogMsgPeriodOpen}}
+					ok-button="Ok"
+					ok-callback="okMsgPeriodHandle">
+					{{messagePeriod}}
+			</div>
+			<div jq-dialog
+					id="period-confirm-dlg"
+					title="Period"
+					modal="true"
+					open={{dialogConfirmPeriodOpen}}
+					ok-button="Yes"
+					ok-callback="okConfirmPeriodHandle"
+					cancel-button="No"
+					cancel-callback="cancelConfirmPeriodHandle"
+					hide-close-button="false">
+					{{confirmPeriod}}
+			</div>
+			<div jq-dialog
 					id="period-dlg"
 					title="Period"
 					modal="true"
@@ -264,53 +285,57 @@
 					cancel-callback="cancelHandle"
 					hide-close-button="false"
 					get-toolbars="toolbars">
-				<table>
-					<tr>
-						<td>Start Date</td>
-						<td>
-							<input type="date" name="start_date" 
-									ng-model="start_date"
-									placeholder="Start Date">
-						</td>
-					</tr>
-					<tr>
-						<td>End Date</td>
-						<td>
-							<input type="date" name="end_date" 
-									ng-model="end_date"
-									placeholder="End Date">
-						</td>
-					</tr>
-					<tr>
-						<td>Status</td>
-						<td>
-							<select name="status" 
-									ng-model="period_status" 
-									ng-options="state.id as state.name for state in status track by state.id"
-									placeholder="Select Status">
-									<option disabled value="">Select Status</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<label for="active">
-								<input type="checkbox" id="active" name="active" 
-										ng-model="active"
-										ng-true-value="'Yes'" 
-										ng-false-value="'No'">
-								Active?
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<input type="submit" value="Submit">
-						</td>
-					</tr>
-				</table>
+				<form ng-submit="submit()">
+					<input type="hidden" name="id" ng-model="id">
+					<table>
+						<tr>
+							<td class="caption">Start Date</td>
+							<td>
+								<input type="date" name="start_date" 
+										ng-model="start_date"
+										placeholder="Start Date">
+							</td>
+						</tr>
+						<tr>
+							<td class="caption">End Date</td>
+							<td>
+								<input type="date" name="end_date" 
+										ng-model="end_date"
+										placeholder="End Date">
+							</td>
+						</tr>
+						<tr>
+							<td class="caption">Description</td>
+							<td><textarea rows="5" cols="35" 
+											name="descr" 
+											ng-model="descr"></textarea></td>
+						</tr>
+						<tr>
+							<td class="caption">Status</td>
+							<td>
+								{{period_status}}
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<label for="active">
+									<input type="checkbox" id="active" name="active" 
+											ng-model="active"
+											ng-true-value="'Yes'" 
+											ng-false-value="'No'">
+									Active?
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<input type="submit" value="Submit">
+							</td>
+						</tr>
+					</table>
+				</form>
 			</div>
 			<table jq-simplr-grid 
 				id='period-tbl'
@@ -599,25 +624,25 @@
 							<tr>
 								<td class="caption">Name</td>
 								<td valign="top" align="left" colspan="2">
-									<input id="name" name="name" type="text" ng-model="benefit.name">
+									<input id="name" name="name" type="text" ng-model="name">
 								</td>
 							</tr>
 							<tr>
 								<td class="caption">Amount</td>
-								<td ng-if="benefit.perc==='Yes'" 
+								<td ng-if="perc==='Yes'" 
 									valign="top" align="left" colspan="2">
 									<input type="number" 
 											name="amt" 
 											min="1" max="100"
-											ng-model="benefit.amt"
+											ng-model="amt"
 											style="text-align: right">&nbsp;%
 								</td>
-								<td ng-if="benefit.perc==='No'" 
+								<td ng-if="perc==='No'" 
 									valign="top" align="left" colspan="2">
 									<input currency 
 											name="amt" 
 											type="text" 
-											ng-model="benefit.amt"
+											ng-model="amt"
 											style="text-align: right">
 								</td>
 							</tr>
@@ -626,7 +651,7 @@
 								<td valign="top" align="left" colspan="2">
 									<select id="type"
 										name="type"
-										ng-model="benefit.type"
+										ng-model="type"
 										ng-options="type.id as type.name for type in benefit_types track by type.id"></select>
 								</td>
 							</tr>
@@ -634,14 +659,14 @@
 								<td class="caption">Description</td>
 								<td valign="top" align="left" colspan="2">
 									<textarea id="descr" name="descr" rows="5" cols="40" 
-												ng-model="benefit.descr"></textarea>
+												ng-model="descr"></textarea>
 								</td>
 							</tr>
 							<tr>
 								<td></td>
 								<td valign="top" align="left">
 									<label><input type="checkbox" id="perc" name="perc" 
-												ng-model="benefit.perc"
+												ng-model="perc"
 												ng-true-value="'Yes'" 
 												ng-false-value="'No'">
 									Percentage?</label>
@@ -662,7 +687,7 @@
 								<td valign="top" align="left">
 									<label for="taxable">
 										<input type="checkbox" id="taxable" name="taxable" 
-												ng-model="benefit.taxable"
+												ng-model="taxable"
 												ng-true-value="'Yes'" 
 												ng-false-value="'No'">
 									Taxable?</label>
@@ -674,7 +699,7 @@
 								<td valign="top" align="left">
 									<label for="active">
 										<input type="checkbox" id="active" name="active" 
-													ng-model="benefit.active"
+													ng-model="active"
 													ng-true-value="'Yes'" 
 													ng-false-value="'No'">
 									Active?</label>

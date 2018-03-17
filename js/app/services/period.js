@@ -5,6 +5,74 @@ app.service("periodService", ["$http", "$q", function($http, $q){
 		//
 	}
 
+	this.closePeriod = function(id){
+
+		var deferred = $q.defer();
+
+		$http.post("/period/" + id + "/close")
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
+	this.get = function(id){
+
+		var deferred = $q.defer();
+
+		$http.post("/period/".concat(id))
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
+	this.add = function(data){
+
+		var deferred = $q.defer();
+
+		$http.post("/period/add", data)
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
+	this.update = function(data){
+
+		var deferred = $q.defer();
+
+		$http.post("/period/update", data)
+		.then(function(response){
+
+			deferred.resolve(response.data)
+		},
+		function(err){
+
+			deferred.reject("An error occured!")
+		});
+
+		return deferred.promise;
+	}
+
 	this.getAll = function(pager){
 
 		var deferred = $q.defer();
@@ -28,7 +96,7 @@ app.service("periodService", ["$http", "$q", function($http, $q){
 
 			{
 				"id":"new",
-				"name":"New"
+				"name":"New/Open"
 			},
 			{
 				"id":"closed",

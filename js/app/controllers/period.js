@@ -5,9 +5,98 @@ app.controller("periodController", ["$scope",
 
 	$scope.status = periodService.getStatus()
 
+	$scope.addNew = function(){
+
+		$scope.start_date = "";
+		$scope.end_date = "";
+		$scope.period_status = "New";
+		$scope.descr = ""
+		$scope.active = "No"	
+	}
+
+	$scope.submit = function(){
+
+		var period = {
+
+			"start":(new Date($scope.start_date)).toDateString(),
+			"end":(new Date($scope.end_date)).toDateString(),
+			"status":$scope.period_status == "New"?"Open":$scope.period_status,
+			"descr":$scope.descr,
+			"active":$scope.active == "Yes"
+		}
+
+		var validator = validate(period, {
+
+			start:{
+
+				name:"Start Date",
+				required:true
+			},
+			end:{
+
+				name:"End Date",
+				required:true
+			}
+		})
+
+		if(validator.isValid()){
+
+			period = $.extend(period, validator.getSanitized())
+
+			var periodSvr;
+
+			if(!!$scope.id){
+
+				period.id = $scope.id;
+				periodSvr = periodService.update(period)
+			}
+			else periodSvr = periodService.add(period)
+
+			$("body").LoadingOverlay("show")
+
+			periodSvr.then(function(data){
+
+				$scope.dialogPeriodOpen = false;
+
+				setTimeout(function(){
+
+					$("body").LoadingOverlay("hide")
+					$("#period-tbl").trigger("refresh")
+
+				}, 400)
+			})
+		}
+		else validator.flushMessage("Period")
+	}
+
 	$scope.cancelHandle = function(){
 
 		$scope.dialogPeriodOpen = false;
+	}
+
+	$scope.okConfirmPeriodHandle = function(){
+
+		var row = $("#period-tbl").getSelectedRow()	
+
+		$scope.dialogConfirmPeriodOpen = false;
+
+		$("body").LoadingOverlay("show")
+
+		periodService.closePeriod(row.id).then(function(data){
+
+			$("body").LoadingOverlay("hide")
+			$("#period-tbl").trigger("refresh")
+		})
+	}
+
+	$scope.cancelConfirmPeriodHandle = function(){
+
+		$scope.dialogConfirmPeriodOpen = false;
+	}
+
+	$scope.okMsgPeriodHandle = function(){
+
+		$scope.dialogMsgPeriodOpen = false
 	}
 
 	$scope.toolbars = function(){
@@ -19,17 +108,28 @@ app.controller("periodController", ["$scope",
 
 				$scope.dialogPeriodOpen = true;
 
-				$scope.start_date = ""
-				$scope.end_date = ""
-				$scope.period_status = null
-				$scope.active = "No"
+				$scope.addNew()
 			})				
 		})
 
 		var btnClose = $(document.createElement("BUTTON")).html("Close")
 		btnClose.click(function(){
 
-			//
+			var row = $("#period-tbl").getSelectedRow()	
+
+			$scope.$apply(function(){
+
+				if(JSON.stringify(row) == "{}"){
+
+					$scope.dialogMsgPeriodOpen = true
+					$scope.messagePeriod = "Please select period from grid!"
+				}
+				else{
+
+					$scope.dialogConfirmPeriodOpen = true;
+					$scope.confirmPeriod = "Are you sure you want to close period?"
+				}
+			})
 		})
 
 		return [
@@ -42,16 +142,15 @@ app.controller("periodController", ["$scope",
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		periodService.get(row.id).then(function(data){
 
 			$scope.dialogPeriodOpen = true;
 
-			$scope.start_date = new Date(row.start);
-			$scope.end_date = new Date(row.end);
-			$scope.period_status = $scope.status[row.status == "Open"?0:1]
-			$scope.active = row.active
-
-			$("input[type=submit]").attr("disabled", row.active == "No")
+			$scope.start_date = new Date(data.start);
+			$scope.end_date = new Date(data.end);
+			$scope.period_status = data.status
+			$scope.descr = data.descr
+			$scope.active = data.active?"Yes":"No"				
 		})
 	}
 
