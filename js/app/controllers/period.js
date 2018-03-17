@@ -16,10 +16,13 @@ app.controller("periodController", ["$scope",
 
 	$scope.submit = function(){
 
+		var start = !isNull($scope.start_date)?(new Date($scope.start_date)).toDateString():"";
+		var end = !isNull($scope.end_date)?(new Date($scope.end_date)).toDateString():"";
+
 		var period = {
 
-			"start":(new Date($scope.start_date)).toDateString(),
-			"end":(new Date($scope.end_date)).toDateString(),
+			"start":start,
+			"end":end,
 			"status":$scope.period_status == "New"?"Open":$scope.period_status,
 			"descr":$scope.descr,
 			"active":$scope.active == "Yes"
