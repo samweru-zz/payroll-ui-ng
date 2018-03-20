@@ -1028,14 +1028,19 @@
 					open={{dialogUserOpen}}
 					cancel-callback="cancelUserHandle"
 					hide-close-button="false">
-				<form name="user-form">
+				<form name="user-form" ng-submit="submit()">
+					<input type="hidden" name="id" ng-model="id">
 					<table>
 						<tr>
 							<td class="caption">Username</td>
 							<td><input type="text" name="username" ng-model="username"></td>
 						</tr>
+						<tr ng-hide="!id">
+							<td class="caption">Current Password</td>
+							<td><input type="password" name="lpassword" ng-model="lpassword"></td>
+						</tr>
 						<tr>
-							<td class="caption">Password</td>
+							<td class="caption">New Password</td>
 							<td><input type="password" name="password" ng-model="password"></td>
 						</tr>
 						<tr>
@@ -1055,7 +1060,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<input type="submit" value="Submit" ng-click="submit()">
+								<input type="submit" value="Submit">
 							</td>
 						</tr>
 					</table>

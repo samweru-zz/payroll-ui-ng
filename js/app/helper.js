@@ -16,6 +16,14 @@ String.prototype.toCamel = function(){
 	return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
 };
 
+String.prototype.equalTo = function(str){
+
+	if(typeof str == "string")
+		return this.trim() === str.trim()
+
+	return false;
+}
+
 // https://goo.gl/d2r24q
 function getMonthFirstDay(date){
 

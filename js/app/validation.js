@@ -111,6 +111,8 @@ function validate(data, meta, customValidation){
 
 		var state = self.getState()
 
+		console.log(state)
+
 		for(key in state){
 
 			var keys = Object.keys(state[key])
@@ -118,8 +120,8 @@ function validate(data, meta, customValidation){
 
 			if(keys.includes("format")){
 
-				if(Object.keys(sanitizers).includes("format"))
-					sanitized[key] = self.sanitize(state[key].value, state[key].format)
+				// if(Object.keys(sanitizers).includes("format"))
+				sanitized[key] = self.sanitize(state[key].value, state[key].format)
 			}
 			else{
 
@@ -132,12 +134,16 @@ function validate(data, meta, customValidation){
 			}
 		}
 
+		// console.log(sanitized)
+
 		return sanitized;
 	}
 
 	self.isValid = function(){
 
 		var state = self.getState()
+
+		// console.log(state)
 
 		for(key in state){
 

@@ -710,6 +710,7 @@ app.run(['$httpBackend', function ($httpBackend){
 
 		    	__users.push({
 
+		    		id:_users[idx].id,
 		    		username: _users[idx].username,
 		    		role_id:  role.id,
 		    		role_name: role.name
@@ -717,7 +718,103 @@ app.run(['$httpBackend', function ($httpBackend){
 		    }
 
 			return [200, {rows:__users, count:users().count()}, {}];
-		});  
+		});
+
+		$httpBackend.whenPOST(/\/user\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+
+		    console.log('User:', method, url, data, headers, params);
+
+      		var _user = users({id:parseInt(params.id)}).first()
+
+      		var _roles = roles().get()
+
+		    var __roles = []
+
+		    for(idx in _roles){
+
+		    	__roles.push({
+
+		    		id:_roles[idx].id,
+		    		name:_roles[idx].name
+		    	})
+			}
+
+      		var __user = {
+
+      			id:_user.id,
+				username:_user.username,
+				password:_user.password,
+				role:_user.role,
+				roles:__roles
+      		}
+
+			return [200, __user, {}];
+		});
+
+		$httpBackend.whenPOST('/user/update').respond(function(method, url, data, headers){
+
+			console.log('User Update:', method, url, data, headers);
+
+			data = JSON.parse(data)
+
+			data.id = parseInt(data.id)
+
+			var success, message = null;
+
+			try{
+
+				var user_ = users({id:data.id})
+
+				if(user_.first().password.equalTo(data.lpassword)){
+
+					user_ = user_.update(data)				
+
+					success = !!user_.first();
+				}
+				else{
+
+					success = false
+
+					message = "Incorrect last password!"
+				}
+			}
+			catch(err){
+
+				console.log(err)
+
+				success = false
+			}
+
+			return [200, {"success":success, "message":message}, {}]
+		});
+
+		$httpBackend.whenPOST("/user/add").respond(function(method, url, data, headers, params){
+
+			console.log('User Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				users.insert({
+
+					id:users().count()+1,
+					username:data.username,
+					passsword:data.passsword,
+					role:data.role
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})  
 
      	$httpBackend.whenPOST('/login').respond(function(method, url, data, headers){
 

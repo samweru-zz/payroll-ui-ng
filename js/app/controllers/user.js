@@ -4,22 +4,127 @@ app.controller("usersController", ['$scope',
 									'roleService', 
 									function($scope, $http, userService, roleService){
 
-	function populateRolesSelectBox(scope, row){
+	$scope.addNew = function(){
+
+		$scope.id = ""
+		$scope.username = ""
+		$scope.role = null
+		$scope.password = ""
+		$scope.lpassword = ""
+		$scope.cpassword = ""
 
 		roleService.getList().then(function(data){
 
 			$scope.roles = data
-			$scope.role = {}
-
-			if(!$.isEmptyObject(row)){
-
-				$scope.role = {
-
-					"id": row.role_id,
-					"name":row.role_name
-				}
-			}
+			$scope.role = null
 		})
+	}
+
+	$scope.submit = function(){
+
+		var user  = {
+
+			username:$scope.username,
+			role:$scope.role,
+			password:$scope.password,
+			lpassword:$scope.lpassword,
+			cpassword:$scope.cpassword
+		}
+
+		var meta = {
+
+			username:{
+
+				name:"Username",
+				format:"alphaOrNumericOrBoth",
+				required:true
+			},
+			password:{
+
+				name:"New Password",
+				required:true
+			},
+			cpassword:{
+
+				name:"Confirm Password",
+				required:true
+			},
+			role:{
+
+				name:"Role",
+				required:true
+			}
+		}
+
+		if(!!$scope.id)
+			meta = $.extend({}, {
+
+				lpassword:{
+
+					name:"Current Password",
+					required:true
+				}
+				
+			}, meta)
+
+		var validator = validate(user, meta)
+
+		// console.log(meta)
+
+		if(validator.isValid()){
+
+			user = validator.getSanitized()
+
+			// console.log(user)
+
+			if(!user.cpassword.equalTo(user.password)){
+
+				$.growl({
+
+					title: "User", 
+					message: "New Password and Confirm Password do not match!"
+				})
+			}
+			else{
+
+				var userSrv;
+				if(!!$scope.id){
+
+					user.id = $scope.id
+					userSrv = userService.update(user)
+				}
+				else userSrv = userService.add(user)
+
+				$("body").LoadingOverlay("show")
+
+				userSrv.then(function(data){
+
+					if(data.message){
+
+						$.growl({
+
+							title: "User",
+							message: data.message
+						})
+
+						$("body").LoadingOverlay("hide")
+					}
+					else {
+
+						setTimeout(function(){
+
+							$("body").LoadingOverlay("hide")
+							$("#user-tbl").trigger("refresh")
+
+						}, 400)
+					}	
+
+					$scope.dialogUserOpen = false;
+				})
+			}
+
+		}
+		else validator.flushMessage("User")
 	}
 
 	$scope.cancelMsgHandle = function(){
@@ -50,9 +155,8 @@ app.controller("usersController", ['$scope',
 			$scope.$apply(function(){
 
 				$scope.dialogUserOpen = true;
-				$scope.username = ""
-
-				populateRolesSelectBox($scope)
+				
+				$scope.addNew()
 			})		
 		})
 
@@ -84,12 +188,20 @@ app.controller("usersController", ['$scope',
 
 		var row = $(this).getRow();
 
-		$scope.$apply(function(){
+		userService.get(row.id).then(function(data){
 
 			$scope.dialogUserOpen = true;
-			$scope.username = row.username
 
-			populateRolesSelectBox($scope, row);
+			$scope.id = data.id
+			$scope.username = data.username
+			$scope.lpassword = ""
+			$scope.cpassword = ""
+			$scope.password = ""
+			$scope.roles = data.roles
+
+			for(idx in data.roles)
+				if(data.roles[idx].id == data.role)
+					$scope.role = data.roles[idx];
 		})
 	}
 
