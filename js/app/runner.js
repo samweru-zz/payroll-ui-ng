@@ -332,8 +332,8 @@ app.run(['$httpBackend', function ($httpBackend){
 
 					"id":_employees[idx].id,
 					"idno":_employees[idx].idno,
-					"firstname":_employees[idx].firstname,
-					"lastname":_employees[idx].lastname,
+					"surname":_employees[idx].surname,
+					"othernames":_employees[idx].othernames,
 					"email":_employees[idx].email,
 					"county":_employees[idx].county,
 				})

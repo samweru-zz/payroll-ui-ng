@@ -326,8 +326,10 @@ var i = 1;
 var employees__ = [];
 while(i<=20){
 
-	var firstName = faker.name.firstName()
+	var firstName = faker.name.firstName() 
 	var lastName = faker.name.lastName()
+	var othernames = firstName + " " + lastName
+	var surname = faker.name.lastName()
 	var emailAddr = firstName+"."+lastName+"@"+faker.internet.domainName()
 
 	var banks = ["Barclays", "Equity", "Co-operative", "I&M"]
@@ -346,8 +348,8 @@ while(i<=20){
 		address: faker.address.streetName(),
 		marital_status: faker.random.arrayElement(["Single","Married","Separated","Divorced"]),
 		gender: faker.random.arrayElement(["Male","Female","Other"]),
-		lastname: lastName, 
-		firstname: firstName,
+		othernames: othernames, 
+		surname: surname,
 		county: faker.address.county(), 
 		country:faker.address.country(),
 		city:faker.address.city(),

@@ -15,6 +15,18 @@ function validate(data, meta, customValidation){
 
 			return toFloat(val)
 		},
+		email:function(val){
+
+			return trimAny(val)
+		},
+		alpha:function(val){
+
+			return trimAny(val)
+		},
+		alphaNumericOnly:function(val){
+
+			return trimAny(val)
+		},
 		alphaOrNumericOrBoth:function(val){
 
 			return trimAny(val)
@@ -23,6 +35,10 @@ function validate(data, meta, customValidation){
 
 	var validators = {
 
+		email:function(val){
+
+			return isEmail(val)
+		},
 		currency:function(val){
 
 			return isCurrency(val)
@@ -30,6 +46,14 @@ function validate(data, meta, customValidation){
 		number:function(val){
 
 			return self.sanitize(val, "number")
+		},
+		alpha:function(val){
+
+			return /^[A-z ]+$/.test(self.sanitize(val, "alpha"))
+		},
+		alphaNumericOnly:function(val){
+
+			return /^\d*[a-zA-Z][a-zA-Z0-9]*$/.test(self.sanitize(val, "alphaNumericOnly"))
 		},
 		alphaOrNumericOrBoth:function(val){
 
@@ -88,6 +112,15 @@ function validate(data, meta, customValidation){
 
 				state[key].format = self.__meta[key].format;
 				state[key].formatValid = self.validator(val, state[key].format)
+			}
+
+			if(keys.includes("len")){
+
+				state[key].len = self.__meta[key].len
+
+				state[key].lengthValid = false
+				if(val.toString().length == self.__meta[key].len)
+					state[key].lengthValid = true
 			}
 
 			if(keys.includes("required"))
@@ -160,6 +193,10 @@ function validate(data, meta, customValidation){
 			if(keys.includes("empty"))
 				if(state[key].empty)
 					return false;
+
+			if(keys.includes("lengthValid"))
+				if(state[key].lengthValid == false)
+					return false;
 		}
 
 		return true;
@@ -198,6 +235,20 @@ function validate(data, meta, customValidation){
 					_messages[key] = $.extend({}, _messages[key], {
 
 						empty:state[key].empty
+					})
+
+					valid = false
+				}
+			}
+
+			if(_keys.includes("lengthValid")){
+
+				if(state[key].len){
+
+					_messages[key] = $.extend({}, _messages[key], {
+
+						len:state[key].len,
+						lengthValid:state[key].lengthValid
 					})
 
 					valid = false
@@ -248,6 +299,10 @@ function validate(data, meta, customValidation){
 					messages.push("Has to be a " + format + "!<br>");
 				}
 			}
+
+			if(keys.includes("lengthValid"))
+				if(_messages[key].lengthValid == false)
+					messages.push("Has to be on length "+ _messages[key].len)
 
 			if(keys.includes("empty"))
 				if(_messages[key].empty)
@@ -307,4 +362,11 @@ function isCurrency(val){
 	var currFormat = /(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/
 
 	return currFormat.test(val)
+}
+
+function isEmail(val){
+
+	var regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+	return regex.test(val)
 }

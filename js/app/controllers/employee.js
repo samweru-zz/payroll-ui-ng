@@ -27,13 +27,13 @@ app.controller("employeeController", [
 				nssf:data.nssf_no,
 				nhif:data.nhif_no,
 				pin:data.pin,
-				email1:data.email,
-				phone1:data.mobile,
-				address1:data.address,
-				mStatus:employeeService.getMaritalStatus(data.marital_status),
+				email:data.email,
+				mobile:data.mobile,
+				address:data.address,
+				marital_status:employeeService.getMaritalStatus(data.marital_status),
 				gender:employeeService.getGenders(data.gender),
-				surname:data.lastname,
-				othernames:data.firstname,
+				surname:data.surname,
+				othernames:data.othernames,
 				// county:data.county,
 				country:data.country,
 				city:data.city,
@@ -65,14 +65,14 @@ app.controller("employeeController", [
 				nssf_no: employee.nssf,
 				nhif_no: employee.nhif,
 				pin: employee.pin,
-				email: employee.email1,
+				email: employee.email,
 				mobile: employee.mobile, 
 				status: employee.active,
-				address: employee.address1,
-				marital_status: employee.married,
+				address: employee.address,
+				marital_status: employee.marital_status,
 				gender: employee.gender.name,
-				lastname: employee.surname, 
-				firstname: employee.othername,
+				surname: employee.surname, 
+				othernames: employee.othernames,
 				// county: employee.county, 
 				country: employee.country,
 				city: employee.city,
@@ -80,24 +80,122 @@ app.controller("employeeController", [
 				start_date: employee.start_date,
 				end_date: employee.end_date,
 				bank_details: employee.bank_details,
-				other_address:employee.address2,
-				other_email:employee.email2,
-				other_mobile:employee.phone2,
+				other_address:employee.other_address,
+				other_email:employee.other_email,
+				other_mobile:employee.other_mobile,
 				post:employee.post.id
 			}
 
-			$("body").LoadingOverlay("show")
+			var validator = validate(employee_data, {
 
-			employeeService.update(employee_data).then(function(data){
+				idno:{
 
-				console.log(data)
+					name: "IDNo",
+					format:"number",
+					len:8,
+					required:true
+				},
+				othernames:{
 
-				setTimeout(function(){
+					name:"Other Names",
+					format:"alpha",
+					required:true
+				},
+				surname:{
 
-					$("body").LoadingOverlay("hide")
+					name:"Surname",
+					format:"alpha",
+					required:true
+				},
+				nssf_no:{
 
-				}, 500)
+					name:"NSSF No.",
+					format:"number",
+					len:9,
+					required:true
+				},
+				nhif_no:{
+
+					name:"NHIF No.",
+					format:"number",
+					len:7,
+					required:true
+				},
+				pin:{
+
+					name:"PIN",
+					format:"alphaNumericOnly",
+					len:12,
+					required:true					
+				},
+				email:{
+
+					name:"Email",
+					format:"email",
+					required:true
+				},
+				mobile:{
+
+					name:"Mobile Number",
+					required:true
+				},
+				marital_status:{
+
+					name:"Marital Status",
+					required:true
+				},
+				gender:{
+
+					name:"Gender",
+					required:true
+				},
+				dob:{
+
+					name:"Date of Birth",
+					required:true
+				},
+				start_date:{
+
+					name:"Start Date",
+					required:true
+				},
+				end_date:{
+
+					name:"End Date",
+					required:true
+				},
+				post:{
+
+					name:"Post",
+					required:true
+				},
+				bank_details:{
+
+					name:"Bank Details",
+					required:true
+				}
 			})
+
+			// console.log(validator.isValid())
+
+			console.log(validator.getState())
+
+			if(validator.isValid()){
+
+				$("body").LoadingOverlay("show")
+
+				employeeService.update(employee_data).then(function(data){
+
+					// console.log(data)
+
+					setTimeout(function(){
+
+						$("body").LoadingOverlay("hide")
+
+					}, 500)
+				})
+			}
+			else validator.flushMessage("Employee")
 		}
 }]);
 
