@@ -144,7 +144,7 @@ function validate(data, meta, customValidation){
 
 		var state = self.getState()
 
-		console.log(state)
+		// console.log(state)
 
 		for(key in state){
 
@@ -243,7 +243,7 @@ function validate(data, meta, customValidation){
 
 			if(_keys.includes("lengthValid")){
 
-				if(state[key].len){
+				if(state[key].lengthValid == false){
 
 					_messages[key] = $.extend({}, _messages[key], {
 
@@ -302,7 +302,7 @@ function validate(data, meta, customValidation){
 
 			if(keys.includes("lengthValid"))
 				if(_messages[key].lengthValid == false)
-					messages.push("Has to be on length "+ _messages[key].len)
+					messages.push("Has to be on length "+ _messages[key].len + "<br>")
 
 			if(keys.includes("empty"))
 				if(_messages[key].empty)
@@ -369,4 +369,9 @@ function isEmail(val){
 	var regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
 	return regex.test(val)
+}
+
+function isObject(val){
+
+	return typeof val == "object"
 }

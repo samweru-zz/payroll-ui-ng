@@ -246,6 +246,54 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {"success": success}, {}];
 		})
 
+		$httpBackend.whenPOST("/employee/add").respond(function(method, url, data, headers, params){
+
+			console.log('Employee Add:', method, url, data, headers, params);
+
+			data = JSON.parse(data)
+
+			var success;
+
+			try{
+
+				employees.insert({
+
+					id:employees().count()+1,
+					idno: data.idno,
+					nssf_no: data.nssf,
+					nhif_no: data.nhif,
+					pin: data.pin,
+					email: data.email,
+					mobile: data.mobile, 
+					status: data.active,
+					address: data.address,
+					marital_status: data.marital_status,
+					gender: data.gender.name,
+					surname: data.surname, 
+					othernames: data.othernames,
+					// county: data.county, 
+					country: data.country,
+					city: data.city,
+					dob: data.dob,
+					start_date: data.start_date,
+					end_date: data.end_date,
+					bank_details: data.bank_details,
+					other_address:data.other_address,
+					other_email:data.other_email,
+					other_mobile:data.other_mobile,
+					post:data.post
+				})
+
+				success = true;
+			}
+			catch(err){
+
+				success = false
+			}
+
+			return [200, {"success":success}, {}]
+		})
+
 		$httpBackend.whenPOST("/employee/update").respond(function(method, url, data, headers, params){
 
 			console.log('Employee Update:', method, url, data, headers, params);

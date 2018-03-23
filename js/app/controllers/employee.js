@@ -20,79 +20,110 @@ app.controller("employeeController", [
 	if(Object.keys($stateParams).includes("id"))
 		employeeService.get($stateParams.id).then(function(data){
 
-			$scope.employee = {
+			$scope.id = $stateParams.id
+			$scope.idno = data.idno
+			$scope.nssf = data.nssf_no
+			$scope.nhif = data.nhif_no
+			$scope.pin = data.pin
+			$scope.email = data.email
+			$scope.mobile = data.mobile
+			$scope.address = data.address
+			$scope.marital_status = employeeService.getMaritalStatus(data.marital_status)
+			$scope.gender = employeeService.getGenders(data.gender)
+			$scope.surname = data.surname
+			$scope.othernames = data.othernames
+			// $scope.county = data.county
+			$scope.country = data.country
+			$scope.city = data.city
+			$scope.dob = new Date(data.dob)
+			$scope.start_date =  new Date(data.start_date)
+			$scope.end_date = new Date(data.end_date)
+			$scope.bank_details = data.bank_details
+			$scope.other_address = data.other_address
+			$scope.other_email = data.other_email
+			$scope.other_mobile = data.other_mobile
+			$scope.active = data.status
 
-				id:$stateParams.id,
-				idno:data.idno,
-				nssf:data.nssf_no,
-				nhif:data.nhif_no,
-				pin:data.pin,
-				email:data.email,
-				mobile:data.mobile,
-				address:data.address,
-				marital_status:employeeService.getMaritalStatus(data.marital_status),
-				gender:employeeService.getGenders(data.gender),
-				surname:data.surname,
-				othernames:data.othernames,
-				// county:data.county,
-				country:data.country,
-				city:data.city,
-				dob:new Date(data.dob),
-				start_date: new Date(data.start_date),
-				end_date:new Date(data.end_date),
-				bank_details:data.bank_details,
-				other_address:data.other_address,
-				other_email:data.other_email,
-				other_mobile:data.other_mobile,
-				active:data.status,
-				// post:""
-			}
-
-			$scope.employee.post = $scope.posts.find(function(e){
+			$scope.post = $scope.posts.find(function(e){
 
 				return data.post == e.id
 			})
 		})
 
+		$scope.addNew = function(){
+
+			$scope.id = ""
+			$scope.idno = ""
+			$scope.nssf = ""
+			$scope.nhif = ""
+			$scope.pin = ""
+			$scope.email = ""
+			$scope.mobile = ""
+			$scope.address = ""
+			$scope.marital_status = null
+			$scope.gender = null
+			$scope.surname = ""
+			$scope.othernames = ""
+			// $scope.county = ""
+			$scope.country = ""
+			$scope.city = ""
+			$scope.dob = ""
+			$scope.start_date = ""
+			$scope.end_date = ""
+			$scope.bank_details = ""
+			$scope.other_address = ""
+			$scope.other_email = ""
+			$scope.other_mobile = ""
+			$scope.active = ""
+
+			$scope.post = null
+		}
+
 		$scope.submit = function(){
 
-			var employee = $scope.employee;
+			// console.log($scope.gender)
 
-			var employee_data = {
+			if(!$scope.id)
+			 $scope.addNew()
 
-				id:employee.id,
-				idno: employee.idno,
-				nssf_no: employee.nssf,
-				nhif_no: employee.nhif,
-				pin: employee.pin,
-				email: employee.email,
-				mobile: employee.mobile, 
-				status: employee.active,
-				address: employee.address,
-				marital_status: employee.marital_status,
-				gender: employee.gender.name,
-				surname: employee.surname, 
-				othernames: employee.othernames,
-				// county: employee.county, 
-				country: employee.country,
-				city: employee.city,
-				dob: employee.dob,
-				start_date: employee.start_date,
-				end_date: employee.end_date,
-				bank_details: employee.bank_details,
-				other_address:employee.other_address,
-				other_email:employee.other_email,
-				other_mobile:employee.other_mobile,
-				post:employee.post.id
+			var marital_status = isObject($scope.marital_status)?$scope.marital_status.name:$scope.marital_status
+			var gender = isObject($scope.gender)?$scope.gender.name:$scope.gender
+			var post = isObject($scope.post)?$scope.post.id:$scope.post
+
+			var employee_ = {
+
+				idno: $scope.idno,
+				nssf_no: $scope.nssf,
+				nhif_no: $scope.nhif,
+				pin: $scope.pin,
+				email: $scope.email,
+				mobile: $scope.mobile, 
+				status: $scope.active,
+				address: $scope.address,
+				marital_status: marital_status,
+				gender: gender,
+				surname: $scope.surname, 
+				othernames: $scope.othernames,
+				// county: $scope.county, 
+				country: $scope.country,
+				city: $scope.city,
+				dob: $scope.dob,
+				start_date: $scope.start_date,
+				end_date: $scope.end_date,
+				bank_details: $scope.bank_details,
+				other_address:$scope.other_address,
+				other_email:$scope.other_email,
+				other_mobile:$scope.other_mobile,
+				post:post
 			}
 
-			var validator = validate(employee_data, {
+			var validator = validate(employee_, {
 
 				idno:{
 
 					name: "IDNo",
 					format:"number",
-					len:8,
+					len:7,
 					required:true
 				},
 				othernames:{
@@ -178,13 +209,24 @@ app.controller("employeeController", [
 
 			// console.log(validator.isValid())
 
-			console.log(validator.getState())
+			// console.log(validator.getState())
 
 			if(validator.isValid()){
 
+				employee_ = $.extend(employee_, validator.getSanitized())
+
+				console.log(employee_)
+
+				if(!!$scope.id){
+
+					employee_.id = $scope.id
+					empSrv = employeeService.update(employee_)
+				}
+				else empSrv = employeeService.add(employee_)
+
 				$("body").LoadingOverlay("show")
 
-				employeeService.update(employee_data).then(function(data){
+				empSrv.then(function(data){
 
 					// console.log(data)
 

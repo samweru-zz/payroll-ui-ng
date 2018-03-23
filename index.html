@@ -357,26 +357,26 @@
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee.html">
 		<form>
-			<input type="hidden" name="id" ng-model="employee.id">
+			<input type="hidden" name="id" ng-model="id">
 			<table>
 				<tr>
 					<td class="caption">IDNo</td>
 					<td colspan="3">
-						<input type="text" name="idno" ng-model="employee.idno">
+						<input type="text" name="idno" ng-model="idno">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Surname</td>
 					<td><input type="text" name="surname"
-											ng-model="employee.surname"></td>
+											ng-model="surname"></td>
 					<td class="caption">Othernames</td>
 					<td><input type="text" name="othernames" 
-											ng-model="employee.othernames"></td>
+											ng-model="othernames"></td>
 				</tr>
 				<tr>
 					<td class="caption">Post</td>
 					<td colspan="3">
-						<select ng-model="employee.post"
+						<select ng-model="post_"
 								ng-options="post.id as post.name for post in posts track by post.id"></select>
 					</td>
 				</tr>
@@ -384,78 +384,78 @@
 					<td class="caption">Address 1</td>
 					<td><textarea rows="5" cols="30" 
 									name="address" 
-									ng-model="employee.address"></textarea></td>
+									ng-model="address"></textarea></td>
 					<td class="caption">Address 2</td>
 					<td><textarea rows="5" cols="30" 
 									name="other_address" 
-									ng-model="employee.other_address"></textarea></td>
+									ng-model="other_address"></textarea></td>
 				</tr>
 				<tr>
 					<td class="caption">Phone 1</td>
-					<td><input type="text" name="mobile" ng-model="employee.mobile"></td>
+					<td><input type="text" name="mobile" ng-model="mobile"></td>
 					<td class="caption">Phone 2</td>
-					<td><input type="text" name="other_mobile" ng-model="employee.other_mobile"></td>
+					<td><input type="text" name="other_mobile" ng-model="other_mobile"></td>
 				</tr>
 				<tr>
 					<td class="caption">Email 1</td>
-					<td><input type="text" name="email" ng-model="employee.email"></td>
+					<td><input type="text" name="email" ng-model="email"></td>
 					<td class="caption">Email 2</td>
-					<td><input type="text" name="other_email" ng-model="employee.other_email"></td>
+					<td><input type="text" name="other_email" ng-model="other_email"></td>
 				</tr>
 				<tr>
 					<td class="caption">NSSF</td>
-					<td><input type="text" name="nssf" ng-model="employee.nssf"></td>
+					<td><input type="text" name="nssf" ng-model="nssf"></td>
 					<td class="caption">NHIF</td>
-					<td><input type="text" name="nhif" ng-model="employee.nhif"></td>
+					<td><input type="text" name="nhif" ng-model="nhif"></td>
 				</tr>
 				<tr>
 					<td class="caption">PIN</td>
 					<td colspan="3">
-						<input type="text" name="pin" ng-model="employee.pin">
+						<input type="text" name="pin" ng-model="pin">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Gender</td>
 					<td colspan="3">
-						<select ng-model="employee.gender" 
+						<select ng-model="gender_" 
 								ng-options="gender.id as gender.name for gender in genders track by gender.id"></select>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Country</td>
-					<td><input type="text" name="country" ng-model="employee.country"></td>
+					<td><input type="text" name="country" ng-model="country"></td>
 					<td class="caption">City</td>
-					<td><input type="text" name="city" ng-model="employee.city"></td>
+					<td><input type="text" name="city" ng-model="city"></td>
 				</tr>
 				<tr>
 					<td class="caption">DOB</td>
 					<td colspan="3">
-						<input type="date" name="dob" ng-model="employee.dob">
+						<input type="date" name="dob" ng-model="dob">
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Start Date</td>
-					<td><input type="date" name="start_date" ng-model="employee.start_date"></td>
+					<td><input type="date" name="start_date" ng-model="start_date"></td>
 					<td class="caption">End Date</td>
-					<td><input type="date" name="end_date" ng-model="employee.end_date"></td>
+					<td><input type="date" name="end_date" ng-model="end_date"></td>
 				</tr>
 				<tr>
 					<td class="caption">Marital Status</td>
 					<td colspan="3">
-						<select ng-model="employee.marital_status"
+						<select ng-model="marital_status"
 								ng-options="status.id as status.name for status in maritalStatus track by status.id"></select>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Bank Details</td>
 					<td colspan="3">
-						<textarea rows="5" cols="30" ng-model="employee.bank_details"></textarea>
+						<textarea rows="5" cols="30" ng-model="bank_details"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td class="caption">Active</td>
 					<td colspan="3">
-						<input type="checkbox" name="active" ng-model="employee.active"
+						<input type="checkbox" name="active" ng-model="active"
 								ng-true-value="'Active'"
 								nt-false-value="'Inactive'">
 					</td>
