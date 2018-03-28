@@ -14,30 +14,30 @@ app.controller("employeeController", [
 
 	$scope.addNew = function(){
 
-		// $scope.id = ""
-		// $scope.idno = ""
-		// $scope.nssf = ""
-		// $scope.nhif = ""
-		// $scope.pin = ""
-		// $scope.email = ""
-		// $scope.mobile = ""
-		// $scope.address = ""
-		// $scope.marital_status = null
-		// $scope.gender = null
-		// $scope.post = null
-		// $scope.surname = ""
-		// $scope.othernames = ""
-		// // $scope.county = ""
-		// $scope.country = ""
-		// $scope.city = ""
-		// $scope.dob = ""
-		// $scope.start_date = ""
-		// $scope.end_date = ""
-		// $scope.bank_details = ""
-		// $scope.other_address = ""
-		// $scope.other_email = ""
-		// $scope.other_mobile = ""
-		// $scope.active = ""
+		$scope.id = ""
+		$scope.idno = ""
+		$scope.nssf = ""
+		$scope.nhif = ""
+		$scope.pin = ""
+		$scope.email = ""
+		$scope.mobile = ""
+		$scope.address = ""
+		$scope.marital_status = null
+		$scope.gender = null
+		$scope.post = null
+		$scope.surname = ""
+		$scope.othernames = ""
+		// $scope.county = ""
+		$scope.country = ""
+		$scope.city = ""
+		$scope.dob = ""
+		$scope.start_date = ""
+		$scope.end_date = ""
+		$scope.bank_details = ""
+		$scope.other_address = ""
+		$scope.other_email = ""
+		$scope.other_mobile = ""
+		$scope.active = ""
 
 		postService.getList().then(function(list){
 
@@ -231,6 +231,11 @@ app.controller("employeeController", [
 				// console.log(data)
 
 				setTimeout(function(){
+
+					// console.log(data, "=========")
+
+					if(!isEmpty(data.id))
+						$state.go("employee.details", {id:data.id})
 
 					$("body").LoadingOverlay("hide")
 

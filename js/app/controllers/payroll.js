@@ -11,7 +11,7 @@ app.controller("payrollController", [
 
 	payrollService.getSalaryDetails($stateParams.id).then(function(data){
 
-		$scope.employeeName = data.employee.firstname + " " + data.employee.lastname
+		$scope.employeeName = data.employee.surname + ", " + data.employee.othernames
 		$scope.benefits = data.benefits
 
 		// console.log(data.pay_details)

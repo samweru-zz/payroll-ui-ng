@@ -187,8 +187,8 @@ app.run(['$httpBackend', function ($httpBackend){
 
 				employee:{
 
-					firstname:employee.firstname,
-					lastname:employee.lastname
+					othernames:employee.othernames,
+					surname:employee.surname
 				},
 				pay_details:pay_details,
 				benefits:_benefits,
@@ -252,13 +252,15 @@ app.run(['$httpBackend', function ($httpBackend){
 
 			data = JSON.parse(data)
 
-			var success;
+			var success, new_emp_id = null;
 
 			try{
 
+				new_emp_id = employees().count()+1
+
 				employees.insert({
 
-					id:employees().count()+1,
+					id:new_emp_id,
 					idno: data.idno,
 					nssf_no: data.nssf_no,
 					nhif_no: data.nhif_no,
@@ -291,7 +293,9 @@ app.run(['$httpBackend', function ($httpBackend){
 				success = false
 			}
 
-			return [200, {"success":success}, {}]
+
+
+			return [200, {"success":success, id: new_emp_id}, {}]
 		})
 
 		$httpBackend.whenPOST("/employee/update").respond(function(method, url, data, headers, params){
