@@ -100,6 +100,10 @@ app.service("employeeService", ["$http", "$q", function($http, $q){
 		var mStatus = [
 
 			{
+				id:"single",
+				name:"Single"
+			},
+			{
 				id:"married",
 				name: "Married"
 			},

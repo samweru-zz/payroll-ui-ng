@@ -373,5 +373,8 @@ function isEmail(val){
 
 function isObject(val){
 
-	return typeof val == "object"
+	if(!isNull(val))
+		return typeof val == "object"
+
+	return false;
 }

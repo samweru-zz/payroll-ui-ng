@@ -20,7 +20,7 @@ app.service("payrollService", ["$http", "$q", "employeeService", function($http,
 
 		var deferred = $q.defer();
 
-		$http.post("/add/employee/pay", data).then(function(response){
+		$http.post("/employee/pay/add", data).then(function(response){
 
 			deferred.resolve(response.data)
 		},
@@ -38,7 +38,7 @@ app.service("payrollService", ["$http", "$q", "employeeService", function($http,
 
 		var deferred = $q.defer();
 
-		$http.post("/update/employee/pay", data).then(function(response){
+		$http.post("/employee/pay/update", data).then(function(response){
 
 			deferred.resolve(response.data)
 		},

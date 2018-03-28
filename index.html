@@ -356,13 +356,13 @@
 		</div>
 	</script>
 	<script type="text/ng-template" charset="utf-8" id="employee.html">
-		<form>
+		<form ng-submit="submit()">
 			<input type="hidden" name="id" ng-model="id">
 			<table>
 				<tr>
 					<td class="caption">IDNo</td>
 					<td colspan="3">
-						<input type="text" name="idno" ng-model="idno">
+						<input type="text" name="idno" ng-model="idno" maxlength="7" pattern="[0-9]+">
 					</td>
 				</tr>
 				<tr>
@@ -463,7 +463,7 @@
 				<tr>
 					<td></td>
 					<td colspan="3">
-						<input type="submit" value="Submit" ng-click="submit()">
+						<input type="submit" value="Submit">
 						<!-- <input type="reset" value="Reset"> -->
 					</td>
 				</tr>
@@ -599,8 +599,7 @@
 					'idno':{name:'IdNo', css:{width:'50px'}},
 					'othernames':{name:'Other Names', css:{width:'100px'}},
 					'surname':{name:'Surname', css:{width:'100px'}},
-					'email':{name:'Email', css:{width:'200px'}},
-					'county':{name:'County', css:{width:'100px'}}
+					'email':{name:'Email', css:{width:'200px'}}
 				}"
 				css="{capsuleWidth:'100%',gridHeight:'400px', gridWidth:'700px'}"
 				pager="{page:1,rows:10,list:[10,20]}"

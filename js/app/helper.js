@@ -41,7 +41,7 @@ function getMonthLastDay(date){
 }
 
 // https://goo.gl/1SQbwG
-function getShortDate(date){ //dd/mm/yyyy
+function getShortDate(date){ //mm/dd/yyyy
 
 	var dd = date.getDate();
 	var mm = date.getMonth()+1; //January is 0!
@@ -56,7 +56,7 @@ function getShortDate(date){ //dd/mm/yyyy
 	    mm='0'+mm;
 	} 
 
-	var date = dd+'/'+mm+'/'+yyyy;
+	var date = mm+'/'+dd+'/'+yyyy;
 
 	return date;
 }

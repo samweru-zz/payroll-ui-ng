@@ -117,7 +117,7 @@ app.run(['$httpBackend', function ($httpBackend){
 		})
 
 
-		$httpBackend.whenPOST("/add/employee/pay").respond(function(method, url, data, headers, params){
+		$httpBackend.whenPOST("/employee/pay/add").respond(function(method, url, data, headers, params){
 
 			console.log('Employee Pay Add:', method, url, data, headers, params);
 
@@ -145,7 +145,7 @@ app.run(['$httpBackend', function ($httpBackend){
 			return [200, {"success":success}, {}];
 		})
 
-		$httpBackend.whenPOST("/update/employee/pay").respond(function(method, url, data, headers, params){
+		$httpBackend.whenPOST("/employee/pay/update").respond(function(method, url, data, headers, params){
 
 			console.log('Employee Pay Update:', method, url, data, headers, params);
 
@@ -260,15 +260,15 @@ app.run(['$httpBackend', function ($httpBackend){
 
 					id:employees().count()+1,
 					idno: data.idno,
-					nssf_no: data.nssf,
-					nhif_no: data.nhif,
+					nssf_no: data.nssf_no,
+					nhif_no: data.nhif_no,
 					pin: data.pin,
 					email: data.email,
 					mobile: data.mobile, 
-					status: data.active,
+					status: data.status,
 					address: data.address,
 					marital_status: data.marital_status,
-					gender: data.gender.name,
+					gender: data.gender,
 					surname: data.surname, 
 					othernames: data.othernames,
 					// county: data.county, 
@@ -359,6 +359,21 @@ app.run(['$httpBackend', function ($httpBackend){
 
       		var _employee = employees({id:parseInt(params.id)}).first()
 
+      		var _posts = posts().get()
+
+      		var __posts = []
+
+      		for(idx in _posts){
+
+      			__posts.push({
+
+      				id:_posts[idx].id,
+      				name:_posts[idx].name
+      			})
+      		}
+
+      		_employee.posts = __posts
+
 			return [200, _employee, {}];
 		});
 
@@ -383,7 +398,7 @@ app.run(['$httpBackend', function ($httpBackend){
 					"surname":_employees[idx].surname,
 					"othernames":_employees[idx].othernames,
 					"email":_employees[idx].email,
-					"county":_employees[idx].county,
+					// "county":_employees[idx].county,
 				})
 			}
 
