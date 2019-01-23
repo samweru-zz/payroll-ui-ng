@@ -2,3 +2,6 @@ php_errors.log
 ..gitignore.swp
 .README.md.swp
 payroll.html
+npm-debug.log
+node_modules/
+bower_components/

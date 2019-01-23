@@ -1,33 +1,40 @@
 body:not(.simplr-grid) {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 .ui-dialog-titlebar-close {
-  /*visibility: hidden;*/ }
+  /*visibility: hidden;*/
+}
 
 .ui-widget-overlay {
   background-color: #000;
-  opacity: 0.5; }
+  opacity: 0.5;
+}
 
-div.tree {
-  display: block;
-  width: 20%;
-  float: left;
-  min-height: 100%;
-  /*display: none;*/ }
-
-div.body {
-  display: block;
-  width: 80%;
-  float: right;
-  min-height: 100%;
-  /*border-left: 1px solid #000;*/
-  /*height: 100%;*/
-  /*display: block;*/ }
+div {
+  &.tree {
+    display: block;
+    width: 20%;
+    float: left;
+    min-height: 100%;
+    /*display: none;*/
+  }
+  &.body {
+    display: block;
+    width: 80%;
+    float: right;
+    min-height: 100%;
+    /*border-left: 1px solid #000;*/
+    /*height: 100%;*/
+    /*display: block;*/
+  }
+}
 
 table:not(.simplr-grid) tr td.caption {
   vertical-align: top;
-  text-align: right; }
+  text-align: right;
+}
 
 /*table {
   border: 1px solid #ccc;
@@ -58,17 +65,18 @@ table th {
 }*/
 @media screen and (max-width: 600px) {
   table:not(.simplr-grid) {
-    border: 0; }
-    table:not(.simplr-grid) tr {
+    border: 0;
+    tr {
       /*border-bottom: 3px solid #ddd;*/
       display: block;
-      margin-bottom: .625em; }
-    table:not(.simplr-grid) td {
+      margin-bottom: .625em;
+    }
+    td {
       /*border-bottom: 1px solid #ddd;*/
       display: block;
       /*font-size: .8em;*/
-      text-align: right; }
-      table:not(.simplr-grid) td:before {
+      text-align: right;
+      &:before {
         /*
         * aria-label has no advantage, it won't be read inside a table
         content: attr(aria-label);
@@ -76,9 +84,13 @@ table th {
         content: attr(data-label);
         float: left;
         font-weight: bold;
-        text-transform: uppercase; }
-      table:not(.simplr-grid) td:last-child {
-        border-bottom: 0; }
+        text-transform: uppercase;
+      }
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
   /*  table caption {
       font-size: 1.3em;
     }*/
@@ -91,14 +103,18 @@ table th {
       padding: 0;
       position: absolute;
       width: 1px;
-    }*/ }
+    }*/
+}
 
 .tab-head {
   cursor: pointer;
-  text-decoration: underline; }
+  text-decoration: underline;
+}
 
 a.tab-head.active {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .tree ul li {
-  list-style-type: none; }
+  list-style-type: none;
+}

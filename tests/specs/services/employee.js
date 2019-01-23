@@ -19,7 +19,7 @@ describe("Employee Service:", function(){
 
     it('should return employee record', function(){
 
-      $httpBackend.expect("POST", /\/data\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
+      $httpBackend.expect("POST", /\/employee\/(\d+)/, undefined, undefined, ['id']).respond(function(method, url, data, headers, params){
     
          console.log('Received these data:', method, url, data, headers, params);
 

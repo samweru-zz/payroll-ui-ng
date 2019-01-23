@@ -1,0 +1,44 @@
+{
+  "name": "payroll-ui-ng",
+  "version": "1.0.0",
+  "description": "payroll angularjs ui interface",
+  "main": "index.html",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "dependencies": {
+    "gulp": "^4.0.0",
+    "pump": "^3.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.1",
+    "node-sass": "^4.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samweru/payroll-ui-ng.git"
+  },
+  "keywords": [
+    "payroll",
+    "ui",
+    "angular",
+    "jquery",
+    "directives",
+    "services",
+    "jasmine",
+    "gulp",
+    "npm"
+  ],
+  "author": "Sam Weru",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samweru/payroll-ui-ng/issues"
+  },
+  "homepage": "https://github.com/samweru/payroll-ui-ng#readme"
+}
