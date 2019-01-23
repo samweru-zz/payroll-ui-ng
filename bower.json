@@ -1,0 +1,41 @@
+{
+  "name": "payroll-ui-ng",
+  "description": "payroll angularjs ui interface",
+  "main": "index.html",
+  "authors": [
+    "Sam Weru"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "payroll",
+    "ui",
+    "angular",
+    "jquery",
+    "directives",
+    "services",
+    "jasmine",
+    "gulp",
+    "npm"
+  ],
+  "homepage": "https://github.com/samweru/payroll-ui-ng",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-cookies": "^1.7.6",
+    "angular-mocks": "^1.7.6",
+    "angular-ui-router": "^1.0.20",
+    "angular": "^1.7.6",
+    "gasparesganga-jquery-loading-overlay": "^2.1.6",
+    "growl": "^1.3.5",
+    "jquery-ui": "^1.12.1",
+    "jasmine-core": "jasmine#^3.3.0",
+    "simplr-grid": "^1.0.0",
+    "taffy": "*"
+  }
+}

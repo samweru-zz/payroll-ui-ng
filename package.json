@@ -16,7 +16,17 @@
     "gulp-uglify": "^3.0.1",
     "node-sass": "^4.11.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+
+    "gulp":"^4.0.0",
+    "gulp-concat":"^2.6.1",
+    "gulp-jasmine":"^4.0.0",
+    "gulp-rename":"^1.4.0",
+    "gulp-sass":"^4.0.2",
+    "gulp-uglify":"^3.0.1",
+    "node-sass":"^4.11.0",
+    "pump":"^3.0.0"
+  },
   "scripts": {
     "test": "gulp test"
   },
