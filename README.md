@@ -1,7 +1,13 @@
 jQuery & AngularJs Test
 =======================
 You do not need a server to run this, just run the index on your browser.
+
+## Example
+
+Find a running sample here [Payroll](https://samweru.github.io/project/payroll-ui-ng).
+
 ## Scripts Used
+
 - jQuery 
 - jQuery-ui
 - [jQuery.simplr-grid](https://github.com/samweru/simplr-grid)
